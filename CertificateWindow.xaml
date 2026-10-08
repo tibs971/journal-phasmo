@@ -1,0 +1,93 @@
+<Window x:Class="PhasmoCompanion.CertificateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Certificat d'auteur"
+        Width="560" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        MouseLeftButtonDown="Drag">
+
+  <Window.Resources>
+    <Style x:Key="Cle" TargetType="TextBlock">
+      <Setter Property="Foreground" Value="#6E7689"/>
+      <Setter Property="FontFamily" Value="Segoe UI"/>
+      <Setter Property="FontSize" Value="11.5"/>
+      <Setter Property="Margin" Value="0,0,14,0"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    <Style x:Key="Val" TargetType="TextBlock">
+      <Setter Property="Foreground" Value="#E3E6EC"/>
+      <Setter Property="FontFamily" Value="Segoe UI"/>
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+  </Window.Resources>
+
+  <Border Background="#0E1116" BorderBrush="#A68CFF" BorderThickness="1" CornerRadius="10" Padding="24,20">
+    <Border.Effect>
+      <DropShadowEffect Color="#000000" BlurRadius="18" ShadowDepth="0" Opacity="0.85"/>
+    </Border.Effect>
+
+    <StackPanel>
+      <DockPanel LastChildFill="False">
+        <TextBlock DockPanel.Dock="Left" Text="CERTIFICAT D'AUTEUR" Foreground="#A68CFF"
+                   FontFamily="Segoe UI" FontSize="11" VerticalAlignment="Center"/>
+        <Button DockPanel.Dock="Right" Content="✕" Click="Close_Click" Style="{StaticResource BarBtn}"/>
+      </DockPanel>
+
+      <TextBlock Text="Journal Phasmo" Foreground="#E3E6EC" FontFamily="Segoe UI"
+                 FontSize="24" FontWeight="SemiBold" Margin="0,10,0,2"/>
+      <TextBlock x:Name="LblAuteur" Foreground="#A68CFF" FontFamily="Segoe UI" FontSize="15"/>
+
+      <Border Background="#171B23" BorderBrush="#2A303C" BorderThickness="1"
+              CornerRadius="7" Padding="14,12" Margin="0,16,0,0">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+
+          <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource Cle}" Text="Créée le"/>
+          <TextBlock Grid.Row="0" Grid.Column="1" x:Name="LblCreation" Style="{StaticResource Val}" Margin="0,0,0,7"/>
+
+          <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource Cle}" Text="Cet exécutable"/>
+          <TextBlock Grid.Row="1" Grid.Column="1" x:Name="LblBuild" Style="{StaticResource Val}" Margin="0,0,0,7"/>
+
+          <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource Cle}" Text="Version"/>
+          <TextBlock Grid.Row="2" Grid.Column="1" x:Name="LblVersion" Style="{StaticResource Val}" Margin="0,0,0,7"/>
+
+          <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource Cle}" Text="Conçue avec"/>
+          <TextBlock Grid.Row="3" Grid.Column="1" x:Name="LblOutil" Style="{StaticResource Val}" Margin="0,0,0,7"/>
+
+          <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource Cle}" Text="Construite sur"/>
+          <TextBlock Grid.Row="4" Grid.Column="1" x:Name="LblTech" Style="{StaticResource Val}" Margin="0,0,0,7"/>
+
+          <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource Cle}" Text="Données du jeu"/>
+          <TextBlock Grid.Row="5" Grid.Column="1" Text="Phasmophobia v0.19 — 30 entités, 18 cartes"
+                     Style="{StaticResource Val}"/>
+        </Grid>
+      </Border>
+
+      <TextBlock Text="EMPREINTE DE CET EXÉCUTABLE (SHA-256)" Foreground="#A68CFF"
+                 FontFamily="Segoe UI" FontSize="11" Margin="0,16,0,6"/>
+      <Border Background="#171B23" BorderBrush="#2A303C" BorderThickness="1" CornerRadius="7" Padding="12,10">
+        <TextBlock x:Name="LblEmpreinte" Foreground="#C9D1DC" FontFamily="Consolas"
+                   FontSize="12.5" TextWrapping="Wrap" LineHeight="19"/>
+      </Border>
+      <TextBlock Margin="2,8,0,0" TextWrapping="Wrap" Foreground="#6E7689"
+                 FontFamily="Segoe UI" FontSize="11.5"
+                 Text="Deux fichiers identiques donnent la même empreinte ; la moindre modification la change entièrement. Publiez-la quelque part d'horodaté (dépôt Git, message daté, archive en ligne) : c'est ce qui permet de prouver plus tard ce qui existait, et quand."/>
+
+      <DockPanel Margin="0,18,0,0" LastChildFill="False">
+        <Button DockPanel.Dock="Left" x:Name="BtnCopier" Content="Copier le certificat"
+                Click="Copier_Click" Padding="14,6"/>
+        <Button DockPanel.Dock="Right" Content="Fermer" Click="Close_Click" Padding="22,6" IsDefault="True"/>
+      </DockPanel>
+    </StackPanel>
+  </Border>
+</Window>

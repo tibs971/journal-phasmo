@@ -1,0 +1,55 @@
+EMPREINTES DU PROJET — JOURNAL PHASMO
+=====================================
+
+Auteur             : Thibault.P (Shwarzyi)
+Projet             : Journal Phasmo — aide d'identification pour Phasmophobia
+Date de creation   : 7 octobre 2026
+Releve etabli le   : 08/10/2026
+Conçu avec         : Claude (Anthropic), modele claude-opus-5, mode Cowork
+Technique          : .NET 8 / WPF / WebView2 + page HTML-CSS-JS autonome
+
+Chaque ligne ci-dessous est l'empreinte SHA-256 d'un fichier du projet.
+Une seule lettre changee dans un fichier change entierement son empreinte.
+
+VERIFICATION
+  Windows (PowerShell), dans le dossier du projet :
+      Get-FileHash -Algorithm SHA256 MainWindow.xaml.cs
+  Linux / macOS :
+      sha256sum MainWindow.xaml.cs
+
+--- FICHIERS ------------------------------------------------------------
+
+3ca57672d260f29173b60d33d1624863c23e3c530e41d42f8b2747869a726726  .gitignore
+1abe82d3cc9506b11a14e1df7bc182a5de84d693671ca5592b5ff6e28de943e2  App.xaml
+c2ddc9ee8d4987f221767bce9d55321618cf84b993877c1dca5ffa21baa200ae  App.xaml.cs
+c852c0d983b1f69a9ead2ed156222fd340416eb7416daad29174d06c4fb86351  CertificateWindow.xaml
+93329315162922c3319902389f9b99e8fd63f7da83d6c377e8f745c33605cb40  CertificateWindow.xaml.cs
+77829bbfd27070c3f2acb57596f49d9fe8752cf993610a3641ce2ae8bc341270  CodeDialog.xaml
+05b5b0ed98a7eaafb44ca9ec38f103572df5c90f0533a572ce97641b2336f449  CodeDialog.xaml.cs
+9081eca0a83bfe88216c87db11274af40edf67989c28573d60adbd95b5337e99  Hotkeys.cs
+e875e6fead02503dc4fc7d49c1e1bec5f6f1c27109f9cbf8ee730df43857ae87  LICENCE.txt
+d00d3c9643b3c8866b9f9fd1c8e5aaf8f6322583bca7c9407997cab06cf6bbcc  LISEZ-MOI.md
+c42843af4408cbba13258d271eb8f7b3d88b0a14685d7911cdff77d026559ede  MainWindow.xaml
+11776a2295b1d03ec6a1ba926fa2ced45bd6ebd5c6d5c1104e1c8e2c2074862f  MainWindow.xaml.cs
+e0b4284d8885724cd808c6879a81ebaaff9c7248a8614ff34c14a39ea3c5717f  MouseHook.cs
+8dd94cd190eeee77e575285fb64ae755593370b6bbde60181fab44b0c6cced42  PhasmoCompanion.csproj
+9d56253a54627bbd63cc14cbbe2fa9b0df0f25c8f79297020f79249aa8bd1ac7  README.md
+1a128cd8ed32f9707ff9f8f1c6042bd59f8c25c95fccb45e77358c09e5a4836b  Signature.cs
+b16e40264e892357a0c78e95ee78ac331d5cc9ed5798d23d21d4cccce2f7fe69  TimerWindow.xaml
+57235e9312754c6faa1f32d4c611a530b27b3e03a6232377eea5e9fa332bd225  TimerWindow.xaml.cs
+4d1fcb38c69d63be6140bd3119df99bd355b5aff4f1c86758169891f2251ca4c  app.manifest
+b0d4cdb3a87a7b0b7e8ea492b0d0d0544ba2fad8102667302ecbfb51a5419d1e  phasmo.html
+cb0c194d8da77b59271da306e4c2fa6b881effc067b178ba5fb8f490cc3e9782  publier.cmd
+--- EMPREINTE GLOBALE ---------------------------------------------------
+
+9ab39ba904b09ab7fbf9cda5f9830fbef31fc9ac93fc73b8bd80369637da11b2
+
+  (SHA-256 de la liste ci-dessus : resume l'etat complet du projet
+   a cette date en un seul nombre)
+
+--- A QUOI CA SERT ------------------------------------------------------
+
+Ce fichier ne protege rien par lui-meme. Il sert de piece a deposer :
+une fois horodate par un tiers (depot GitHub public, INPI e-Soleau,
+huissier), il permet de montrer quels fichiers existaient, dans quel
+etat exact, a cette date.

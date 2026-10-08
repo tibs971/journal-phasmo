@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>PhasmoCompanion</AssemblyName>
+    <RootNamespace>PhasmoCompanion</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+    <!-- identité de l'exe (visible dans les propriétés du fichier) -->
+    <Product>Journal Phasmo</Product>
+    <AssemblyTitle>Journal Phasmo</AssemblyTitle>
+    <Company>Thibault.P (Shwarzyi)</Company>
+    <Authors>Thibault.P (Shwarzyi)</Authors>
+    <Version>1.0.0</Version>
+    <Copyright>© 2026 Thibault.P (Shwarzyi) — aide de jeu non officielle, sans lien avec Kinetic Games</Copyright>
+    <Description>Journal Phasmo — identification des entités de Phasmophobia. Créé le 7 octobre 2026 par Thibault.P (Shwarzyi).</Description>
+
+    <!-- publication en un seul .exe : voir publier.cmd -->
+    <RuntimeIdentifier Condition="'$(PublishProfileFull)' == 'true'">win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2792.45" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- le journal est EMBARQUÉ dans l'exe : un seul fichier à partager.
+         Un phasmo.html posé à côté de l'exe prend le dessus (mise à jour sans recompiler). -->
+    <EmbeddedResource Include="phasmo.html" />
+  </ItemGroup>
+
+</Project>

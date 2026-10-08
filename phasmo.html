@@ -1,0 +1,1748 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Journal Phasmo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#E7EAF0; --surface:#F6F7FA; --surface2:#EDEFF4; --ink:#171A21; --muted:#596173; --line:#CBD1DC;
+  --accent:#5B3FD0; --accent-soft:#E6E0FB; --accent-ink:#FFFFFF;
+  --no:#B8372F; --no-soft:#F6DEDB; --warn:#9A6200; --warn-soft:#F7EBD2; --good:#23734F; --good-soft:#D8EFE4;
+  --display:"Special Elite","Courier New",monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1116; --surface:#171B23; --surface2:#1E232D; --ink:#E3E6EC; --muted:#8C94A6; --line:#2A303C;
+    --accent:#A68CFF; --accent-soft:#2A2244; --accent-ink:#130E24;
+    --no:#F0736B; --no-soft:#3A1C1C; --warn:#F2B84B; --warn-soft:#3A2C12; --good:#5CC99A; --good-soft:#15322A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1116; --surface:#171B23; --surface2:#1E232D; --ink:#E3E6EC; --muted:#8C94A6; --line:#2A303C;
+  --accent:#A68CFF; --accent-soft:#2A2244; --accent-ink:#130E24;
+  --no:#F0736B; --no-soft:#3A1C1C; --warn:#F2B84B; --warn-soft:#3A2C12; --good:#5CC99A; --good-soft:#15322A;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);padding-inline:16px;padding-block:0 40px}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1320px;margin:0 auto}
+header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:18px 10px}
+.brand h1{font-family:var(--display);font-weight:400;font-size:30px;line-height:1;margin:0;letter-spacing:.5px}
+.brand p{margin:4px 0 0;color:var(--muted);font-size:13px}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:16px;scrollbar-width:none}
+nav.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:10px 12px;color:var(--muted);font-weight:500;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.lbl{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 8px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.hint{color:var(--muted);font-size:12.5px}
+kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 4px;background:var(--surface2)}
+
+/* ---------- Enquête layout ---------- */
+.inv{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:20px;align-items:start}
+.side{position:sticky;top:56px;display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 70px);overflow:auto;padding-bottom:8px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.seg button{background:var(--surface);border:0;padding:6px 11px;font-size:13px;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.evs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.ev{display:flex;align-items:center;gap:8px;text-align:left;background:var(--surface2);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px;font-size:14px;min-height:42px}
+.ev .st{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--muted);flex:none;display:grid;place-items:center;font-size:11px;font-weight:700}
+.ev .k{margin-left:auto;opacity:.6}
+.ev[data-s="1"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.ev[data-s="1"] .st{border-color:currentColor;background:currentColor}
+.ev[data-s="1"] .st::after{content:"✓";color:var(--accent)}
+.ev[data-s="2"]{background:var(--no-soft);border-color:var(--no);color:var(--no)}
+.ev[data-s="2"] .nm{text-decoration:line-through}
+.ev[data-s="2"] .st{border-color:var(--no)}
+.ev[data-s="2"] .st::after{content:"✕"}
+.ev.dead{opacity:.45}
+.ev.dead .nm{text-decoration:line-through}
+.ev.dead .st{border-style:dashed}
+.ev:disabled{cursor:not-allowed}
+.filters{display:flex;flex-direction:column;gap:10px}
+.chip{background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.field{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.field input[type=number]{width:72px;padding:5px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface2)}
+.btn{background:var(--surface2);border:1px solid var(--line);border-radius:var(--r);padding:6px 12px;font-size:13px}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+/* timers */
+.timers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tm{position:relative;background:var(--surface2);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.tmain{all:unset;box-sizing:border-box;cursor:pointer;width:100%;padding:8px 8px 10px;display:flex;flex-direction:column;gap:4px;border-radius:var(--r)}
+.tmain:focus-visible{outline:2px solid var(--accent)}
+.trs{position:absolute;right:6px;bottom:6px;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font-size:14px;line-height:1;padding:0}
+.trs:hover{border-color:var(--accent)}
+.tm.pause{border-color:var(--warn);border-style:dashed}
+.tm.pause .t{color:var(--warn)}
+.tm .t{font-family:var(--mono);font-size:22px;font-weight:500;line-height:1.1}
+.tm .n{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:4px}
+.tm.run{border-color:var(--accent)}
+.tm .bar{position:relative;height:6px;background:var(--line);border-radius:3px;overflow:visible;margin-top:4px}
+.tm .fill{position:absolute;inset:0 auto 0 0;width:0;background:var(--accent);border-radius:3px}
+.tm .mk{position:absolute;top:-3px;width:2px;height:12px;background:var(--ink);opacity:.55}
+.tm .ms{font-size:11px;color:var(--muted);min-height:32px;padding-right:28px}
+.tm .ms b{color:var(--warn);font-weight:600}
+.obs{display:flex;flex-direction:column;gap:5px}
+.obs-g{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:8px 0 2px}
+.ob{display:flex;gap:8px;align-items:flex-start;text-align:left;background:var(--surface2);border:1px solid var(--line);border-radius:var(--r);padding:6px 9px;font-size:13px;width:100%}
+.ob .bx{flex:none;width:15px;height:15px;margin-top:2px;border:1.5px solid var(--muted);border-radius:3px;display:grid;place-items:center;font-size:10px}
+.ob small{display:block;color:var(--muted);font-size:11.5px}
+.ob[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.ob[aria-pressed="true"] .bx{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.ob[aria-pressed="true"] .bx::after{content:"✓"}
+.ob-info{font-size:12px;color:var(--muted);background:var(--surface2);border-left:3px solid var(--line);padding:6px 9px;border-radius:var(--r)}
+.ob.ex[aria-pressed="true"]{background:var(--no-soft);border-color:var(--no)}
+.ob.ex[aria-pressed="true"] .bx{background:var(--no);border-color:var(--no);color:#fff}
+.ob.ex[aria-pressed="true"] .bx::after{content:"✕"}
+/* tap */
+.tap{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
+.tapbtn{width:92px;height:92px;border-radius:50%;border:2px solid var(--accent);background:var(--accent-soft);font-family:var(--display);font-size:20px;touch-action:manipulation;user-select:none}
+.tapbtn:active,.tapbtn.hit{background:var(--accent);color:var(--accent-ink)}
+.readout{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.readout .big{font-family:var(--mono);font-size:26px;font-weight:500}
+.readout small{color:var(--muted);font-size:12px}
+.matches{font-size:12.5px;color:var(--muted);margin-top:6px}
+.matches b{color:var(--ink);font-weight:500}
+select{background:var(--surface2);border:1px solid var(--line);border-radius:var(--r);padding:5px 8px;font-size:13px}
+
+/* ghost grid */
+.gh-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.count{font-family:var(--display);font-size:22px}
+.count .of{color:var(--muted);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 12px 10px;text-align:left;display:flex;flex-direction:column;gap:7px;cursor:pointer;transition:opacity .15s,border-color .15s}
+.card:hover{border-color:var(--accent)}
+.card .nm{font-family:var(--display);font-size:21px;line-height:1.05;padding-right:28px}
+.card .en{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.card .key{font-size:13.5px;line-height:1.4}
+.evrow{display:flex;gap:4px;flex-wrap:wrap}
+.evt{font-size:11.5px;padding:1px 7px;border-radius:4px;background:var(--surface2);border:1px solid var(--line);font-weight:500}
+.evt.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.evt.need{border-color:var(--accent);color:var(--accent)}
+.evt.forced::after{content:" ★"}
+.evt.fake{border-style:dashed}
+.stats{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
+.st2{font-size:11.5px;font-family:var(--mono);padding:2px 6px;border-radius:4px;background:var(--surface2);color:var(--muted)}
+.st2.hot{background:var(--warn-soft);color:var(--warn)}
+.st2.cold{background:var(--good-soft);color:var(--good)}
+.x{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--surface2);font-size:13px;line-height:1;color:var(--muted)}
+.x:hover{color:var(--no);border-color:var(--no)}
+.card.out{opacity:.32}
+.card.out .nm{text-decoration:line-through;text-decoration-thickness:1.5px}
+.card.manual .x{background:var(--no);color:#fff;border-color:var(--no)}
+.card .why{font-size:11.5px;color:var(--no)}
+.card.win{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.card.picked{border-color:var(--good);box-shadow:0 0 0 2px var(--good-soft);opacity:1}
+.card.picked .nm{text-decoration:none}
+.card .pick{position:absolute;top:8px;right:40px;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--surface2);font-size:13px;line-height:1;color:var(--muted)}
+.card .pick:hover{color:var(--good);border-color:var(--good)}
+.card.picked .pick{background:var(--good);color:#fff;border-color:var(--good)}
+.badge-pick{position:absolute;bottom:10px;right:10px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--good)}
+.chip.dead{opacity:.4;text-decoration:line-through}
+#bmBtn[aria-pressed="true"]{background:var(--no-soft);border-color:var(--no);color:var(--no);font-weight:600}
+body.bm .st2.spd{background:var(--no-soft);color:var(--no)}
+.bm-note{font-size:12px;color:var(--no);margin-top:6px}
+/* difficulté */
+#pnl-diff select{font:inherit;font-size:12.5px;padding:4px 6px;border-radius:7px;border:1px solid var(--line);background:var(--surface2);color:var(--ink)}
+[hidden]{display:none!important}
+/* récapitulatif des cases cochées, au-dessus des entités */
+.recap{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:9px 10px;margin:0 0 10px}
+.recap-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:7px}
+.rcount{color:var(--muted);font-weight:400;letter-spacing:0}
+.btn.mini{padding:3px 9px;font-size:11.5px}
+.recap-chips{display:flex;flex-wrap:wrap;gap:5px}
+.rch{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12px;line-height:1.25;
+  padding:3px 7px 3px 9px;border-radius:999px;border:1px solid var(--line);background:var(--surface2);
+  color:var(--ink);cursor:pointer;text-align:left;max-width:100%}
+.rch:hover{border-color:var(--muted)}
+.rch .rx{color:var(--muted);font-size:13px;line-height:1;position:static}
+.rch:hover .rx{color:var(--no)}
+.rch.out .rx,.rch.out span{text-decoration:none}
+.rch.out>span:first-child{text-decoration:line-through}
+.rch.ex{background:var(--no-soft);border-color:transparent;color:var(--no)}
+.rch.keep{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+.rch.ok{background:var(--good-soft);border-color:transparent;color:var(--good)}
+.rch.out{background:var(--no-soft);border-color:transparent;color:var(--no);text-decoration:line-through}
+.rch b{font-weight:600}
+body.ovl .recap{padding:6px 7px;margin-bottom:6px}
+body.ovl .recap .lbl{font-size:10px}
+.dchips{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.dchip{font-size:11.5px;padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.dchip.acc{background:var(--accent-soft);color:var(--accent);border-color:transparent;font-weight:600}
+.dchip.no{background:var(--no-soft);color:var(--no);border-color:transparent}
+#difftbl tr.on{background:var(--accent-soft)}
+#difftbl tr.on td{color:var(--ink)}
+#difftbl td,#difftbl th{white-space:nowrap}
+.ob .star{margin-left:auto;background:none;border:0;font-size:14px;line-height:1;color:var(--line);padding:0 2px}
+.ob .star.on{color:var(--warn)}
+.favs{display:flex;flex-direction:column;gap:5px}
+.fav-empty{font-size:12px;color:var(--muted)}
+
+/* dialog */
+dialog{border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);padding:0;width:min(760px,calc(100vw - 24px));max-height:calc(100vh - 40px)}
+dialog::backdrop{background:rgba(8,10,14,.6)}
+.dlg{padding:20px 22px 24px;display:flex;flex-direction:column;gap:16px}
+.dlg h2{font-family:var(--display);font-weight:400;font-size:34px;margin:0;line-height:1}
+.dlg .sub{color:var(--muted);font-family:var(--mono);font-size:13px}
+dialog .close{position:absolute;top:12px;right:12px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+.fact{background:var(--surface2);border-radius:var(--r);padding:8px 10px}
+.fact .lbl{margin-bottom:2px}
+.fact div:last-child{font-size:14px}
+.sec h3{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;font-weight:600}
+.sec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.sec.ok h3{color:var(--good)} .sec.ko h3{color:var(--no)}
+.lead{font-size:16px;border-left:3px solid var(--accent);padding-left:10px;margin:0}
+
+/* reference pages */
+.ref{max-width:1000px}
+.ref h2{font-family:var(--display);font-weight:400;font-size:28px;margin:6px 0 4px}
+.ref .intro{color:var(--muted);max-width:68ch;margin:0 0 16px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px;margin-bottom:22px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.item h4{margin:0 0 6px;font-size:16px;font-weight:600}
+.item p,.item li{font-size:14px;margin:0}
+.item ul{margin:4px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+.item .tag{display:inline-block;font-size:11px;font-family:var(--mono);padding:1px 6px;border-radius:4px;background:var(--warn-soft);color:var(--warn);margin-bottom:6px}
+.item .tag.good{background:var(--good-soft);color:var(--good)}
+.item .tag.acc{background:var(--accent-soft);color:var(--accent)}
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);margin-bottom:22px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600;background:var(--surface2);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr.click{cursor:pointer}
+tbody tr.click:hover{background:var(--surface2)}
+.search{width:100%;max-width:360px;padding:8px 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);margin-bottom:12px}
+.foot{color:var(--muted);font-size:12px;margin-top:30px;max-width:80ch}
+.foot a{color:var(--accent)}
+
+/* ---------- mode overlay ---------- */
+body.ovl{font-size:13px}
+body.ovl nav.tabs, body.ovl .brand p, body.ovl #pnl-diff, body.ovl #pnl-filters, body.ovl #pnl-keys, body.ovl #pnl-ev, body.ovl #pnl-tap, body.ovl .foot, body.ovl .page:not(#p-enq), body.ovl .gh-head, body.ovl .grid{display:none}
+body.ovl .timers{grid-template-columns:repeat(3,1fr)}
+body.ovl .tm .t{font-size:34px}
+body.ovl .tm .ms{font-size:12px;min-height:30px}
+body.ovl .inv{grid-template-columns:1fr;gap:10px}
+body.ovl .side{position:static;max-height:none;overflow:visible;gap:8px}
+body.ovl .panel{padding:9px}
+body.ovl .brand h1{font-size:20px}
+body.ovl header.top{padding-block:8px 4px}
+body.ovl .grid{grid-template-columns:1fr 1fr;gap:5px}
+body.ovl .card{padding:6px 8px;gap:3px}
+body.ovl .card .key,body.ovl .card .en,body.ovl .card .stats,body.ovl .card .x,body.ovl .card .why{display:none}
+body.ovl .card .nm{font-size:16px;padding-right:0}
+body.ovl .card.out{display:none}
+body.ovl .tapbtn{width:64px;height:64px;font-size:16px}
+body.ovl .ev{padding:5px 8px;min-height:34px;font-size:12.5px}
+body.ovl .hint{display:none}
+/* mode application de bureau : les minuteurs vivent dans leur propre fenêtre */
+body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
+/* fenêtre flottante (Document PiP) */
+.pipwin{background:var(--bg);color:var(--ink);font:14px/1.4 var(--sans);margin:0;padding:6px}
+.pipwin .panel{border:0;background:transparent;padding:0}
+.pipwin .lbl{display:none}
+.pipwin .timers{grid-template-columns:repeat(3,1fr);gap:6px}
+.pipwin .tm .t{font-size:26px}
+.pipwin .tm .ms{min-height:28px;font-size:11px}
+.pipwin .hint{display:none}
+@media (max-width:860px){
+  .inv{grid-template-columns:1fr}
+  .side{position:static;max-height:none;overflow:visible}
+  .brand h1{font-size:26px}
+  .grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:560px){
+  .grid{grid-template-columns:1fr}
+  .timers .tm .t{font-size:19px}
+  .dlg{padding:18px 16px 22px}
+  .dlg h2{font-size:28px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="brand">
+    <h1>Journal Phasmo</h1>
+    <p>Identification des 30 entités · données à jour v0.19 (sept. 2026) · aide non officielle</p>
+  </div>
+  <div class="row">
+    <button class="btn" id="bmBtn" aria-pressed="false" title="Toutes les vitesses affichées passent en vitesses Lune de sang (+15 %)">🌕 Lune de sang</button>
+    <button class="btn" id="pipBtn" title="Fenêtre flottante toujours au-dessus du jeu">Minuteurs flottants</button>
+    <button class="btn" id="ovBtn" title="Affichage compact pour jouer à côté du jeu">Mode overlay</button>
+    <button class="btn" id="resetAll" title="Raccourci : Retour arrière">Nouvelle enquête</button>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" aria-selected="true" data-tab="enq" id="tab-enq">Enquête</button>
+  <button role="tab" aria-selected="false" data-tab="ent" id="tab-ent">Tableau des entités</button>
+  <button role="tab" aria-selected="false" data-tab="chasse" id="tab-chasse">Chasses &amp; vitesses</button>
+  <button role="tab" aria-selected="false" data-tab="diff" id="tab-diff">Difficultés</button>
+  <button role="tab" aria-selected="false" data-tab="evt" id="tab-evt">Événements &amp; interactions</button>
+  <button role="tab" aria-selected="false" data-tab="equip" id="tab-equip">Équipement</button>
+  <button role="tab" aria-selected="false" data-tab="obj" id="tab-obj">Objets maudits</button>
+  <button role="tab" aria-selected="false" data-tab="meteo" id="tab-meteo">Météo &amp; idées reçues</button>
+</nav>
+
+<!-- ================= ENQUÊTE ================= -->
+<section id="p-enq" class="page">
+<div class="inv">
+  <aside class="side">
+    <div class="panel" id="pnl-diff">
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <p class="lbl" style="margin:0">Difficulté du contrat</p>
+        <select id="diffsel" aria-label="Difficulté du contrat"></select>
+      </div>
+      <div class="row" style="justify-content:space-between;align-items:center;margin-top:6px">
+        <p class="lbl" style="margin:0">Carte</p>
+        <select id="mapsel" aria-label="Carte jouée"></select>
+      </div>
+      <div class="dchips" id="dchips"></div>
+      <div class="row" id="dcustom" hidden style="margin-top:8px;gap:8px">
+        <label class="hint">Grâce
+          <select id="dgrace" aria-label="Période de grâce"><option value="0">0 s</option><option value="1">1 s</option><option value="2">2 s</option><option value="3" selected>3 s</option><option value="4">4 s</option><option value="5">5 s</option></select>
+        </label>
+        <label class="hint">Durée de chasse
+          <select id="dhunt" aria-label="Durée de chasse"><option value="low">basse · 15/30/40 s</option><option value="med">moyenne · 20/40/50 s</option><option value="high" selected>haute · 30/50/60 s</option></select>
+        </label>
+      </div>
+      <p class="hint" id="dnote" style="margin:7px 0 0"></p>
+    </div>
+
+    <div class="panel" id="pnl-ev">
+      <div class="row" style="justify-content:space-between">
+        <p class="lbl" style="margin:0">Preuves de la partie</p>
+        <div class="seg" id="nev" aria-label="Nombre de preuves">
+          <button data-n="3" aria-pressed="true">3</button><button data-n="2">2</button><button data-n="1">1</button><button data-n="0">0</button>
+        </div>
+      </div>
+      <div class="evs" id="evs"></div>
+      <p class="hint" style="margin:8px 0 0">1 clic = trouvée · 2 clics = exclue · 3 = neutre. Clavier <kbd>1</kbd>–<kbd>7</kbd>. ★ = preuve forcée en mode réduit.</p>
+    </div>
+
+    <div class="panel" id="pnl-fav">
+      <p class="lbl" style="margin:0 0 8px">Observations favorites</p>
+      <div class="favs" id="favs"></div>
+    </div>
+
+    <div class="panel filters" id="pnl-filters">
+      <p class="lbl" style="margin:0">Observations en chasse</p>
+      <div class="field"><label for="san">A chassé avec une santé moyenne de</label><input id="san" type="number" min="0" max="100" step="1" placeholder="—"><span>%</span></div>
+      <div>
+        <div class="hint" style="margin-bottom:5px">Accélération en ligne de vue (LdV)</div>
+        <div class="row" id="losf">
+          <button class="chip" data-v="oui" aria-pressed="false">A accéléré en me voyant</button>
+          <button class="chip" data-v="non" aria-pressed="false">N'a jamais accéléré</button>
+        </div>
+      </div>
+      <div>
+        <div class="hint" style="margin-bottom:5px">Vitesse de base observée (sans LdV)</div>
+        <div class="row" id="catf">
+          <button class="chip" data-v="tlent" aria-pressed="false"></button>
+          <button class="chip" data-v="lent" aria-pressed="false"></button>
+          <button class="chip" data-v="normal" aria-pressed="false"></button>
+          <button class="chip" data-v="rapide" aria-pressed="false"></button>
+          <button class="chip" data-v="trapide" aria-pressed="false"></button>
+        </div>
+      </div>
+      <div class="row">
+        <button class="chip" id="spdf" aria-pressed="false">Filtrer avec la vitesse mesurée</button>
+      </div>
+      <details id="obsbox" open>
+        <summary class="hint" style="cursor:pointer;margin-bottom:6px"><b style="color:var(--ink)">Ce que j'ai observé</b> — les cases rouges éliminent, les autres ne gardent que les entités compatibles</summary>
+        <div id="obs"></div>
+      </details>
+    </div>
+
+    <div class="panel" id="pnl-timers">
+      <p class="lbl">Minuteurs</p>
+      <div class="timers">
+        <div class="tm" id="tm-smudge"><button class="tmain" aria-label="Encens : démarrer ou mettre en pause"><span class="n"><span>Encens</span><kbd>S</kbd></span><span class="t">0:00</span><span class="bar"><span class="fill"></span></span><span class="ms"></span></button><button class="trs" aria-label="Remettre Encens à zéro" title="Remettre à zéro (Maj+S)">↺</button></div>
+        <div class="tm" id="tm-hunt"><button class="tmain" aria-label="Chasse : démarrer ou mettre en pause"><span class="n"><span>Chasse</span><kbd>H</kbd></span><span class="t">0:00</span><span class="bar"><span class="fill"></span></span><span class="ms"></span></button><button class="trs" aria-label="Remettre Chasse à zéro" title="Remettre à zéro (Maj+H)">↺</button></div>
+        <div class="tm" id="tm-cd"><button class="tmain" aria-label="Recharge : démarrer ou mettre en pause"><span class="n"><span>Recharge</span><kbd>C</kbd></span><span class="t">0:00</span><span class="bar"><span class="fill"></span></span><span class="ms"></span></button><button class="trs" aria-label="Remettre Recharge à zéro" title="Remettre à zéro (Maj+C)">↺</button></div>
+      </div>
+      <p class="hint" id="tmhint" style="margin:8px 0 0"></p>
+    </div>
+
+    <div class="panel" id="pnl-tap">
+      <p class="lbl">Vitesse des pas</p>
+      <div class="tap">
+        <button class="tapbtn" id="tapbtn" aria-label="Taper au rythme des pas">Tap</button>
+        <div>
+          <div class="readout"><span><span class="big" id="bpm">0</span> <small>bpm</small></span><span><span class="big" id="ms">0</span> <small>m/s</small></span></div>
+          <div class="row" style="margin-top:6px">
+            <select id="gspd" aria-label="Vitesse de l'entité (réglage)"><option value="0.5">Entité 50 %</option><option value="0.75">Entité 75 %</option><option value="1" selected>Entité 100 %</option><option value="1.25">Entité 125 %</option><option value="1.5">Entité 150 %</option></select>
+            <button class="chip" id="blood" aria-pressed="false">Lune de sang +15 %</button>
+            <button class="btn" id="tapReset" title="Raccourci : R">↺ Remettre à 0</button>
+          </div>
+        </div>
+      </div>
+      <div class="matches" id="matches">Tapez au moins 3 fois au rythme des pas pendant une chasse. Clavier <kbd>F</kbd> pour taper, <kbd>R</kbd> pour remettre à zéro.</div>
+    </div>
+    <div class="panel" id="pnl-keys">
+      <p class="lbl">Raccourcis clavier</p>
+      <div class="row" id="keys"></div>
+      <p class="hint" style="margin:8px 0 0">Cliquez un bouton puis appuyez sur la touche voulue (Échap pour annuler). <kbd>Maj</kbd> + touche d'un minuteur = remise à zéro.</p>
+      <p class="lbl" style="margin:14px 0 6px">Voir les minuteurs en jouant</p>
+      <p class="hint" style="margin:0 0 6px"><b>Minuteurs flottants</b> détache les 3 minuteurs dans une petite fenêtre que le navigateur garde au-dessus des autres fenêtres. Jouez en <b>fenêtré sans bordure</b> : la fenêtre reste visible et cliquable par-dessus le jeu.</p>
+      <p class="hint" style="margin:0">Si le navigateur refuse (fenêtre flottante non disponible), l'appli bascule sur une vignette vidéo flottante (affichage seul). Sinon : <b>Mode overlay</b> + une seconde fenêtre épinglée au premier plan avec <b>PowerToys</b> (<kbd>Win</kbd>+<kbd>Ctrl</kbd>+<kbd>T</kbd>), ou l'appli ouverte sur le téléphone.</p>
+    </div>
+  </aside>
+
+  <div>
+    <div class="gh-head">
+      <div class="count"><span id="nleft">30</span> <span class="of">entités possibles sur 30</span></div>
+      <div class="row">
+        <span class="hint" id="nexthint"></span>
+      </div>
+    </div>
+    <div class="recap" id="recap" hidden>
+      <div class="recap-head">
+        <span class="lbl" style="margin:0">Ce que vous avez coché <span class="rcount" id="rcount"></span></span>
+        <button class="btn mini" id="recapClear">Tout décocher</button>
+      </div>
+      <div class="recap-chips" id="recapChips"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+</section>
+
+<!-- ================= TABLEAU ================= -->
+<section id="p-ent" class="page ref" hidden>
+  <h2>Tableau des entités</h2>
+  <p class="intro">Vue comparée des 30 entités. Cliquez une ligne pour ouvrir la fiche complète. Vitesses à 100 % de vitesse d'entité, hors Lune de sang.</p>
+  <input class="search" id="q" type="search" placeholder="Rechercher (nom, preuve, comportement…)">
+  <div class="tbl"><table id="tbl"><thead><tr><th>Entité</th><th>Preuves</th><th>Seuil de chasse</th><th>Vitesse</th><th>LdV</th><th>Signe distinctif</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<!-- ================= CHASSES ================= -->
+<section id="p-chasse" class="page ref" hidden>
+  <h2>Chasses &amp; vitesses</h2>
+  <p class="intro">Les règles communes à toutes les entités pendant une chasse, puis les exceptions qui trahissent une entité.</p>
+
+  <p class="lbl">Déclenchement</p>
+  <div class="cols">
+    <div class="item"><h4>Seuil de santé mentale</h4><p>Une entité peut chasser quand la santé moyenne de l'équipe (tous les joueurs, même dehors) passe sous son seuil. Exception : la Banshee regarde uniquement la santé de sa cible.</p></div>
+    <div class="item"><h4>Seuils particuliers</h4><ul>
+      <li><b>Très tôt</b> : Yokai 80 % (voix), Thayé jeune 75 %, Démon 70 %, Kormos 70 % (sprint)</li>
+      <li><b>Tôt</b> : Raiju 65 %, Dayan 65 %, Obambo agressif 65 %, Cauchemar 60 %, Onryo 60 %, Gallu enragé 60 %</li>
+      <li><b>Tard</b> : Deogen 40 %, Gallu affaibli 40 %, Ombre 35 %, Obambo calme 10 %</li>
+      <li><b>À n'importe quelle santé</b> : Démon (capacité), Onryo (3e flamme), objets maudits</li></ul></div>
+    <div class="item"><h4>Ce qui empêche une chasse</h4><ul>
+      <li>Crucifix : 3 / 4 / 5 m selon le rang (Démon 4,5 / 6 / 7,5 m ; Gallu enragé −2 m, affaibli +1 m)</li>
+      <li>Encens hors chasse : 90 s (Démon 60 s, Esprit 180 s)</li>
+      <li>Flamme allumée : bloque l'Onryo comme un crucifix</li>
+      <li>Recharge après une chasse : 25 s (Démon 20 s)</li></ul></div>
+  </div>
+
+  <p class="lbl">Déroulement</p>
+  <div class="cols">
+    <div class="item"><h4>Période de grâce</h4><p>Au début de la chasse, l'entité ne peut pas tuer : 5 s (Amateur), 4 s (Intermédiaire), 3 s (Professionnel), 2 s (Cauchemar / Démence). Attention : après un Aswang, la chasse suivante fonce vers le joueur caché même pendant la grâce.</p></div>
+    <div class="item"><h4>Détection des joueurs</h4><ul>
+      <li>Voix entendue jusqu'à ≈9 m ; électronique tenue allumée attire l'entité à ≈7,5 m</li>
+      <li>Yokai : 2,5 m seulement. Kormos : entend les pas (sprint 30 m, marche 15 m, accroupi 10 m)</li>
+      <li>Deogen sait toujours où vous êtes ; se cacher ne sert à rien</li>
+      <li>La radio globale n'alerte l'entité qu'à votre position</li></ul></div>
+    <div class="item"><h4>Signes sonores & visuels</h4><ul>
+      <li>Pas audibles à 20 m (Myling 12 m)</li>
+      <li>Électronique qui clignote à 10 m (Raiju 15 m)</li>
+      <li>Clignotement : Fantôme invisible plus longtemps ; Oni et Deogen très visibles ; Obake change de forme</li>
+      <li>Souffle glacé visible : Hantu (disjoncteur coupé)</li></ul></div>
+    <div class="item"><h4>Outils pendant la chasse</h4><ul>
+      <li>Encens : aveugle 5 s (Moroï 7 s, Gallu enragé 4 s / affaibli 6 s) et efface la vitesse LdV accumulée</li>
+      <li>Sel rang III : ralentit l'entité de 50 % pendant 2 s</li>
+      <li>Portée de mort : 1,1 m immédiat / 1,5 m après 1 s (Kormos 0,5 / 0,6 m)</li>
+      <li>Aswang : vous atteindre dans une cachette officielle termine la chasse</li></ul></div>
+  </div>
+
+  <p class="lbl">Durée d'une chasse</p>
+  <div class="tbl"><table><thead><tr><th>Difficulté (durée)</th><th>Petite carte</th><th>Moyenne</th><th>Grande</th><th>Chasse maudite</th></tr></thead><tbody>
+    <tr><td>Amateur (faible)</td><td class="num">15 s</td><td class="num">30 s</td><td class="num">40 s</td><td class="num">+20 s</td></tr>
+    <tr><td>Intermédiaire (moyenne)</td><td class="num">20 s</td><td class="num">40 s</td><td class="num">50 s</td><td class="num">+20 s</td></tr>
+    <tr><td>Professionnel · Cauchemar · Démence (élevée)</td><td class="num">30 s</td><td class="num">50 s</td><td class="num">60 s</td><td class="num">+20 s</td></tr>
+  </tbody></table></div>
+  <p class="hint" style="margin:-12px 0 22px">Chasse maudite (déclenchée par un objet maudit) : +20 s, et toutes les chasses suivantes aussi. Obambo agressif : −20 %. Option « Mourir prolonge la chasse » (Cauchemar/Démence) : +15 / +20 / +25 s selon la taille.</p>
+
+  <p class="lbl">Vitesses particulières</p>
+  <p id="bmbanner" class="hint" hidden style="color:var(--no);margin:0 0 8px">🌕 Mode Lune de sang actif : les vitesses affichées ici incluent déjà le bonus de +15 %.</p>
+  <p class="hint" style="margin:0 0 10px">Standard : 1,7 m/s, puis accélération progressive en ligne de vue jusqu'à ×1,65 (2,81 m/s) en 13 s. Après avoir perdu le joueur, garde la vitesse jusqu'à sa dernière position connue, puis ralentit lentement.</p>
+  <div class="tbl"><table><thead><tr><th>Entité</th><th>Règle</th><th>Min</th><th>Max</th></tr></thead><tbody id="spdtbl"></tbody></table></div>
+
+  <div class="cols">
+    <div class="item"><span class="tag acc">Hantu</span><h4>Vitesse selon la température</h4>
+      <div class="tbl" style="margin:6px 0 0"><table><tbody>
+      <tr><td>&gt; 15 °C</td><td class="num">1,40 m/s</td></tr><tr><td>12–15 °C</td><td class="num">1,75 m/s</td></tr><tr><td>9–12 °C</td><td class="num">2,10 m/s</td></tr><tr><td>6–9 °C</td><td class="num">2,30 m/s</td></tr><tr><td>3–6 °C</td><td class="num">2,40 m/s</td></tr><tr><td>0–3 °C</td><td class="num">2,50 m/s</td></tr><tr><td>&lt; 0 °C</td><td class="num">2,70 m/s</td></tr></tbody></table></div></div>
+    <div class="item"><span class="tag acc">Moroï</span><h4>Vitesse selon la santé moyenne</h4>
+      <div class="tbl" style="margin:6px 0 0"><table><tbody>
+      <tr><td>&gt; 45 %</td><td class="num">1,50 m/s</td></tr><tr><td>40–45 %</td><td class="num">1,58 m/s</td></tr><tr><td>35–40 %</td><td class="num">1,66 m/s</td></tr><tr><td>30–35 %</td><td class="num">1,75 m/s</td></tr><tr><td>25–30 %</td><td class="num">1,83 m/s</td></tr><tr><td>20–25 %</td><td class="num">1,92 m/s</td></tr><tr><td>15–20 %</td><td class="num">2,00 m/s</td></tr><tr><td>10–15 %</td><td class="num">2,08 m/s</td></tr><tr><td>5–10 %</td><td class="num">2,16 m/s</td></tr><tr><td>0–5 %</td><td class="num">2,25 m/s</td></tr></tbody></table></div></div>
+    <div class="item"><span class="tag acc">Thayé</span><h4>Âge → seuil & vitesse</h4>
+      <div class="tbl" style="margin:6px 0 0"><table><thead><tr><th>Âge</th><th>Seuil</th><th>Vitesse</th></tr></thead><tbody id="thaye"></tbody></table></div></div>
+  </div>
+</section>
+
+<!-- ================= DIFFICULTÉS ================= -->
+<section id="p-diff" class="page ref" hidden>
+  <h2>Difficultés</h2>
+  <p class="intro">Ce que chaque difficulté change réellement. Le choix fait dans l'enquête règle le nombre de preuves, la période de grâce, la durée de chasse et la vitesse de l'entité dans toute l'appli — y compris dans le métronome et le compteur de pas.</p>
+
+  <div class="tbl"><table id="difftbl"><thead><tr>
+    <th>Difficulté</th><th>Niv.</th><th>Gain</th><th>Preuves</th><th>Prépa.</th>
+    <th>Santé départ</th><th>Perte</th><th>Cachet</th><th>Grâce</th><th>Chasse (P/M/G)</th>
+    <th>Fantôme</th><th>Joueur</th><th>Maudits</th><th>Empreintes</th><th>Assurance</th>
+  </tr></thead><tbody></tbody></table></div>
+
+  <p class="lbl">À retenir</p>
+  <div class="cols">
+    <div class="item"><h4>La recharge ne bouge pas</h4><p>Le délai minimum entre deux chasses reste <b>25 s</b> (20 s pour le Démon) à toutes les difficultés : ce n'est pas un réglage. Ce qui change avec la difficulté, c'est la <b>période de grâce</b> en début de chasse (5 s en Amateur, 0 s en Apocalypse III) et la <b>durée</b> de la chasse.</p></div>
+    <div class="item"><h4>Durée de chasse selon la carte</h4><p>Le réglage « durée de chasse » donne trois paliers, et la valeur dépend ensuite de la taille de la carte : <b>basse</b> 15 / 30 / 40 s, <b>moyenne</b> 20 / 40 / 50 s, <b>haute</b> 30 / 50 / 60 s (petite / moyenne / grande). Chaque mort peut la rallonger si l'option est active (+15 à +45 s).</p></div>
+    <div class="item"><h4>Preuves cachées</h4><p>En Cauchemar et en Démence, l'entité possède toujours ses 3 preuves : seules 2 ou 1 vous sont montrées. Les preuves que vous ne trouverez jamais ne sont donc pas « absentes », elles sont masquées — d'où l'intérêt des comportements. Une preuve forcée (★) reste toujours affichée.</p></div>
+    <div class="item"><h4>Objets maudits</h4><p>1 objet au hasard sur les difficultés normales, <b>aucun en Démence</b>, et de 0 à 7 en difficulté perso. Toute chasse déclenchée par un objet maudit ignore la recharge, n'a presque pas de grâce et dure 20 s de plus.</p></div>
+    <div class="item"><h4>Santé mentale</h4><p>La perte passive est de 0,12 / 0,08 / 0,05 % par seconde (petite / moyenne / grande carte), <b>divisée par deux en solo</b>, puis multipliée par le réglage de la difficulté (50 % à 200 %). Les seuils de chasse des entités, eux, ne changent jamais.</p></div>
+    <div class="item"><h4>Vitesse de l'entité</h4><p>Les préréglages Apocalypse montent l'entité à <b>150 %</b> : une entité « normale » passe de 1,70 à 2,55 m/s, et jusqu'à 4,21 m/s en ligne de vue. Le compteur de pas et le métronome tiennent compte du réglage (et de la Lune de sang par-dessus).</p></div>
+  </div>
+
+  <p class="lbl">Taille des cartes</p>
+  <p class="hint" style="margin:0 0 10px">Le jeu n'affiche <b>jamais</b> la taille d'une carte : il faut la connaître. Elle décide pourtant de la durée des chasses, de la vitesse à laquelle la santé mentale descend, du nombre de lumières qu'on peut allumer avant de faire sauter les plombs, et des gains. Cliquez une ligne pour la choisir dans l'enquête. Valeurs de perte données à 100 % (équipe) : multipliez par le réglage de la difficulté, divisez par deux en solo, et ajoutez +1 au multiplicateur en Lune de sang.</p>
+  <div class="tbl"><table><thead><tr>
+    <th>Carte</th><th>Taille</th><th>Niv.</th><th>Chasse basse / moyenne / haute</th><th>Perte de santé</th><th>Lumières</th><th>Identification / os</th>
+  </tr></thead><tbody id="maptbl"></tbody></table></div>
+  <p class="hint" style="margin:8px 0 0">Les versions <b>Restricted</b> comptent comme une taille en dessous de la carte complète et paient le tarif de cette taille : Prison et Point Hope Restricted sont <b>petites</b>, Brownstone et Sunny Meadows Restricted sont <b>moyennes</b>. Attention aux guides périmés : Bleasdale et Point Hope sont passées en <b>moyenne</b> (v0.12.0.1), Brownstone est <b>grande</b> depuis 2023, Sunny Meadows Restricted est <b>moyenne</b> depuis la 0.10.</p>
+  <p class="hint" style="margin:6px 0 0">Ce qui <b>ne dépend pas</b> de la taille : la vitesse de l'entité, la recharge de 25 s, la période de grâce, le temps de préparation, le nombre d'objectifs et le nombre d'objets maudits. Les cachettes sont écrites carte par carte, pas par taille. Les morts qui rallongent la chasse, elles, en dépendent : +15 / 20 / 25 s en réglage bas, jusqu'à +35 / 40 / 45 s en haut.</p>
+
+  <p class="lbl">Apocalypse I / II / III</p>
+  <div class="cols">
+    <div class="item"><h4>Ce ne sont pas des difficultés</h4><p>Ce sont trois <b>préréglages du mode perso</b> (débloqué niveau 50, 3 emplacements). Vous les chargez dans un emplacement perso, et rien n'y est verrouillé : vous pouvez tout modifier. Leur seul but est d'atteindre le multiplicateur de gain demandé par le <b>défi Apocalypse</b>.</p></div>
+    <div class="item"><h4>Le défi Apocalypse</h4><p>En <b>solo</b>, sur <b>Sunny Meadows</b> (complet), terminer les 4 objectifs, prendre une photo du fantôme et ressortir vivant. Trophée <b>bronze ≥ ×6</b>, <b>argent ≥ ×10</b>, <b>or ≥ ×15</b> — le trophée apparaît dans la vitrine du hall et débloque le succès correspondant.</p><p class="hint" style="margin-top:6px">Les anciennes annonces officielles parlent de ×15 / ×20 / ×24 : ces chiffres datent d'avant la refonte des gains.</p></div>
+    <div class="item"><h4>Défi hebdomadaire</h4><p>C'est l'inverse du perso : réglages <b>imposés et non modifiables</b>, matériel fourni (mourir ne coûte donc presque rien), gain de base ×1 mais la tâche hebdomadaire rapporte 5 000 $ et 5 000 XP. 26 défis, rotation chaque lundi à 0 h UTC, chacun sur une carte imposée.</p></div>
+    <div class="item"><h4>Ce que le mode perso règle</h4><p><b>Joueur</b> : cachet, santé de départ, vitesse de perte, sprint, lampes cassées, perte du matériel à la mort, vitesse. <b>Fantôme</b> : nombre de preuves, changement de pièce préférée, interactions, fréquence des événements, durée de chasse, grâce, empreintes (chance et durée), chasses désactivées, morts qui rallongent, errance, vitesse, et depuis août 2026 le <b>choix du type d'entité</b>. <b>Contrat</b> : préparation, météo, portes ouvertes, cachettes, moniteurs, boîte à fusibles, nombre et type d'objets maudits.</p></div>
+  </div>
+
+  <p class="hint" style="margin-top:14px">⚠ Les valeurs des trois préréglages Apocalypse, ainsi que l'état des portes, cachettes et moniteurs par difficulté, ne sont documentées que par une seule source : vérifiez-les en jeu si un détail compte. Tout le reste (preuves, préparation, santé mentale, grâce, durées de chasse, objets maudits, assurance, niveaux de déblocage) est confirmé par plusieurs sources sur la v0.19.</p>
+</section>
+
+<!-- ================= ÉVÉNEMENTS ================= -->
+<section id="p-evt" class="page ref" hidden>
+  <h2>Événements &amp; interactions</h2>
+  <p class="intro">Ce que l'entité peut faire hors chasse, et ce que chaque manifestation vous apprend.</p>
+  <p class="lbl">Événements paranormaux</p>
+  <div class="cols">
+    <div class="item"><h4>Apparition</h4><p>L'entité se montre (forme pleine ou ombre), immobile ou en marchant vers un joueur. L'électronique à proximité clignote, sifflement / souffle possible. Si elle vous touche : perte de santé (10 %, Oni 20 %).</p><ul><li>Photo pendant l'événement : le <b>Fantôme</b> disparaît</li><li>Forme d'ombre fréquente : <b>Ombre</b></li></ul></div>
+    <div class="item"><h4>Poursuite / marche vers vous</h4><p>L'entité apparaît et avance vers un joueur, souvent jusqu'à le toucher, puis disparaît. Aucune mort possible, mais c'est l'événement qui fait peur en premier.</p><ul><li>Le <b>Kormos</b> ne fait jamais de poursuite</li></ul></div>
+    <div class="item"><h4>Mist (souffle / bulle d'air)</h4><p>Un nuage de brume flotte vers un joueur et se dissipe avec un bruit de souffle.</p><ul><li>Vu de vos yeux : <b>pas un Oni</b> (définitif)</li><li>Le <b>Kormos</b> n'en fait jamais</li><li>Le son seul ne suffit pas : l'apparition en marche fait le même souffle</li></ul></div>
+    <div class="item"><h4>Chant</h4><p>L'entité fredonne près d'un joueur, les lumières et l'électronique réagissent.</p><ul><li>Plus fréquent chez la <b>Banshee</b></li><li>Oni : le chant draine 20 % (corrigé en v0.19)</li></ul></div>
+    <div class="item"><h4>Fréquence</h4><p>Les événements sont plus fréquents sous Lune de sang et avec la patte de singe (« activité »). Depuis v0.18, ils peuvent aussi avoir lieu dans les pièces moyennes et grandes.</p></div>
+  </div>
+
+  <p class="lbl">Interactions à surveiller</p>
+  <div class="tbl"><table><thead><tr><th>Interaction</th><th>Ce que ça indique</th></tr></thead><tbody>
+    <tr><td>Porte qui bouge / claque</td><td>EMF 2. Porte fermée entièrement + chute de santé : <b>Yurei</b>. Les entités ne ferment plus les portes pendant les chasses (v0.12).</td></tr>
+    <tr><td>Objet lancé</td><td>EMF 3. Plusieurs objets d'un coup : <b>Poltergeist</b>. Les objets lancés par l'entité ne ralentissent pas le Deildegast.</td></tr>
+    <tr><td>Lumière allumée par l'entité</td><td>Élimine le <b>Cauchemar</b>. Lumière rééteinte juste après que vous l'allumez : Cauchemar probable.</td></tr>
+    <tr><td>Disjoncteur</td><td>Coupé par l'entité : <b>pas un Djinn</b>. Rallumé par l'entité : <b>pas un Hantu</b>.</td></tr>
+    <tr><td>Flamme soufflée (bougie, lumière à feu)</td><td>EMF 2. Compte pour l'<b>Onryo</b> (chasse toutes les 3 flammes). Les entités peuvent aussi allumer cheminées et feux du décor (v0.12).</td></tr>
+    <tr><td>Sel piétiné</td><td>Jamais par le <b>Spectre</b> ni le Gallu enragé. Déclenche un changement d'état chez le <b>Gallu</b>.</td></tr>
+    <tr><td>Empreintes UV</td><td>Main à 6 doigts, double empreinte sur interrupteur, 5 empreintes sur clavier : <b>Obake</b>.</td></tr>
+    <tr><td>EMF loin de la pièce, près d'un joueur</td><td>Téléportation du <b>Spectre</b> ou déplacement du <b>Fantôme</b>.</td></tr>
+    <tr><td>Deux interactions presque simultanées</td><td>Possible <b>Jumeaux</b> (non définitif : toute entité peut enchaîner vite).</td></tr>
+    <tr><td>Respiration lourde au Spirit Box à 1 m</td><td><b>Deogen</b> (définitif).</td></tr>
+    <tr><td>Cri au micro parabolique</td><td><b>Banshee</b> (définitif). Sons paranormaux très fréquents : <b>Myling</b>.</td></tr>
+    <tr><td>Comportement strictement standard la 1re minute</td><td>Le <b>Mimic</b> démarre en état neutre (il s'imite lui-même) : aucune capacité, seuil 50 %, 1,7 m/s. Première tentative de changement 1 min après l'ouverture de la porte, puis toutes les 30 s à 2 min, jamais pendant une chasse ou un événement.</td></tr>
+    <tr><td>Âge qui change à la Ouija</td><td><b>Thayé</b>.</td></tr>
+    <tr><td>Respiration visible (joueur)</td><td>Plus une preuve : visible sous 5 °C depuis v1.9. Seul le thermomètre sous 0 °C compte.</td></tr>
+  </tbody></table></div>
+
+  <p class="lbl">Niveaux EMF</p>
+  <div class="cols">
+    <div class="item"><p><b class="mono">EMF 2</b> interaction (porte, lumière, toucher) · <b class="mono">EMF 3</b> objet lancé · <b class="mono">EMF 4</b> manifestation / événement · <b class="mono">EMF 5</b> preuve (aléatoire parmi les interactions, seulement si c'est une preuve de l'entité).</p></div>
+    <div class="item"><p>Le tableau d'activité du camion additionne tout l'EMF de la carte : un pic à 10 ne veut pas forcément dire chasse ou événement.</p></div>
+  </div>
+</section>
+
+<!-- ================= ÉQUIPEMENT ================= -->
+<section id="p-equip" class="page ref" hidden>
+  <h2>Équipement par rang</h2>
+  <p class="intro">Ce que change chaque rang (I, II, III). Les rangs se débloquent avec le niveau, puis s'achètent une fois pour le compte. Consommables : crucifix, sel, médicaments, et les rangs I et II de l'encens, du briquet et des lumières à feu.</p>
+  <div class="cols" id="equip"></div>
+</section>
+
+<!-- ================= OBJETS MAUDITS ================= -->
+<section id="p-obj" class="page ref" hidden>
+  <h2>Objets maudits</h2>
+  <p class="intro">Un seul par contrat (sauf réglages). Toute chasse déclenchée par un objet maudit est « maudite » : +20 s, période de grâce raccourcie, et les chasses suivantes sont aussi allongées.</p>
+  <div class="cols" id="cursed"></div>
+</section>
+
+<!-- ================= MÉTÉO ================= -->
+<section id="p-meteo" class="page ref" hidden>
+  <h2>Météo &amp; idées reçues</h2>
+  <p class="intro">La météo change la visibilité, le bruit ambiant et parfois la vitesse de l'entité.</p>
+  <div class="tbl"><table><thead><tr><th>Météo</th><th>Lumière</th><th>Visibilité</th><th>Bruit</th><th>Temp.</th><th>Effet en jeu</th></tr></thead><tbody>
+    <tr><td><b>Lune de sang</b></td><td>Modeste</td><td>Élevée</td><td>Moyen</td><td class="num">13 °C</td><td>2 % de chance sur toute carte. Entité <b>+15 % de vitesse</b> en chasse, perte de santé passive +100 %, plus d'événements, +10 % de paie.</td></tr>
+    <tr><td>Temps clair</td><td>Faible</td><td>Élevée</td><td>Faible</td><td class="num">13 °C</td><td>Aucun.</td></tr>
+    <tr><td>Brouillard</td><td>Modeste</td><td>Faible</td><td>Faible</td><td class="num">13 °C</td><td>Gêne dehors (Camp Woodwind, Maple Lodge) et les caméras extérieures. N'affecte pas la vision de l'entité.</td></tr>
+    <tr><td>Pluie forte</td><td>Faible</td><td>Modeste</td><td>Fort</td><td class="num">8 °C</td><td>Couvre les interactions, tonnerre qui masque les pas. Éteint lumières à feu / briquets rang I-II sous la pluie. Éclairs = lumière brève.</td></tr>
+    <tr><td>Pluie légère</td><td>Modeste</td><td>Élevée</td><td>Moyen</td><td class="num">8 °C</td><td>Léger bruit de fond, sans gêne réelle.</td></tr>
+    <tr><td>Neige</td><td>Modeste</td><td>Modeste</td><td>Faible</td><td class="num">5 °C</td><td>Respiration visible partout si le disjoncteur est coupé. Les flocons peuvent être confondus avec des Orbes.</td></tr>
+    <tr><td>Soleil levant</td><td>Élevée</td><td>Élevée</td><td>Faible</td><td class="num">16 °C</td><td>Beaucoup plus de lumière naturelle.</td></tr>
+    <tr><td>Vent</td><td>Faible</td><td>Élevée</td><td>Moyen</td><td class="num">8 °C</td><td>Bruit de vent et de feuilles, rarement gênant.</td></tr>
+    <tr><td>Serviteurs de la forêt (événement)</td><td colspan="4">—</td><td>Serviteur chanceux : entité −10 % de vitesse ; malchanceux : +10 %. Cumulables.</td></tr>
+  </tbody></table></div>
+
+  <p class="lbl">Idées reçues</p>
+  <div class="cols" id="myths"></div>
+</section>
+
+<p class="foot">Aide de jeu non officielle, sans lien avec Kinetic Games. Données compilées depuis le <a href="https://tybayn.github.io/phasmo-cheat-sheet/" target="_blank" rel="noopener">Zero-Network Cheat Sheet</a>, le wiki Phasmophobia et les notes de mise à jour officielles (jusqu'à v0.19.0.2). Marqué « non vérifié » : seuil de l'Aswang, niveaux d'activité de l'Obambo. La conversion bpm → m/s reprend la formule du Cheat Sheet ; le rythme perçu varie selon la machine.</p>
+</div>
+
+<dialog id="dlg"><button class="btn close" id="dlgClose" aria-label="Fermer">Fermer</button><div class="dlg" id="dlgBody"></div></dialog>
+
+<script>
+const EV = {
+  emf:{fr:"EMF 5", long:"EMF niveau 5", key:"1"},
+  sb:{fr:"Spirit Box", long:"Spirit Box", key:"2"},
+  uv:{fr:"UV", long:"Ultraviolet (empreintes)", key:"3"},
+  orb:{fr:"Orbes", long:"Orbe fantomatique", key:"4"},
+  wr:{fr:"Écriture", long:"Écriture fantomatique", key:"5"},
+  frz:{fr:"Glaciales", long:"Températures glaciales", key:"6"},
+  dots:{fr:"D.O.T.S.", long:"Projecteur D.O.T.S.", key:"7"}
+};
+const EV_ORDER = ["emf","sb","uv","orb","wr","frz","dots"];
+
+/* spd = [min, max] m/s atteignables (vitesse entité 100 %), LdV comprise
+   seuilMax = santé moyenne max à laquelle une chasse normale reste possible (999 = n'importe quand) */
+const GHOSTS = [
+{id:"spirit",fr:"Esprit",en:"Spirit",ev:["emf","sb","wr"],seuil:"50 %",seuilMax:50,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"L'encens l'empêche de chasser 180 s (au lieu de 90 s).",
+ capa:["Aucune capacité active particulière."],
+ indices:["Après un encens, ne peut pas chasser pendant 180 s. Toute autre entité peut attendre 180 s, mais l'Esprit y est obligé."],
+ confirm:["Encensez-le hors chasse et lancez le minuteur : aucune chasse avant 180 s = très probable Esprit (non définitif)."],
+ elim:["Une chasse entre 90 s et 180 s après l'encens = pas un Esprit (définitif, sauf Démon/Mimic)."]},
+
+{id:"wraith",fr:"Spectre",en:"Wraith",ev:["emf","sb","dots"],seuil:"50 %",seuilMax:50,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"Ne marche jamais dans le sel.",
+ capa:["Se téléporte près d'un joueur au hasard (laisse un EMF 2, ou 5 si c'est sa preuve), puis revient en marchant."],
+ indices:["Ne perturbe jamais le sel et ne laisse donc jamais d'empreintes UV dans le sel.","Idée reçue : il ne traverse pas les murs pendant les chasses."],
+ confirm:["EMF surgissant loin de sa pièce, à côté d'un joueur, sans raison apparente."],
+ elim:["Sel piétiné par l'entité = pas un Spectre (définitif). Attention : le Gallu enragé ne perturbe pas le sel non plus."]},
+
+{id:"phantom",fr:"Fantôme",en:"Phantom",ev:["sb","uv","dots"],seuil:"50 %",seuilMax:50,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"Disparaît quand on le prend en photo. Clignote peu visible en chasse.",
+ capa:["Peut se téléporter vers un joueur aléatoire puis revenir.","Le regarder fait perdre de la santé mentale plus vite."],
+ indices:["Prendre une photo pendant un événement le fait disparaître (la photo doit être étiquetée « Fantôme »).","En chasse : invisible plus longtemps entre les clignotements (≈1 à 2 s).","N'utilise plus sa capacité sur les joueurs morts ou dehors (v0.18)."],
+ confirm:["Photo pendant un événement : l'entité disparaît et n'apparaît pas sur la photo.","Clignotement très espacé en chasse."],
+ elim:["L'entité reste visible sur une photo « Fantôme » étiquetée = pas un Fantôme."]},
+
+{id:"poltergeist",fr:"Poltergeist",en:"Poltergeist",ev:["sb","uv","wr"],seuil:"50 %",seuilMax:50,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"Lance plusieurs objets d'un coup (« explosion »).",
+ capa:["Explosion d'objets : lance tous les objets proches en même temps ; chaque objet fait perdre 2 % de santé aux joueurs qui le voient."],
+ indices:["Lance les objets plus fort et plus souvent.","En chasse, lance un objet environ toutes les 0,5 s.","Faiblesse : presque inoffensif dans une pièce vide."],
+ confirm:["Faites un tas d'objets dans sa pièce : plusieurs objets projetés simultanément = Poltergeist."],
+ elim:["Pas de test d'élimination définitif."]},
+
+{id:"banshee",fr:"Banshee",en:"Banshee",ev:["uv","orb","dots"],seuil:"50 % (santé de sa cible)",seuilMax:50,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"Traque une seule cible. Cri unique au micro parabolique.",
+ capa:["Choisit une cible (l'hôte en solo) et ne chasse qu'en fonction de la santé mentale de cette cible, où qu'elle soit.","Peut marcher vers sa cible pour démarrer une chasse depuis elle."],
+ indices:["Cri unique au micro parabolique (≈33 % des sons paranormaux).","Événements de chant plus fréquents.","Toujours féminine (nom et modèle).","En chasse, ignore les autres joueurs (mais peut les tuer s'ils sont sur son chemin).","Peut changer de pièce favorite depuis v0.13."],
+ confirm:["Cri Banshee au micro parabolique (définitif).","Pendant une chasse, passe à côté d'un joueur visible pour en viser un autre."],
+ elim:["Nom ou modèle masculin = pas une Banshee (définitif)."]},
+
+{id:"jinn",fr:"Djinn",en:"Jinn",ev:["emf","uv","frz"],seuil:"50 %",seuilMax:50,vit:"1,7 m/s · 2,5 m/s (disjoncteur ON, LdV, > 3 m)",spd:[1.7,2.81],los:"spécial",
+ key:"Très rapide de loin si le disjoncteur est allumé. N'éteint jamais le disjoncteur.",
+ capa:["Capacité : draine 25 % de santé mentale aux joueurs à moins de 3 m (même étage uniquement, v0.17) ; nécessite le disjoncteur allumé."],
+ indices:["Disjoncteur ON + ligne de vue + joueur à plus de 3 m → fonce à 2,5 m/s, puis revient à la normale à moins de 3 m.","Ne peut jamais couper le disjoncteur directement."],
+ confirm:["Chasse disjoncteur allumé : accélération brutale de loin, ralentissement net près de vous."],
+ elim:["L'entité coupe le disjoncteur elle-même = pas un Djinn (définitif)."]},
+
+{id:"mare",fr:"Cauchemar",en:"Mare",ev:["sb","orb","wr"],seuil:"60 % dans le noir · 40 % lumière allumée",seuilMax:60,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"N'allume jamais la lumière ; la rééteint juste après que vous l'allumez.",
+ capa:["Peut éteindre une lumière quelques secondes après qu'un joueur l'a allumée."],
+ indices:["Ne peut jamais allumer une lumière.","Fait éclater les ampoules plus souvent.","Se déplace davantage quand la lumière de sa pièce actuelle est allumée."],
+ confirm:["Allumez sa pièce : lumière rééteinte presque immédiatement = forte suspicion.","Chasse au-dessus de 50 % pièce sombre."],
+ elim:["L'entité allume un interrupteur = pas un Cauchemar (définitif).","Chasse au-dessus de 40 % avec la lumière de sa pièce allumée = pas un Cauchemar."]},
+
+{id:"revenant",fr:"Revenant",en:"Revenant",ev:["orb","wr","frz"],seuil:"50 %",seuilMax:50,vit:"1,0 m/s sans cible · 3,0 m/s dès qu'il détecte",spd:[1.0,3.0],los:"non",
+ key:"Très lent tant qu'il ne vous a pas détecté, très rapide dès qu'il vous voit/entend.",
+ capa:["Pas d'accélération en LdV standard : passe instantanément à 3,0 m/s quand il détecte un joueur (vue, voix, électronique)."],
+ indices:["Après avoir perdu sa cible, ralentit progressivement jusqu'à 1,0 m/s en atteignant sa dernière position connue."],
+ confirm:["Pas très lents (1,0 m/s) puis bond immédiat à 3,0 m/s."],
+ elim:["Vitesse de base normale (1,7 m/s) sans cible = pas un Revenant."]},
+
+{id:"shade",fr:"Ombre",en:"Shade",ev:["emf","wr","frz"],seuil:"35 %",seuilMax:35,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"Timide : ne chasse pas si vous êtes dans sa pièce. Seuil très bas.",
+ capa:["Ne produit pas d'EMF et ne chasse pas si un joueur est dans sa pièce actuelle (pas seulement sa pièce favorite)."],
+ indices:["Moins actif quand plusieurs joueurs sont proches.","Apparaît souvent sous forme d'ombre pendant les événements (seule entité en ombre pendant les événements d'objets maudits)."],
+ confirm:["Très peu d'activité, événements en forme d'ombre."],
+ elim:["Chasse au-dessus de 35 % (hors objet maudit) = pas une Ombre (définitif)."]},
+
+{id:"demon",fr:"Démon",en:"Demon",ev:["uv","wr","frz"],seuil:"70 % · parfois à n'importe quelle santé",seuilMax:999,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"Chasse tôt et souvent. Encens : seulement 60 s de protection.",
+ capa:["Capacité rare : peut lancer une chasse quelle que soit la santé mentale."],
+ indices:["Recharge entre chasses : 20 s (au lieu de 25 s).","Encens : empêche la chasse 60 s (au lieu de 90 s).","Crucifix plus efficace : 4,5 / 6 / 7,5 m selon le rang."],
+ confirm:["Chasse entre 60 s et 90 s après un encens = Démon (définitif, hors Mimic).","Nouvelle chasse 20–25 s après la fin de la précédente."],
+ elim:["Pas de test d'élimination définitif."]},
+
+{id:"yurei",fr:"Yurei",en:"Yurei",ev:["orb","frz","dots"],seuil:"50 %",seuilMax:50,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"Claque une porte et fait chuter la santé. L'encens le piège dans sa pièce.",
+ capa:["Ferme complètement une porte et draine 15 % de santé mentale aux joueurs proches (≈7,5 m)."],
+ indices:["Encensé, il reste bloqué dans sa pièce favorite pendant 90 s (ne se promène pas).","Bug : peut entrouvrir les portes de casier."],
+ confirm:["Porte fermée entièrement + chute de santé soudaine.","Après encens dans sa pièce : aucune activité hors de la pièce."],
+ elim:["Pas de test d'élimination définitif."]},
+
+{id:"oni",fr:"Oni",en:"Oni",ev:["emf","frz","dots"],seuil:"50 %",seuilMax:50,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"Très visible en chasse. Ne fait JAMAIS la bulle d'air / brume.",
+ capa:["Ses événements font perdre 20 % de santé (au lieu de 10 %) — y compris l'événement de chant depuis v0.19."],
+ indices:["Plus actif quand des joueurs sont proches ; lance les objets plus fort.","En chasse, clignote en restant beaucoup plus visible.","Ne fait jamais l'événement mist (souffle / brume fantomatique)."],
+ confirm:["Clignotement très visible en chasse (attention : Deogen aussi)."],
+ elim:["Mist (souffle) vu de vos yeux = pas un Oni (définitif). Le son « souffle » seul ne suffit pas."]},
+
+{id:"yokai",fr:"Yokai",en:"Yokai",ev:["sb","orb","dots"],seuil:"80 % si on parle près de lui · sinon 50 %",seuilMax:80,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"Parler près de lui le fait chasser tôt ; en chasse il est presque sourd.",
+ capa:["Parler (chat vocal) dans sa pièce lui permet de chasser jusqu'à 80 %."],
+ indices:["Pendant une chasse, n'entend les voix et l'électronique qu'à 2,5 m.","Déclenche la boîte à musique à 0,5 m (1 m pour les autres)."],
+ confirm:["En chasse, parlez / allumez un appareil à 3–5 m : il ne vous détecte pas = Yokai."],
+ elim:["Il vous repère à la voix de loin en chasse = pas un Yokai."]},
+
+{id:"hantu",fr:"Hantu",en:"Hantu",ev:["uv","orb","frz"],forced:"frz",seuil:"50 %",seuilMax:50,vit:"1,4 m/s (> 15 °C) → 2,7 m/s (< 0 °C)",spd:[1.4,2.7],los:"non",
+ key:"Plus rapide dans le froid. Souffle glacé visible en chasse.",
+ capa:["Vitesse selon la température de la pièce où il se trouve ; aucune accélération en LdV."],
+ indices:["Souffle de vapeur visible pendant les chasses quand le disjoncteur est éteint.","N'allume jamais le disjoncteur et l'éteint plus souvent.","Preuve forcée : Températures glaciales (en mode 1-2 preuves)."],
+ confirm:["Souffle glacé visible en chasse (disjoncteur coupé) = Hantu (définitif).","Vitesse qui change selon les pièces froides/chaudes."],
+ elim:["L'entité allume le disjoncteur = pas un Hantu.","Pas de souffle en chasse avec disjoncteur coupé = pas un Hantu."]},
+
+{id:"goryo",fr:"Goryo",en:"Goryo",ev:["emf","uv","dots"],forced:"dots",seuil:"50 %",seuilMax:50,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"D.O.T.S. visible uniquement à la caméra, sans personne dans la pièce.",
+ capa:["Sa silhouette D.O.T.S. n'apparaît qu'à travers une caméra vidéo quand aucun joueur n'est dans la pièce."],
+ indices:["S'éloigne peu de sa pièce et ne change jamais de pièce favorite.","Preuve forcée : D.O.T.S. (en mode 1-2 preuves)."],
+ confirm:["D.O.T.S. vu uniquement au moniteur du camion avec la pièce vide."],
+ elim:["D.O.T.S. vu à l'œil nu ou avec quelqu'un dans la pièce = pas un Goryo (définitif).","Changement de pièce favorite = pas un Goryo."]},
+
+{id:"myling",fr:"Myling",en:"Myling",ev:["emf","uv","wr"],seuil:"50 %",seuilMax:50,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"Pas silencieux en chasse (audibles à 12 m au lieu de 20 m).",
+ capa:["Ses bruits de pas et sons vocaux en chasse ne portent qu'à 12 m."],
+ indices:["Sons paranormaux plus fréquents au micro parabolique.","Peut toujours émettre des sons vocaux en chasse (idée reçue)."],
+ confirm:["Votre électronique clignote (≈10 m) mais vous n'entendez pas encore ses pas = Myling."],
+ elim:["Pas entendus de loin, avant le clignotement de l'électronique = pas un Myling."]},
+
+{id:"onryo",fr:"Onryo",en:"Onryo",ev:["sb","orb","frz"],seuil:"60 % · + chasse toutes les 3 flammes soufflées",seuilMax:999,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"Une flamme allumée agit comme un crucifix. Chaque 3e flamme soufflée = chasse.",
+ capa:["Les flammes (bougies, briquet…) bloquent ses chasses comme un crucifix : il souffle la flamme à la place.","Après chaque 3e flamme soufflée, il tente une chasse quelle que soit la santé mentale."],
+ indices:["N'évite pas les flammes (idée reçue) : il les souffle en voulant chasser.","L'encens retarde la chasse de capacité au lieu de la réinitialiser."],
+ confirm:["Chasse juste après avoir soufflé la 3e flamme."],
+ elim:["Chasse démarrée à côté d'une flamme allumée (dans la portée) = pas un Onryo."]},
+
+{id:"twins",fr:"Les Jumeaux",en:"The Twins",ev:["emf","sb","frz"],seuil:"50 %",seuilMax:50,vit:"1,5 m/s ou 1,9 m/s",spd:[1.5,3.01],los:"spécial",
+ key:"Deux vitesses différentes selon les chasses. Interactions en double.",
+ capa:["Une seule entité avec deux portées d'interaction (une grande, une petite) : interactions quasi simultanées à deux endroits.","Chasse soit en « jumeau lent » (1,5 m/s, −10 %) soit en « jumeau rapide » (1,9 m/s, +10 %)."],
+ indices:["LdV max : 2,6 m/s (lent) / 3,0 m/s (rapide).","Portée d'interaction ×4 (8,5 m, 17 m sur grande carte)."],
+ confirm:["Deux chasses de suite avec des vitesses de base différentes (1,5 puis 1,9)."],
+ elim:["Vitesse de base exactement 1,7 m/s = pas Les Jumeaux."]},
+
+{id:"raiju",fr:"Raiju",en:"Raiju",ev:["emf","orb","dots"],seuil:"65 % près d'électronique active · sinon 50 %",seuilMax:65,vit:"1,7 m/s · 2,5 m/s près de l'électronique",spd:[1.7,2.81],los:"spécial",
+ key:"Fonce à 2,5 m/s près de l'électronique allumée.",
+ capa:["Toute électronique active proche lui permet de chasser à 65 % (depuis v0.17, pas seulement tenue).","Près d'un appareil électronique actif (6 / 8 / 10 m selon la taille de la carte) : vitesse fixe 2,5 m/s."],
+ indices:["Perturbe l'électronique et fait entendre les battements de cœur jusqu'à 15 m (au lieu de 10 m).","Ne fait plus clignoter les lumières hors chasse (v0.17.1)."],
+ confirm:["Chasse entre 50 et 65 % avec de l'électronique allumée.","Paliers plats à 2,5 m/s quand il passe près d'appareils."],
+ elim:["Aucune accélération près de l'électronique = pas un Raiju."]},
+
+{id:"obake",fr:"Obake",en:"Obake",ev:["emf","uv","orb"],forced:"uv",seuil:"50 %",seuilMax:50,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
+ key:"Empreintes spéciales (6 doigts). Change de forme en chasse.",
+ capa:["Change de modèle pendant la chasse (clignotements 12, 27, 39, 54…).","Peut laisser des empreintes uniques : main à 6 doigts (portes, fenêtres), double empreinte (interrupteurs), 5 empreintes (claviers)."],
+ indices:["25 % de chance de ne pas laisser d'UV ; ses empreintes disparaissent plus vite.","Preuve forcée : UV (en mode 1-2 preuves)."],
+ confirm:["Main à 6 doigts ou empreinte double sur un interrupteur (définitif).","Transformation visible pendant une chasse."],
+ elim:["Pas de test d'élimination définitif."]},
+
+{id:"mimic",fr:"Le Mimic",en:"The Mimic",ev:["sb","uv","frz"],fake:"orb",seuil:"Copie celui de l'entité imitée",seuilMax:999,vit:"Copie l'entité imitée",spd:[0.4,3.71],los:"spécial",
+ key:"Orbes en plus de ses 3 preuves (même en 0 preuve). Imite les autres entités.",
+ capa:["Commence en état « neutre » (il s'imite lui-même) : il se comporte comme une entité standard, sans capacité, seuil 50 %, vitesse 1,7 m/s.","Première tentative de changement 1 min après la première ouverture d'une porte de sortie, puis toutes les 30 s à 2 min.","Ne change jamais pendant une chasse ni pendant un événement.","Copie comportements, capacités, seuil et vitesse de n'importe quelle entité — mais jamais ses preuves."],
+ indices:["Peut retomber sur « Mimic » en tirant au sort : il reste alors neutre, parfois bien plus d'une minute.","Ne peut pas imiter la Banshee ni la Dayan s'il a un modèle / nom masculin.","Montre toujours des Orbes (fausse preuve), même en mode 0 preuve : Orbes + 3 preuves = 4 preuves visibles.","Ne montre que ses propres preuves (UV, Spirit Box, Glaciales + faux Orbes).","Presque n'importe quel test de confirmation peut aussi correspondre au Mimic."],
+ confirm:["4 preuves trouvées dont Orbes = Mimic.","Comportements contradictoires (ex. vitesses incohérentes entre chasses).","Première minute (après ouverture de la porte) : comportement et vitesse strictement standards, même si la suite ne l'est pas."],
+ elim:["Pas d'Orbes malgré une surveillance longue de la pièce = probablement pas un Mimic."]},
+
+{id:"moroi",fr:"Moroï",en:"Moroi",ev:["sb","wr","frz"],forced:"sb",seuil:"50 %",seuilMax:50,vit:"1,5 m/s (> 45 %) → 2,25 m/s (< 5 %) · jusqu'à 3,71 m/s en LdV",spd:[1.5,3.71],los:"oui",
+ key:"Plus la santé baisse, plus il est rapide. Maudit via Spirit Box.",
+ capa:["Malédiction : une réponse Spirit Box ou un murmure au micro parabolique double la perte de santé passive du joueur ; une pilule la lève."],
+ indices:["La vitesse dépend de la santé moyenne de l'équipe. Entité la plus rapide du jeu en LdV (3,71 m/s).","Aveuglé 7 s par l'encens (5 s pour les autres).","Preuve forcée : Spirit Box (en mode 1-2 preuves)."],
+ confirm:["Vitesse de base qui augmente d'une chasse à l'autre à mesure que la santé baisse.","Aveuglement d'encens nettement plus long."],
+ elim:["Vitesse de base 1,7 m/s avec une santé moyenne > 45 % = pas un Moroï."]},
+
+{id:"deogen",fr:"Deogen",en:"Deogen",ev:["sb","wr","dots"],forced:"sb",seuil:"40 %",seuilMax:40,vit:"3,0 m/s de loin → 0,4 m/s près de vous",spd:[0.4,3.0],los:"non",
+ key:"Sait toujours où vous êtes. Fonce puis ralentit presque à l'arrêt près de vous.",
+ capa:["Connaît toujours la position des joueurs : se cacher ne sert à rien.","3,0 m/s au-delà de 6 m ; en dessous, vitesse = distance × 0,15 (min 0,4 m/s à ≈2,5 m)."],
+ indices:["Respiration lourde au Spirit Box quand on est à ~1 m.","Plus visible en chasse (clignotement).","Faiblesse : on peut le « tourner en rond » autour d'un obstacle.","Preuve forcée : Spirit Box (en mode 1-2 preuves)."],
+ confirm:["Respiration Deogen au Spirit Box (définitif).","Vient droit sur vous puis ralentit fortement."],
+ elim:["Chasse au-dessus de 40 % = pas un Deogen.","Perd votre trace alors que vous êtes caché = pas un Deogen."]},
+
+{id:"thaye",fr:"Thayé",en:"Thaye",ev:["orb","wr","dots"],seuil:"75 % → 15 % en vieillissant",seuilMax:75,vit:"2,75 m/s → 1,0 m/s en vieillissant",spd:[1.0,2.75],los:"non",
+ key:"Rapide et agressif au début, vieillit et ralentit si vous restez près de lui.",
+ capa:["Vieillit (jusqu'à 10 fois) : −6 % de seuil, −0,175 m/s et moins d'activité à chaque âge.","Première tentative 1 min après ouverture de la porte ; vieillit si un joueur est dans sa pièce ou à moins de 3 m, puis nouvelle tentative 1–2 min plus tard."],
+ indices:["Aucune accélération en LdV.","À la planche Ouija, « Quel âge avez-vous ? » donne un âge qui change.","Bug : peut vieillir à cause d'un joueur à l'étage en dessous ; seuil réel 1 % plus bas."],
+ confirm:["Chasse très tôt et rapide (2,75 m/s) sans accélération, puis ralentissements successifs.","Âge différent à la Ouija après être resté près de lui."],
+ elim:["Accélération en LdV observée = pas un Thayé."]},
+
+{id:"gallu",fr:"Gallu",en:"Gallu",ev:["emf","sb","uv"],seuil:"Normal 50 % · Enragé 60 % · Affaibli 40 %",seuilMax:60,vit:"Normal 1,7 · Enragé 1,96 · Affaibli 1,36 m/s",spd:[1.36,3.23],los:"oui",
+ key:"S'enrage avec le sel / l'encens / le crucifix, puis s'affaiblit après la chasse.",
+ capa:["3 états : Normal → Enragé → (fin de chasse) Affaibli → Normal…","Déclencheurs : crucifix brûlé, encens (pendant ou hors chasse), marcher dans du sel (tout rang, délai 2–3 s).","Enragé : crucifix −2 m, encens n'aveugle que 4 s, ne perturbe pas le sel, pas ralenti par le sel III.","Affaibli : crucifix +1 m, encens aveugle 6 s, ralenti 3 s par le sel III."],
+ indices:["Vitesse différente d'une chasse à l'autre.","Affaibli : laisse des empreintes jusqu'à 3 s (≈6 au lieu de 4).","Marche dans un tas de sel mais ignore les suivants.","Bug : parfois seul l'hôte voit le sel perturbé."],
+ confirm:["Après encens/crucifix, chasse suivante plus rapide (1,96) puis la suivante lente (1,36)."],
+ elim:["Vitesse identique à 1,7 m/s sur plusieurs chasses malgré sel/encens/crucifix."]},
+
+{id:"dayan",fr:"Dayan",en:"Dayan",ev:["emf","orb","sb"],seuil:"65 % si on bouge près d'elle · 45 % si immobile · sinon 50 %",seuilMax:65,vit:"2,25 m/s si vous bougez · 1,2 m/s si immobile (à < 10 m)",spd:[1.2,2.81],los:"spécial",
+ key:"Réagit au mouvement : accélère quand vous bougez, ralentit quand vous vous figez.",
+ capa:["Joueur le plus proche à moins de 10 m (même autre étage) : s'il marche → seuil 65 % et vitesse 2,25 m/s ; s'il est immobile → seuil 45 % et 1,2 m/s."],
+ indices:["Toujours féminine (seule autre : Banshee).","Dans les 10 m, l'accélération LdV s'accumule en arrière-plan et s'applique quand elle s'éloigne.","Conseil : considérer un seuil de 65 %."],
+ confirm:["En chasse près de vous : 2,25 m/s quand vous bougez, 1,2 m/s quand vous stoppez."],
+ elim:["Nom ou modèle masculin = pas une Dayan (définitif)."]},
+
+{id:"obambo",fr:"Obambo",en:"Obambo",ev:["wr","uv","dots"],seuil:"Calme 10 % · Agressif 65 %",seuilMax:65,vit:"Calme 1,445 · Agressif 1,955 m/s",spd:[1.445,3.23],los:"oui",
+ key:"Alterne calme / agressif toutes les 2 min, même en pleine chasse.",
+ capa:["Commence calme ; bascule 1 min après la première ouverture d'une porte de sortie, puis toutes les 2 min (y compris pendant une chasse)."],
+ indices:["Une chasse lancée en état agressif dure 20 % de moins.","Vitesse qui passe brusquement de lente à rapide en pleine chasse.","Activité par phases calmes/agitées (valeurs non vérifiées).","Peut être confondu avec Les Jumeaux."],
+ confirm:["Chasse à haute santé (> 50 %) qui démarre vite (1,955 m/s) et dure moins longtemps.","Changement de vitesse en cours de chasse sans raison."],
+ elim:["Vitesse stable à 1,7 m/s sur plusieurs chasses."]},
+
+{id:"kormos",fr:"Kormos",en:"Kormos",ev:["orb","sb","uv"],seuil:"50 % · 70 % si on sprinte dans sa pièce",seuilMax:70,vit:"1,7 m/s · ×1,3 vers un son entendu (max ≈3,65)",spd:[1.7,3.65],los:"spécial",
+ key:"Presque aveugle : chasse à l'oreille, vous entend marcher.",
+ capa:["Ne voit un joueur qu'à moins de 5 m, sans obstacle.","Entend les pas sur le même étage : sprint 30 m, marche 15 m, accroupi 10 m (vérifie chaque seconde). Détecte aussi voix et électronique.","Vers un son entendu sans le voir : vitesse ×1,3."],
+ indices:["Immobile et silencieux, il ne vous détecte pas (mais peut vous tuer en vous croisant).","Portée de mort réduite : 0,5 m instantané / 0,6 m après 1 s.","Ne fait jamais d'événement mist (souffle) ni de poursuite.","Mêmes preuves que le Mimic avec Orbes : si Glaciales en plus → Mimic."],
+ confirm:["En chasse, restez immobile dans un endroit dégagé : s'il ne fonce pas sur vous alors qu'une autre entité vous verrait = Kormos."],
+ elim:["Vous repère de loin alors que vous êtes immobile et silencieux = pas un Kormos."]},
+
+{id:"aswang",fr:"Aswang",en:"Aswang",ev:["frz","wr","dots"],seuil:"50 % (non vérifié)",seuilMax:50,vit:"1,53 m/s → 2,53 m/s (LdV en 8,7 s)",spd:[1.53,2.53],los:"spécial",
+ key:"Accélère très vite en LdV. Vous trouver caché termine la chasse.",
+ capa:["Accélération LdV plus rapide : 1,65× atteint en 8,67 s au lieu de 13 s.","S'il atteint un joueur dans une cachette officielle (placard, casier), la chasse s'arrête net."],
+ indices:["Après une chasse terminée ainsi, la suivante va droit vers ce joueur, même pendant la période de grâce.","Ne fonctionne pas si 0 cachette en difficulté personnalisée.","Il doit entrer dans la même cachette : vous voir y entrer ne suffit pas."],
+ confirm:["La chasse s'arrête quand il ouvre votre placard/casier.","Vitesse de base un peu lente (1,53) puis accélération brutale en LdV."],
+ elim:["Vitesse de base plus rapide que 1,7 m/s = pas un Aswang."]},
+
+{id:"deildegast",fr:"Deildegast",en:"Deildegast",ev:["emf","wr","dots"],seuil:"50 %",seuilMax:50,vit:"3,0 m/s − 0,1 par objet utilisé (min 0,4)",spd:[0.4,3.0],los:"non",
+ key:"Le plus rapide au départ. Ralentit selon le nombre d'objets que vous utilisez.",
+ capa:["Vitesse de départ 3,0 m/s, sans accélération LdV.","Chaque objet unique (hors équipement) ramassé ou utilisé depuis la dernière chasse : −0,1 m/s (min 0,4 m/s après 26 objets). Compte aussi : interrupteurs, disjoncteur, robinets, consoles, micro-ondes…"],
+ indices:["Un même objet ne compte qu'une fois ; n'importe où sur la carte, même dans le camion ; les joueurs morts comptent aussi.","La vitesse est verrouillée au début de la chasse, puis remise à 3,0 m/s.","Les objets lancés par l'entité ne comptent pas."],
+ confirm:["Ne touchez à rien après une chasse : la suivante à 3,0 m/s fixe.","Manipulez 10+ objets : la chasse suivante est nettement plus lente."],
+ elim:["Accélération en LdV observée = pas un Deildegast."]}
+];
+
+/* Équipement par rang (v0.19). Les rangs se débloquent avec le niveau puis s'achètent. */
+const EQUIP = [
+ {n:"Crucifix",d:"Consommable. Bloque une chasse si l'entité (pieds + tête) est dans le rayon ; elle est renvoyée dans sa pièce et attend 25 s (20 s Démon).",
+  t:["Rayon 3 m · 1 charge","Rayon 4 m · 2 charges","Rayon 5 m · 2 charges ; chargé à fond, peut stopper une chasse maudite (consomme les 2 charges)"],
+  note:"Démon : rayon +50 % (4,5 / 6 / 7,5 m). Gallu : −2 m enragé, +1 m affaibli. Traverse les murs. Produit un EMF 2 (33 % → 5)."},
+ {n:"Encens",d:"Empêche une nouvelle chasse 90 s (60 s Démon, 180 s Esprit) — identique à tous les rangs. Rangs I et II consommables, rang III non.",
+  t:["Fumée 5 s · rayon 3 m","Fumée 6 s · rayon 4 m · ralentit l'entité à 50 % pendant l'aveuglement","Fumée 7 s · rayon 5 m · fige complètement l'entité"],
+  note:"Aveuglement en chasse : 5 s (7 s Moroï, 4 s Gallu enragé, 6 s Gallu affaibli), cumulable jusqu'à 20 s. Ne stoppe pas une chasse en cours ni une chasse maudite ; échoue si l'entité est dans un escalier."},
+ {n:"Sel",d:"Consommable. Révèle le passage de l'entité (empreintes UV si elle a la preuve).",
+  t:["Salière · 2 tas · petit tas rond blanc","Pot · 3 tas · longue ligne rose","Pot · 3 tas · ligne noire ; barrière hors chasse (l'entité fait demi-tour) et ralentissement de 50 % pendant 2 s en chasse"],
+  note:"3 contenants max = 6 à 9 tas. Le Spectre l'ignore totalement ; le Gallu change d'état en marchant dedans."},
+ {n:"Médicaments (santé mentale)",d:"Consommable, 1 usage, 4 max. Inutilisable au-dessus de 95 %.",
+  t:["Récupération en 20 s","Récupération en 10 s","Récupération en 10 s + 10 s de sprint sans endurance"],
+  note:"La quantité rendue dépend de la difficulté, pas du rang : 40 % Amateur, 35 % Intermédiaire, 30 % Professionnel, 25 % Cauchemar, 20 % Démence."},
+ {n:"Lumière à feu (bougie)",d:"Réduit la perte de santé mentale à moins de 2 m. Bloque les chasses de l'Onryo. Rangs I et II consommables.",
+  t:["Bougie · 5 min · −33 % de perte","Candélabre 3 bougies · 10 min · −50 % (soufflé plus souvent : ~96 %)","Lanterne · durée infinie · −66 % · résiste à la pluie et à la neige"],
+  note:"L'entité souffle une flamme à moins de 5 m avec 66,67 % de chance, après 30 s puis 20–80 s de recharge. Chaque extinction compte pour l'Onryo."},
+ {n:"Briquet / allumettes",d:"Emplacement d'inventaire dédié. Rangs I et II consommables.",
+  t:["Boîte d'allumettes · 10 allumettes × 10 s","Briquet · 5 min de gaz","Zippo · 10 min · fonctionne sous la pluie forte"],
+  note:"Allumer un encens ou une bougie depuis l'inventaire coûte 1 allumette, ou 15 s de gaz. Depuis la v0.19, les rangs I et II ne s'allument plus du tout sous la pluie forte."},
+ {n:"Détecteur EMF",d:"Électronique : attire l'entité à 7,5 m en chasse (2,5 m Yokai).",
+  t:["Aiguille analogique · portée 1,7 m","K2, 5 LED + son · portée 2 m","ParaMeter numérique · portée 3,5 m · suit 3 interactions, affiche distance et direction"],
+  note:"EMF 5 = 33 % des émissions de niveau 2+ si l'entité a la preuve. La lecture reste affichée 20 s. Valeurs aléatoires 1–4 à moins de 10 m d'une entité visible."},
+ {n:"Spirit Box",d:"Pose des questions à voix haute ; relance automatique toutes les 10 s.",
+  t:["Portée de réponse 3 m","Portée 4 m · écran (X = entendu, icône = réponse)","Portée 5 m · meilleur taux de réponse"],
+  note:"Portées issues d'un guide communautaire, non confirmées par le wiki."},
+ {n:"Thermomètre",d:"Preuve Glaciales à 0 °C ou moins.",
+  t:["Analogique, lecture continue 0,33 °C/s · erreur +3 °C · non électronique","Infrarouge, 2,5 s par mesure · erreur +3 °C","Therma-hygromètre, 1,5 s · erreur +2 °C"]},
+ {n:"Livre d'écriture",d:"Tentative d'écriture toutes les 45 à 90 s.",
+  t:["51 % de réussite · portée 3 m","67 % · portée 4 m","76 % · portée 5 m"],
+  note:"Non électronique. L'écriture produit un EMF 2 (33 % → 5)."},
+ {n:"Lampe UV",d:"Révèle empreintes et traces (~20 s de durée).",
+  t:["Lampe torche UV, faisceau étroit · 5 s pour révéler","Bâton lumineux : 60 s de pleine puissance, à resecouer · 10 s pour révéler · NON électronique","Lampe UV Pro, faisceau large · 1,5 s pour révéler"],
+  note:"Les rangs I et III ne fonctionnent pas si les lampes sont désactivées en difficulté personnalisée."},
+ {n:"Caméra vidéo",d:"Nécessaire pour les orbes et le D.O.T.S. du Goryo.",
+  t:["Petit écran · vision nocturne verte · grosses interférences","Écran détaillé · vision nocturne noir et blanc · interférences moyennes","Grand écran · noir et blanc · interférences minimales"]},
+ {n:"Appareil photo",d:"Photos illimitées, mais seules les 5 premières entrées du journal rapportent (doublons : 20 %).",
+  t:["Pas d'écran · 3 s entre deux photos · n'attire l'entité qu'au déclenchement","Écran · 2 s","Écran · 1 s"],
+  note:"Les rangs II et III attirent l'entité à 7,5 m en chasse."},
+ {n:"Projecteur D.O.T.S.",d:"Preuve D.O.T.S.",
+  t:["Stylo laser tenu en main ou posé · cône étroit · compte comme une lampe · attire l'entité quand il est tenu","Posé uniquement (sol, mur, plafond) · dôme moyen","Posé · cône motorisé balayant · plus grande couverture · bruyant, peut être mis en pause pour une zone réduite et silencieuse"]},
+ {n:"Micro parabolique",d:"Cône de 110°. Capte les sons émis jusqu'à 3 s avant.",
+  t:["Portée 20 m · témoin lumineux · même étage","Portée 30 m · écran dB avec min/pic","Portée 30 m · écran sonar (position + volume) · détecte un étage au-dessus et en dessous"],
+  note:"Affiche des valeurs aléatoires pendant les chasses."},
+ {n:"Lampe torche",d:"Électronique : clignote à 10 m d'une entité en chasse (15 m Raiju), l'attire à 7,5 m.",
+  t:["Faisceau étroit et faible","Tactique, même cône mais beaucoup plus lumineuse","Projecteur mobile, faisceau large et le plus lumineux"]},
+ {n:"Équipement de tête",d:"N'occupe pas d'emplacement d'inventaire.",
+  t:["Caméra frontale (flux vers le camion, vision nocturne) · voit les orbes","Lampe frontale ≈ torche rang I","Vision nocturne verte · NE voit PAS les orbes · filtre le rouge (un EMF 5 ressemble à un EMF 4 sur le K2)"]},
+ {n:"Trépied",d:"Occupe la main, ne rentre pas dans l'inventaire.",
+  t:["30 % de chance que la caméra soit renversée","20 % · rotation motorisée depuis le camion","Le plus stable · rotation motorisée"]},
+ {n:"Détecteur de mouvement",d:"Signale un passage sur la carte du camion.",
+  t:["Un laser (mur ou sol) · clignote 2 s · déclenché aussi par les joueurs et les objets","Mode conique à deux lasers (donne le sens de passage) · bip sur l'appareil","Au sol, détection sphérique, pivote vers l'entité · seule l'entité le déclenche"],
+  note:"Portée du rang III incertaine : 1,5 m selon le wiki, réglable 5/10/15 m selon un guide."},
+ {n:"Capteur sonore",d:"Rayon réglable depuis le camion ; ignore les murs, même étage, mise à jour chaque seconde.",
+  t:["5 ou 10 m","5 / 10 / 15 m, micros plus sensibles","5 / 10 / 15 m + 3 formes (cercle, cône, sablier) réglées sur l'appareil"],
+  note:"Ne capte ni le détecteur EMF, ni la Spirit Box, ni le chat vocal."},
+ {n:"Enregistreur sonore",d:"3 enregistrements par contrat ; la qualité dépend de la proximité.",
+  t:["Portée 3 m · témoin de volume","Portée 5 m · écran avec courbe et seuil","Portée 5 m · radar directionnel"]}
+];
+
+/* ---------------- difficultés ----------------
+   n  : nom · lvl : niveau de déblocage · mult : gain · ev : preuves affichées
+   setup : préparation (s) · san0 : santé mentale de départ · drain : vitesse de perte
+   pill : cachet · grace : période de grâce (s) · hunt : durée de chasse [petite, moyenne, grande]
+   gs/ps : vitesse fantôme / joueur · cursed : objets maudits · fing : empreintes (s)
+   ins : assurance · sure : valeurs confirmées par plusieurs sources                       */
+const DIFFS=[
+ {id:"amateur",n:"Amateur",lvl:0,mult:"×1",ev:3,hid:0,setup:300,san0:100,drain:100,pill:40,grace:5,hunt:[15,30,40],gs:1,ps:1,cursed:1,fing:120,ins:"50 %",sure:true,
+  note:"Boîte à fusibles déjà allumée, cachettes partout, aucune preuve cachée."},
+ {id:"inter",n:"Intermédiaire",lvl:10,mult:"×2",ev:3,hid:0,setup:120,san0:100,drain:150,pill:35,grace:4,hunt:[20,40,50],gs:1,ps:1,cursed:1,fing:120,ins:"25 %",sure:true,
+  note:"Fusibles coupés au départ, quelques portes déjà ouvertes."},
+ {id:"pro",n:"Professionnel",lvl:20,mult:"×3",ev:3,hid:0,setup:0,san0:100,drain:200,pill:30,grace:3,hunt:[30,50,60],gs:1,ps:1,cursed:1,fing:120,ins:"0 %",sure:true,
+  note:"Aucune préparation : l'entité peut chasser dès l'entrée."},
+ {id:"night",n:"Cauchemar",lvl:30,mult:"×4",ev:2,hid:1,setup:0,san0:100,drain:200,pill:25,grace:2,hunt:[30,50,60],gs:1,ps:1,cursed:1,fing:120,ins:"0 %",sure:true,
+  note:"1 preuve cachée · les morts rallongent la chasse (+15 / 20 / 25 s) · peu de cachettes · moniteurs de la camionnette coupés."},
+ {id:"insane",n:"Démence",lvl:40,mult:"×6",ev:1,hid:2,setup:0,san0:75,drain:200,pill:20,grace:2,hunt:[30,50,60],gs:1,ps:1,cursed:0,fing:60,ins:"0 %",sure:true,
+  note:"2 preuves cachées · aucun objet maudit sur la carte · empreintes effacées en 60 s."},
+ {id:"apo1",n:"Apocalypse I",pre:true,mult:"≥ ×6 · bronze",ev:2,hid:1,setup:0,san0:75,drain:200,pill:20,grace:2,hunt:[30,50,60],gs:1.5,ps:1,cursed:1,fing:60,ins:"—",
+  note:"Préréglage perso visant le trophée bronze. Fantôme à 150 %."},
+ {id:"apo2",n:"Apocalypse II",pre:true,mult:"≥ ×10 · argent",ev:1,hid:2,setup:0,san0:50,drain:200,pill:5,grace:2,hunt:[30,50,60],gs:1.5,ps:0.75,cursed:0,fing:60,ins:"—",
+  note:"Vous courez à 75 %, l'entité à 150 % : vous ne la semez plus."},
+ {id:"apo3",n:"Apocalypse III",pre:true,mult:"≥ ×15 · or",ev:0,hid:3,setup:0,san0:0,drain:200,pill:0,grace:0,hunt:[30,50,60],gs:1.5,ps:0.5,cursed:0,fing:0,ins:"—",
+  note:"Aucune preuve, aucune lampe, aucune période de grâce, santé mentale à 0 % dès l'entrée : tout passe par le comportement et la vitesse."},
+ {id:"defi",n:"Défi hebdomadaire",mult:"×1",ev:3,hid:0,setup:0,san0:100,drain:200,pill:30,grace:3,hunt:[30,50,60],gs:1,ps:1,cursed:1,fing:120,ins:"—",
+  note:"Réglages imposés, différents chaque semaine (26 défis, rotation le lundi 0 h UTC) et matériel fourni. Ajustez à la main ce que le défi annonce."},
+ {id:"perso",n:"Perso / libre",free:true,mult:"×0 à ×15",ev:3,hid:0,setup:0,san0:100,drain:200,pill:30,grace:3,hunt:[30,50,60],gs:1,ps:1,cursed:1,fing:120,ins:"—",
+  note:"Difficulté personnalisée (niveau 50, 3 emplacements) : réglez le nombre de preuves, la vitesse de l&rsquo;entité, la grâce et la durée de chasse comme votre contrat."}
+];
+
+/* ---------------- tailles de carte ----------------
+   Le jeu n'affiche jamais la taille : elle est pourtant derrière la durée des chasses,
+   la perte de santé mentale, la limite de lumières et les gains.
+   drain : % de santé perdus par seconde [préparation, phase normale] à 100 % de perte,
+           en équipe (÷2 en solo) · light : lumières avant que les plombs sautent
+   kills : secondes ajoutées par mort quand l'option est active [basse, moyenne, haute]  */
+const SIZES=[
+ {n:"Petite",  drain:[0.09,0.12], light:9, gain:[100,25], kills:[15,25,35]},
+ {n:"Moyenne", drain:[0.05,0.08], light:8, gain:[150,35], kills:[20,30,40]},
+ {n:"Grande",  drain:[0.03,0.05], light:7, gain:[200,50], kills:[25,35,45]}
+];
+/* s : indice dans SIZES · lvl : niveau de déblocage (v0.19, oct. 2026) */
+const MAPS=[
+ {n:"Entraînement (entrepôt)",s:0,lvl:1},
+ {n:"6 Tanglewood Drive",s:0,lvl:1},
+ {n:"42 Edgefield Road",s:0,lvl:2},
+ {n:"10 Ridgeview Court",s:0,lvl:2},
+ {n:"Grafton Farmhouse",s:0,lvl:4},
+ {n:"Nell's Diner",s:0,lvl:5},
+ {n:"13 Willow Street",s:0,lvl:6},
+ {n:"Prison (Restricted)",s:0,lvl:11},
+ {n:"Camp Woodwind",s:0,lvl:13},
+ {n:"Point Hope (Restricted)",s:0,lvl:15},
+ {n:"Bleasdale Farmhouse",s:1,lvl:4},
+ {n:"Brownstone High School (Restricted)",s:1,lvl:8},
+ {n:"Prison",s:1,lvl:11},
+ {n:"Maple Lodge Campsite",s:1,lvl:13},
+ {n:"Point Hope",s:1,lvl:15},
+ {n:"Sunny Meadows (Restricted)",s:1,lvl:17},
+ {n:"Brownstone High School",s:2,lvl:8},
+ {n:"Sunny Meadows Mental Institution",s:2,lvl:17}
+];
+
+const CURSED = [
+ {n:"Planche Ouija",how:"Posez des questions à voix haute, puis dites « au revoir » pour finir.",list:[
+  "« Où êtes-vous ? » → pièce actuelle de l'entité (−50 %)","« Êtes-vous ici / proche ? » → même pièce ou non (−20 %)","« Où est l'os ? » → pièce de l'os (−20 %)",
+  "« Répondez-vous à tout le monde ? » → veut-elle qu'on soit seul au Spirit Box (−20 %)","« Quel âge avez-vous ? » → âge ; s'il change : Thayé (−5 %)",
+  "« Quelle est / À quel point… ma santé » → estimation de santé (−5 %)","« Cache-cache ? » → compte à rebours puis chasse maudite (brise la planche)"],
+  risk:"S'éloigner pendant la session ou poser une question à 0 % → la planche brûle et lance une chasse maudite. Elle donne la pièce actuelle, pas la favorite."},
+ {n:"Miroir hanté",how:"Tenez-le et activez-le : il montre la pièce favorite de l'entité (une lumière y apparaît, visible par les autres).",list:["Coût : 20 % ou 7,5 %/s, le plus élevé des deux"],
+  risk:"Utilisé sans santé (ou sous 20 %) → il se brise et lance une chasse maudite."},
+ {n:"Patte de singe",how:"Faites un vœu à voix haute ; un doigt se plie. Chaque vœu une seule fois par contrat.",list:[
+  "« Voir le fantôme » → apparition, puis chasse avec vision obscurcie","« Activité » → activité ×2 pendant 2 min ; disjoncteur cassé et porte d'entrée verrouillée 2 min",
+  "« Être sain d'esprit » → tout le monde à 50 % ; pièce favorite changée, perte de santé +50 %","« Fantôme emprisonné » → bloqué 1 min ; portes verrouillées puis chasse",
+  "« Être en vie » → ressuscite un joueur ; 50 % de chance que le souhaiteur meure","« Être en sécurité » → débloque la cachette la plus proche ; lumières cassées, l'entité vous entend de partout",
+  "« Partir » → déverrouille les sorties (même en chasse) ; lent et aveuglé 5 s","« Information » → retire 1 fausse preuve du journal ; chasse près de vous, vue et ouïe réduites",
+  "« Météo » → change la météo ; −25 %"],risk:"Les doigts restants indiquent les vœux possibles. « N'importe quoi » tire un vœu au hasard."},
+ {n:"Boîte à musique",how:"Ouvrez-la : à moins de 20 m, l'entité chante (invisible) ; à moins de 5 m, elle apparaît et marche vers la boîte.",list:["Coût : 2,6 %/s à moins de 3 m (77 % si elle joue entièrement)","Yokai : réagit à 0,5 m seulement"],
+  risk:"Chasse maudite si : la boîte est lancée, un joueur atteint 0 %, l'événement dure plus de 5 s, ou l'entité touche le joueur / la boîte."},
+ {n:"Cercle d'invocation",how:"Allumez les 5 bougies rouges au briquet : l'entité est téléportée au centre, attend 5 s, puis chasse (maudite).",list:["Coût : 16 % par bougie (80 % au total)"],
+  risk:"Dernière bougie allumée sous 16 % → chasse immédiate, arrêtable seulement par un crucifix rang III. Si elle chasse déjà, elle est téléportée au cercle et continue."},
+ {n:"Cartes de tarot",how:"Tirez une carte à la fois (10 par paquet).",list:[
+  "The Tower (20 %) : activité ×2 pendant 20 s","Wheel of Fortune (20 %) : +25 % (vert) ou −25 % (rouge)","The Fool (17 %, 100 % en chasse) : aucun effet",
+  "The Devil (10 %) : événement vers le joueur le plus proche","Death (10 %) : chasse maudite","The Hermit (10 %) : entité enfermée 90 s dans sa pièce",
+  "The Sun (5 %) : santé à 100 %","The Moon (5 %) : santé à 0 %","High Priestess (2 %) : ressuscite un joueur","Hanged Man (1 %) : mort instantanée"],risk:"Pendant une chasse, toutes les cartes deviennent The Fool."},
+ {n:"Poupée vaudou",how:"Chaque épingle enfoncée (au hasard) force une interaction de l'entité.",list:["Coût : 5 % par épingle, 10 % pour celle du cœur","Pas d'interaction si rien n'est à portée de l'entité"],
+  risk:"Épingle du cœur, ou 0 % de santé (toutes les épingles partent d'un coup) → chasse maudite."}
+];
+
+const MYTHS = [
+ ["« L'Onryo chasse au hasard après 3 flammes »","Il tente toujours une chasse après chaque 3e flamme soufflée."],
+ ["« L'Ombre ne chasse pas si je suis dans sa pièce favorite »","Ça vaut pour sa pièce actuelle, quelle qu'elle soit."],
+ ["« La Ouija donne la pièce favorite »","Elle donne la position actuelle. Seul le miroir montre la pièce favorite."],
+ ["« Seul l'Esprit attend 180 s après l'encens »","Toute entité peut attendre ; l'Esprit y est obligé."],
+ ["« Le Hantu refroidit plus vite les pièces »","Non : il va seulement plus vite dans le froid."],
+ ["« Les orbes du Mimic le suivent »","Elles restent dans la pièce favorite, identiques aux vraies."],
+ ["« Le Mimic peut montrer les preuves des autres »","Il imite les comportements, pas les preuves."],
+ ["« Les Jumeaux sont deux entités »","Une seule entité avec deux portées d'interaction."],
+ ["« Le Spectre traverse les murs »","Il chasse et se déplace comme les autres."],
+ ["« Voir sa respiration = Températures glaciales »","On la voit sous 5 °C depuis v1.9 ; utilisez le thermomètre."],
+ ["« Seul le sel III déclenche le Gallu »","Tous les rangs de sel le déclenchent."],
+ ["« Il faut jeter les objets sur le Deildegast »","N'importe quel objet non-équipement, n'importe où, même dans le camion."],
+ ["« L'Aswang arrête la chasse s'il me voit me cacher »","Il doit entrer dans la même cachette que vous."],
+ ["« Le Myling est muet en chasse »","Il fait des sons vocaux ; ils portent seulement à 12 m."],
+ ["« Chasser depuis une autre pièce = elle a changé de pièce »","Faux : elle chasse depuis là où elle se promène. Seuls les orbes ou le miroir le confirment."],
+ ["« L'écriture puis le livre lancé »","Depuis v0.9, une entité avec Écriture ne lance plus le livre après avoir écrit."]
+];
+
+const OBS = [
+ {grp:"Ce qu'il a fait — élimine"},
+ {id:"x_breaker_off",t:"A coupé le disjoncteur lui-même",x:["jinn"]},
+ {id:"x_breaker_on",t:"A rallumé le disjoncteur",x:["hantu"]},
+ {id:"x_light_on",t:"A allumé une lumière",x:["mare"]},
+ {id:"x_salt",t:"A marché dans le sel (empreintes / tas perturbé)",x:["wraith"]},
+ {id:"x_mist",t:"Mist (souffle / brume) vu de vos yeux",x:["oni","kormos"]},
+ {id:"x_chase",t:"Événement de poursuite : il marche / court vers vous",x:["kormos"]},
+ {id:"x_photo",t:"Visible sur une photo étiquetée « Fantôme »",x:["phantom"]},
+ {id:"x_dots",t:"D.O.T.S. vu à l'œil nu ou avec quelqu'un dans la pièce",x:["goryo"]},
+ {id:"x_room",t:"A changé de pièce favorite (orbes / miroir)",x:["goryo"]},
+ {id:"x_flame",t:"A chassé alors qu'une flamme était allumée près de lui",x:["onryo"]},
+ {id:"x_smudge",t:"A chassé entre 90 et 180 s après l'encens",x:["spirit"]},
+ {id:"x_male",t:"Nom ou modèle masculin",x:["banshee","dayan"]},
+ {info:"Nom ou modèle féminin : n'élimine personne, toutes les entités peuvent être féminines. Seules la Banshee et la Dayan le sont TOUJOURS."},
+ {id:"x_nobreath",t:"Pas de souffle glacé en chasse, disjoncteur coupé",x:["hantu"]},
+ {id:"x_heard",t:"En chasse, vous a entendu parler ou repéré votre électronique à plus de 3 m",x:["yokai"]},
+ {id:"x_stillseen",t:"Vous a repéré de loin alors que vous étiez immobile et silencieux",x:["kormos"]},
+ {id:"x_hidekill",t:"A ouvert votre cachette et la chasse a continué",x:["aswang"]},
+ {id:"x_notarget",t:"A chassé au-dessus de 40 % lumière de sa pièce allumée",x:["mare"]},
+ {id:"x_tv",t:"A allumé un téléviseur / un ordinateur",x:["mare"]},
+ {id:"x_shade_room",t:"A chassé ou fait de l'EMF alors que j'étais dans sa pièce",x:["shade"]},
+ {id:"x_book",t:"A lancé le livre d'écriture",s:"Valable seulement en 3 preuves : une entité qui a l'Écriture ne peut plus lancer le livre",n3:true,x:["spirit", "poltergeist", "mare", "revenant", "shade", "demon", "myling", "moroi", "deogen", "thaye", "obambo", "aswang", "deildegast"]},
+ {id:"x_salt6",t:"Plus de 4 empreintes de suite dans le sel",s:"Jusqu'à 6 : Gallu affaibli",x:["wraith"]},
+ {id:"x_cd25",t:"A rechassé moins de 25 s après la fin de la chasse précédente",x:["spirit","wraith","phantom","poltergeist","banshee","jinn","mare","revenant","shade","yurei","oni","yokai","hantu","goryo","myling","onryo","twins","raiju","obake","moroi","deogen","thaye","gallu","dayan","obambo","kormos","aswang","deildegast"]},
+ {grp:"Vitesse vérifiée — élimine"},
+ {id:"x_noelec",t:"N'a PAS accéléré en passant près d'une électronique allumée",s:"À vérifier une chasse entière, appareil posé au sol",x:["raiju"]},
+ {id:"x_nofar",t:"N'a PAS foncé de loin alors que le disjoncteur était allumé",x:["jinn"]},
+ {id:"x_noslow",t:"N'était PAS très lent tant qu'il ne m'avait pas détecté",x:["revenant"]},
+ {id:"x_nosound",t:"N'est PAS venu vers le bruit de mes pas (je bougeais, lui non)",x:["kormos"]},
+ {id:"x_base17",t:"Vitesse constante à 1,7 m/s tant qu'il ne me voyait pas",s:"Vitesse de base standard mesurée au Tap",x:["revenant","moroi","thaye","twins","deogen","deildegast","aswang","obambo"]},
+ {id:"x_losacc",t:"A accéléré progressivement quand il me voyait (LdV)",x:["revenant","hantu","deogen","thaye","deildegast"]},
+ {id:"x_nolos",t:"N'a JAMAIS accéléré même en me voyant longtemps",x:["spirit","wraith","phantom","poltergeist","banshee","mare","shade","demon","yurei","oni","yokai","goryo","myling","onryo","raiju","obake","moroi","gallu","obambo","twins","jinn","aswang"]},
+ {info:"Mimic : pendant la 1re minute après l'ouverture de la porte, il est en état neutre (entité standard, seuil 50 %, 1,7 m/s) et ne copie rien. Il change ensuite toutes les 30 s à 2 min, jamais pendant une chasse ni un événement."},
+ {grp:"Apparence pendant la chasse"},
+ {id:"shape",t:"Change de forme / de modèle en pleine chasse",g:["obake"]},
+ {id:"visible",t:"Très visible : clignote en restant presque toujours visible",g:["oni","deogen"]},
+ {id:"invis",t:"Presque invisible : longues disparitions entre les clignotements",g:["phantom"]},
+ {id:"breath",t:"Souffle glacé qui sort de l'entité (disjoncteur coupé)",g:["hantu"]},
+ {grp:"Vitesse"},
+ {id:"twospeed",t:"Vitesse de base différente d'une chasse à l'autre",s:"Mesurez avec le Tap à chaque chasse",g:["twins","gallu","obambo","moroi","thaye","hantu","deildegast","dayan","raiju","jinn"]},
+ {id:"switch",t:"Change brusquement de vitesse sans vous avoir vu",g:["obambo","dayan","raiju","hantu","revenant","jinn","kormos","deogen"]},
+ {id:"slowfast",t:"Très lent, puis fonce d'un coup dès qu'il vous repère",g:["revenant","kormos","aswang"]},
+ {id:"blindacc",t:"A accéléré alors qu'il ne pouvait PAS me voir (mur, cachette, autre pièce)",s:"La LdV standard demande de vous voir",g:["revenant","kormos","deogen","raiju","hantu","obambo","dayan","gallu"]},
+ {id:"closeslow",t:"Fonce droit sur vous puis ralentit presque à l'arrêt tout près",g:["deogen"]},
+ {id:"movespd",t:"Accélère quand vous bougez, ralentit quand vous vous figez",g:["dayan"]},
+ {id:"elec",t:"Fonce près des appareils électroniques allumés",g:["raiju"]},
+ {id:"farfast",t:"Très rapide de loin, disjoncteur allumé, puis normal tout près",g:["jinn"]},
+ {id:"oldslow",t:"Très rapide au début de partie, de plus en plus lent ensuite",g:["thaye","moroi","deildegast"]},
+ {grp:"Sons & objets"},
+ {id:"scream",t:"Cri unique au micro parabolique",g:["banshee"]},
+ {id:"para",t:"Beaucoup de sons paranormaux au micro parabolique",s:"Indice, non définitif",g:["myling"]},
+ {id:"breathsb",t:"Respiration lourde dans la Spirit Box à ~1 m",g:["deogen"]},
+ {id:"age",t:"Âge qui change à la planche Ouija",g:["thaye"]},
+ {id:"orb4",t:"Orbes visibles EN PLUS de 3 autres preuves",g:["mimic"]},
+ {id:"prints",t:"Empreinte à 6 doigts, double empreinte ou 5 empreintes",g:["obake"]},
+ {id:"uvgone",t:"Les empreintes UV disparaissent anormalement vite",g:["obake"]},
+ {id:"shadowevt",t:"Apparition sous forme d'ombre",s:"Définitif seulement pendant un événement d'objet maudit",g:["shade"]},
+ {id:"teleport",t:"EMF surgit près d'un joueur, loin de sa pièce",g:["wraith","phantom"]},
+ {id:"sing",t:"Événements de chant très fréquents",s:"Indice",g:["banshee"]},
+ {grp:"Encens, crucifix, sel"},
+ {id:"blind7",t:"Aveuglé par l'encens nettement plus longtemps (6-7 s)",g:["moroi","gallu"]},
+ {id:"blind4",t:"Aveuglé par l'encens très brièvement (~4 s)",g:["gallu"]},
+ {id:"cruci_far",t:"Crucifix rang I efficace à plus de 3 m",g:["demon","gallu"]},
+ {id:"cruci_near",t:"Crucifix inefficace alors que j'étais à portée",s:"Crucifix déjà utilisé ? Sinon : Gallu enragé (−2 m)",g:["gallu"]},
+ {id:"nosalt_slow",t:"Pas ralenti par le sel de rang III",g:["gallu"]},
+ {id:"trapped",t:"Après un encens, plus aucune activité hors de sa pièce (90 s)",g:["yurei"]},
+ {id:"smudge180",t:"Aucune chasse pendant 180 s après l'encens, santé basse",s:"Indice fort",g:["spirit"]},
+ {grp:"Comment il vous traque"},
+ {id:"knows",t:"Sait où vous êtes, même caché, sans chercher",g:["deogen","aswang"]},
+ {id:"hideend",t:"La chasse s'arrête quand il ouvre votre cachette",g:["aswang"]},
+ {id:"blind",t:"Ne vous voit pas alors que vous êtes immobile à découvert",g:["kormos","banshee"]},
+ {id:"hearsteps",t:"Vous suit au bruit de vos pas (de loin, sans vous voir)",g:["kormos"]},
+ {id:"ignore",t:"Passe à côté d'un joueur visible pour en viser un autre",g:["banshee"]},
+ {id:"deaf",t:"N'entend pas votre voix / votre électronique à quelques mètres",g:["yokai"]},
+ {id:"quiet",t:"Pas entendus seulement tout près (l'électronique grésille avant)",g:["myling"]},
+ {id:"throws",t:"Lance des objets en rafale pendant la chasse",g:["poltergeist"]},
+ {grp:"Quand il a chassé"},
+ {id:"flame3",t:"Chasse juste après avoir soufflé une flamme (la 3e)",g:["onryo"]},
+ {id:"smudge60",t:"Chasse entre 60 et 90 s après un encens",g:["demon"]},
+ {id:"cd20",t:"Rechasse 20 à 25 s après la fin de la chasse précédente",g:["demon"]},
+ {grp:"Hors chasse"},
+ {id:"salt1",t:"A piétiné un tas de sel mais ignoré les suivants",g:["gallu"]},
+ {id:"nosalt",t:"Est passé sur le sel sans jamais le perturber",g:["wraith","gallu"]},
+ {id:"doorslam",t:"Porte fermée entièrement + chute de santé brutale",g:["yurei"]},
+ {id:"lightoff",t:"Rééteint la lumière juste après que vous l'allumez",g:["mare"]},
+ {id:"multi",t:"Plusieurs objets projetés en même temps",g:["poltergeist"]},
+ {id:"photo",t:"Disparaît quand on le prend en photo pendant un événement",g:["phantom"]},
+ {id:"sixfinger",t:"Empreinte à 6 doigts ou double empreinte",g:["obake"]}
+];
+/* catégories de vitesse de base atteignables (hors accélération LdV) */
+const CAT = {tlent:"Très lente",lent:"Lente",normal:"Normale",rapide:"Rapide",trapide:"Très rapide"};
+const GCAT = {
+ revenant:["tlent","trapide"], jinn:["normal","rapide"], hantu:["lent","normal","rapide","trapide"],
+ twins:["lent","normal"], raiju:["normal","rapide"], moroi:["lent","normal","rapide"],
+ deogen:["tlent","trapide"], thaye:["tlent","lent","normal","rapide","trapide"],
+ gallu:["lent","normal","rapide"], dayan:["lent","normal","rapide"], obambo:["lent","rapide"],
+ kormos:["normal","rapide"], aswang:["lent"],
+ deildegast:["tlent","lent","normal","rapide","trapide"],
+ mimic:["tlent","lent","normal","rapide","trapide"]
+};
+const gcat = g => GCAT[g.id] || ["normal"];
+
+/* ---------------- état ---------------- */
+const S = {keys:{smudge:'s',hunt:'h',cd:'c',tap:'f',reset:'r'}, ev:{}, n:3, manual:{}, san:null, los:null, spdf:false, speed:null, obs:{}, cat:{}, fav:{}, pick:null, blood:false, diff:"pro", cgrace:3, chunt:"high", map:-1};
+EV_ORDER.forEach(k=>S.ev[k]=0);
+const LS="phasmo-journal-v1";
+let HADKEYS=false;   // le journal avait-il déjà ses propres touches en mémoire ?
+try{const s=JSON.parse(localStorage.getItem(LS)||"null"); if(s){ HADKEYS=!!s.keys;Object.assign(S,s,{speed:null}); S.obs=S.obs||{}; S.cat=S.cat||{}; S.fav=S.fav||{}; S.keys=Object.assign({smudge:'s',hunt:'h',cd:'c',tap:'f',reset:'r'},s.keys||{});}}catch(e){}
+function save(){try{localStorage.setItem(LS,JSON.stringify({ev:S.ev,n:S.n,manual:S.manual,san:S.san,los:S.los,spdf:S.spdf,obs:S.obs,cat:S.cat,keys:S.keys,fav:S.fav,pick:S.pick,blood:S.blood,diff:S.diff,cgrace:S.cgrace,chunt:S.chunt,map:S.map}))}catch(e){}}
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const fmt=x=>x.toFixed(2).replace(".",",");
+const BM=()=>S.blood?1.15:1;          // Lune de sang : +15 % de vitesse en chasse
+const HUNTSET={low:[15,30,40],med:[20,40,50],high:[30,50,60]};
+const MSZ=()=>(S.map>=0&&MAPS[S.map])?MAPS[S.map].s:-1;   // 0 petite, 1 moyenne, 2 grande, -1 inconnue
+const HLEN=()=>{const z=MSZ(); return z<0?0:D().hunt[z];} // durée de chasse sur cette carte
+const D=()=>{                         // difficulté courante (défaut : Professionnel)
+  const d=DIFFS.find(x=>x.id===S.diff)||DIFFS[2];
+  return (d.free||d.id==="defi") ? Object.assign({},d,{grace:+S.cgrace,hunt:HUNTSET[S.chunt]||HUNTSET.high}) : d;
+};
+const GM=()=>{const v=+(($("#gspd")||{}).value||1); return v>0?v:1;}  // vitesse d'entité réglée
+const fmtS=x=>fmt(x*GM()*BM());       // vitesse telle qu'elle est réellement en jeu
+
+/* ---------------- logique d'élimination ---------------- */
+function evidenceReason(g){
+  const found=EV_ORDER.filter(k=>S.ev[k]===1), excl=EV_ORDER.filter(k=>S.ev[k]===2);
+  const own=g.ev;
+  if(g.fake){ // Mimic : faux orbes toujours visibles
+    if(excl.includes(g.fake)) return "Orbes exclues";
+  }
+  const realFound=found.filter(k=>!(g.fake&&k===g.fake));
+  for(const k of realFound) if(!own.includes(k)) return EV[k].fr+" trouvée";
+  if(realFound.length>S.n) return "trop de preuves pour ce mode";
+  const avail=own.filter(k=>!excl.includes(k));
+  if(avail.length<S.n) return "preuves exclues";
+  if(g.forced&&S.n>0&&S.n<3&&excl.includes(g.forced)) return EV[g.forced].fr+" (forcée) exclue";
+  if(S.n===0 && realFound.length>0) return "mode 0 preuve";
+  return null;
+}
+function reason(g){
+  const r=evidenceReason(g); if(r) return r;
+  if(S.san!=null && S.san!=="" && g.seuilMax<999 && +S.san>g.seuilMax+0.5) return "a chassé au-dessus de "+g.seuilMax+" %";
+  if(S.los==="oui" && g.los==="non" && g.id!=="mimic") return "n'accélère pas en LdV";
+  if(S.los==="non" && g.los==="oui") return "accélère toujours en LdV";
+  const cats=Object.keys(S.cat).filter(k=>S.cat[k]);
+  if(cats.length && !cats.some(c=>gcat(g).includes(c))) return "vitesse de base "+cats.map(c=>CAT[c].toLowerCase()).join(" / ")+" impossible";
+  if(S.spdf && S.speed!=null && g.id!=="mimic"){const [a,b]=g.spd; if(S.speed<a-0.12||S.speed>b+0.12) return "vitesse "+fmt(S.speed)+" m/s hors plage";}
+  for(const o of OBS){ if(o.info) continue; if(o.n3&&S.n!==3) continue; if(o.x&&S.obs[o.id]&&o.x.includes(g.id)) return "exclu : "+o.t.toLowerCase(); }
+  if(g.id!=="mimic") for(const o of OBS){ if(o.info) continue; if(o.n3&&S.n!==3) continue; if(o.g&&S.obs[o.id]&&!o.g.includes(g.id)) return "ne colle pas : "+o.t.toLowerCase(); }
+  if(S.manual[g.id]) return "éliminée à la main";
+  return null;
+}
+
+/* ---------------- rendu preuves ---------------- */
+function renderEv(){
+  const box=$("#evs"); box.innerHTML="";
+  const alive=GHOSTS.filter(g=>!reason(g));
+  EV_ORDER.forEach(k=>{
+    const b=document.createElement("button"); b.className="ev"; b.dataset.s=S.ev[k]; b.id="ev-"+k;
+    b.innerHTML=`<span class="st"></span><span class="nm">${EV[k].long}</span><span class="k mono">${EV[k].key}</span>`;
+    const possible=alive.some(g=>g.ev.includes(k)||g.fake===k);
+    if(S.ev[k]===0 && !possible){ b.classList.add("dead"); b.title="Aucune entité restante ne peut montrer cette preuve"; }
+    b.onclick=()=>{S.ev[k]=(S.ev[k]+1)%3; update();};
+    box.appendChild(b);
+  });
+  $$("#nev button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.n===S.n)));
+}
+
+/* ---------------- rendu cartes ---------------- */
+function card(g){
+  const r=reason(g);
+  const el=document.createElement("div"); el.className="card"+(r?" out":"")+(S.manual[g.id]?" manual":"")+(S.pick===g.id?" picked":""); el.tabIndex=0; el.setAttribute("role","button");
+  const evs=[...g.ev,...(g.fake?[g.fake]:[])].map(k=>{
+    let c="evt"; if(S.ev[k]===1)c+=" on"; else if(!r) c+=" need";
+    if(g.forced===k)c+=" forced"; if(g.fake===k)c+=" fake";
+    return `<span class="${c}" title="${EV[k].long}${g.fake===k?' (faux orbes, toujours visibles)':''}${g.forced===k?' — preuve forcée':''}">${EV[k].fr}</span>`}).join("");
+  const hot=g.seuilMax>=60, cold=g.seuilMax<=40;
+  const fast=g.spd[1]>2.9||g.spd[0]>1.75, slow=g.spd[0]<1.6;
+  el.innerHTML=`<button class="pick" title="${S.pick===g.id?'Annuler le choix':'C\'est cette entité'}" aria-label="Choisir ${g.fr}">✓</button><button class="x" title="${S.manual[g.id]?'Rétablir':'Éliminer à la main'}" aria-label="Éliminer ${g.fr}">✕</button>
+   <div><div class="nm">${g.fr}</div><div class="en">${g.en}</div></div>
+   <div class="evrow">${evs}</div>
+   <div class="key">${g.key}</div>
+   ${r?`<div class="why">✕ ${r}</div>`:""}
+   ${S.pick===g.id?'<div class="badge-pick">C\'est lui</div>':''}
+   <div class="stats"><span class="st2 ${hot?'hot':cold?'cold':''}">seuil ${g.seuilMax>=999?'variable':g.seuilMax+' %'}</span><span class="st2 spd">${fmtS(g.spd[0])}–${fmtS(g.spd[1])} m/s</span><span class="st2">LdV ${g.los}</span><span class="st2 ${slow?'cold':fast?'hot':''}">${gcat(g).map(c=>CAT[c]).join(" / ")}</span></div>`;
+  el.querySelector(".pick").onclick=e=>{e.stopPropagation(); S.pick = S.pick===g.id ? null : g.id; update();};
+  el.querySelector(".x").onclick=e=>{e.stopPropagation(); if(S.manual[g.id]) delete S.manual[g.id]; else S.manual[g.id]=1; update();};
+  el.onclick=()=>openGhost(g); el.onkeydown=e=>{if(e.key==="Enter")openGhost(g)};
+  return el;
+}
+function renderGrid(){
+  const grid=$("#grid"); grid.innerHTML="";
+  const picked=GHOSTS.filter(g=>g.id===S.pick);
+  const alive=GHOSTS.filter(g=>g.id!==S.pick&&!reason(g)), dead=GHOSTS.filter(g=>g.id!==S.pick&&reason(g));
+  picked.forEach(g=>grid.appendChild(card(g)));
+  alive.forEach(g=>{const c=card(g); if(alive.length===1&&!S.pick)c.classList.add("win"); grid.appendChild(c)});
+  dead.forEach(g=>grid.appendChild(card(g)));
+  $("#nleft").textContent=alive.length+(S.pick?1:0);
+  // indice : preuves qui départagent
+  const found=EV_ORDER.filter(k=>S.ev[k]===1).length;
+  let h="";
+  if(S.pick) h="Entité choisie : "+GHOSTS.find(g=>g.id===S.pick).fr+(reason(GHOSTS.find(g=>g.id===S.pick))?" — attention, elle est pourtant éliminée par vos filtres.":"");
+  else if(alive.length===0) h="Aucune entité ne correspond : vérifiez une preuve ou un filtre.";
+  else if(alive.length===1) h="C'est probablement : "+alive[0].fr+".";
+  else if(found<S.n){
+    const cnt={}; EV_ORDER.filter(k=>S.ev[k]===0).forEach(k=>cnt[k]=alive.filter(g=>g.ev.includes(k)).length);
+    const best=Object.entries(cnt).filter(([k,v])=>v>0&&v<alive.length).sort((a,b)=>Math.abs(a[1]-alive.length/2)-Math.abs(b[1]-alive.length/2))[0];
+    if(best) h="Preuve la plus utile à chercher : "+EV[best[0]].long;
+  } else h="Toutes les preuves trouvées : départagez avec les comportements.";
+  $("#nexthint").textContent=h;
+}
+
+/* ---------------- filtres ---------------- */
+function renderFilters(){
+  $("#san").value=S.san??"";
+  const CATLBL={tlent:["Très lente","< "+fmtS(1.2)],lent:["Lente",fmtS(1.2)+" – "+fmtS(1.6)],
+    normal:["Normale","≈ "+fmtS(1.7)],rapide:["Rapide",fmtS(2)+" – "+fmtS(2.6)],trapide:["Très rapide","> "+fmtS(2.6)]};
+  const alive=GHOSTS.filter(g=>!reason(g));
+  $$("#catf .chip").forEach(b=>{
+    const L=CATLBL[b.dataset.v]; b.textContent=L[0]+" · "+L[1];
+    b.setAttribute("aria-pressed",String(!!S.cat[b.dataset.v]));
+    const possible=alive.some(g=>gcat(g).includes(b.dataset.v));
+    b.classList.toggle("dead", !possible && !S.cat[b.dataset.v]);
+    b.title = possible ? "" : "Aucune entité restante ne peut avoir cette vitesse";
+  });
+  $$("#losf .chip").forEach(b=>{
+    const possible=alive.some(g=>g.id==="mimic"||(b.dataset.v==="oui"?g.los!=="non":g.los!=="oui"));
+    b.classList.toggle("dead", !possible && S.los!==b.dataset.v);
+  });
+  $$("#losf .chip").forEach(b=>b.setAttribute("aria-pressed",String(S.los===b.dataset.v)));
+  $("#spdf").setAttribute("aria-pressed",String(S.spdf));
+}
+function renderObs(){
+  const box=$("#obs"); box.className="obs"; box.innerHTML="";
+  const names=id=>GHOSTS.find(g=>g.id===id).fr;
+  OBS.forEach(o=>{
+    if(o.grp){const d=document.createElement("div");d.className="obs-g";d.textContent=o.grp;box.appendChild(d);return;}
+    if(o.info){const d=document.createElement("div");d.className="ob-info";d.textContent=o.info;box.appendChild(d);return;}
+    const b=document.createElement("button"); b.className="ob"; b.id="ob-"+o.id; b.setAttribute("aria-pressed",String(!!S.obs[o.id]));
+    if(o.x) b.classList.add("ex");
+    const list=o.x?"Élimine : "+(o.x.length>6?o.x.length+" entités":o.x.map(names).join(", ")):(o.g.length>8?"la plupart des entités":o.g.map(names).join(", "))+" (+ Mimic)";
+    b.innerHTML=`<span class="bx"></span><span style="flex:1">${o.t}<small>${o.s?o.s+" · ":""}${list}</small></span>`;
+    b.onclick=()=>{if(S.obs[o.id])delete S.obs[o.id]; else S.obs[o.id]=1; update();};
+    const st=document.createElement("button");
+    st.className="star"+(S.fav[o.id]?" on":""); st.textContent=S.fav[o.id]?"★":"☆";
+    st.title="Mettre en favori"; st.onclick=e=>{e.stopPropagation(); if(S.fav[o.id])delete S.fav[o.id]; else S.fav[o.id]=1; update();};
+    b.appendChild(st);
+    box.appendChild(b);
+  });
+}
+function renderFavs(){
+  const box=$("#favs"); box.innerHTML="";
+  const names=id=>GHOSTS.find(g=>g.id===id).fr;
+  const favs=OBS.filter(o=>o.id&&S.fav[o.id]);
+  if(!favs.length){ box.innerHTML='<div class="fav-empty">Cliquez l\'étoile ☆ d\'une observation pour l\'épingler ici et la retrouver tout de suite.</div>'; return; }
+  favs.forEach(o=>{
+    const b=document.createElement("button"); b.className="ob"+(o.x?" ex":""); b.setAttribute("aria-pressed",String(!!S.obs[o.id]));
+    const list=o.x?"Élimine : "+(o.x.length>6?o.x.length+" entités":o.x.map(names).join(", ")):(o.g.length>8?"la plupart des entités":o.g.map(names).join(", "))+" (+ Mimic)";
+    b.innerHTML=`<span class="bx"></span><span style="flex:1">${o.t}<small>${list}</small></span>`;
+    b.onclick=()=>{if(S.obs[o.id])delete S.obs[o.id]; else S.obs[o.id]=1; update();};
+    const st=document.createElement("button"); st.className="star on"; st.textContent="★"; st.title="Retirer des favoris";
+    st.onclick=e=>{e.stopPropagation(); delete S.fav[o.id]; update();};
+    b.appendChild(st);
+    box.appendChild(b);
+  });
+}
+
+/* ------------- récapitulatif de ce qui est coché, au-dessus des entités ------------- */
+function renderRecap(){
+  const box=$("#recapChips"); if(!box) return;
+  const items=[];
+
+  // preuves trouvées / exclues
+  EV_ORDER.forEach(k=>{
+    if(S.ev[k]===1) items.push({c:"ok",  t:EV[k].long, h:"trouvée", k:"ev:"+k});
+    if(S.ev[k]===2) items.push({c:"out", t:EV[k].long, h:"exclue",  k:"ev:"+k});
+  });
+
+  // observations cochées
+  OBS.forEach(o=>{
+    if(o.grp||o.info||!o.id||!S.obs[o.id]) return;
+    items.push({c:o.x?"ex":"keep", t:o.t, h:o.x?"élimine":"ne garde que", k:"obs:"+o.id});
+  });
+
+  // autres filtres de l'enquête
+  if(S.los==="oui") items.push({c:"keep",t:"A accéléré en me voyant",h:"ligne de vue",k:"los"});
+  if(S.los==="non") items.push({c:"keep",t:"N'a jamais accéléré en me voyant",h:"ligne de vue",k:"los"});
+  Object.keys(S.cat).filter(c=>S.cat[c]).forEach(c=>
+    items.push({c:"keep",t:"Vitesse "+CAT[c].toLowerCase(),h:"vitesse de base",k:"cat:"+c}));
+  if(S.san!=null&&S.san!=="") items.push({c:"keep",t:"A chassé à "+S.san+" % de santé",h:"seuil",k:"san"});
+  if(S.spdf&&S.speed!=null) items.push({c:"keep",t:"Vitesse mesurée "+fmt(S.speed)+" m/s",h:"filtre",k:"spdf"});
+  const man=Object.keys(S.manual).filter(i=>S.manual[i]);
+  man.forEach(i=>{const g=GHOSTS.find(x=>x.id===i); if(g) items.push({c:"ex",t:g.fr,h:"éliminée à la main",k:"man:"+i});});
+  if(S.pick){const g=GHOSTS.find(x=>x.id===S.pick); if(g) items.push({c:"ok",t:"C'est lui : "+g.fr,h:"choix",k:"pick"});}
+
+  $("#recap").hidden = items.length===0;
+  $("#rcount").textContent = items.length ? "· "+items.length : "";
+  box.innerHTML=items.map(it=>
+    `<button class="rch ${it.c}" data-k="${it.k}" title="${it.h} — cliquer pour retirer"><span>${it.t}</span><span class="rx">✕</span></button>`).join("");
+  $$("#recapChips .rch").forEach(b=>b.onclick=()=>{
+    const [t,v]=b.dataset.k.split(":");
+    if(t==="ev") S.ev[v]=0;
+    else if(t==="obs") delete S.obs[v];
+    else if(t==="cat") delete S.cat[v];
+    else if(t==="man") delete S.manual[v];
+    else if(t==="los") S.los=null;
+    else if(t==="san") S.san=null;
+    else if(t==="spdf") S.spdf=false;
+    else if(t==="pick") S.pick=null;
+    update();
+  });
+}
+$("#recapClear").onclick=()=>{
+  EV_ORDER.forEach(k=>S.ev[k]=0);
+  S.obs={}; S.cat={}; S.manual={}; S.los=null; S.san=null; S.spdf=false; S.pick=null;
+  update();
+};
+function update(){renderEv();renderGrid();renderFilters();renderObs();renderFavs();renderRecap();save();}
+
+$$("#nev button").forEach(b=>b.onclick=()=>{S.n=+b.dataset.n; diffCheck(); update();});
+$("#san").oninput=e=>{S.san=e.target.value===""?null:+e.target.value; renderEv();renderGrid();save();};
+$$("#catf .chip").forEach(b=>b.onclick=()=>{if(S.cat[b.dataset.v])delete S.cat[b.dataset.v]; else S.cat[b.dataset.v]=1; update();});
+$$("#losf .chip").forEach(b=>b.onclick=()=>{S.los=S.los===b.dataset.v?null:b.dataset.v; update();});
+$("#spdf").onclick=()=>{S.spdf=!S.spdf; update();};
+$("#resetAll").onclick=resetAll;
+function resetAll(){EV_ORDER.forEach(k=>S.ev[k]=0); S.manual={}; S.san=null; S.los=null; S.spdf=false; S.obs={}; S.cat={}; S.pick=null; tapReset(); Object.values(T).forEach(t=>t.reset()); update();}
+
+/* ---------------- fiche ---------------- */
+const dlg=$("#dlg");
+function li(a){return a.map(x=>`<li>${x}</li>`).join("")}
+function openGhost(g){
+  const evs=[...g.ev,...(g.fake?[g.fake]:[])].map(k=>`<span class="evt ${g.forced===k?'forced':''} ${g.fake===k?'fake':''}">${EV[k].long}</span>`).join("");
+  $("#dlgBody").innerHTML=`
+   <div><h2>${g.fr}</h2><div class="sub">${g.en}</div></div>
+   <p class="lead">${g.key}</p>
+   <div class="evrow">${evs}</div>
+   ${g.forced?`<p class="hint" style="margin:-8px 0 0">★ Preuve forcée : toujours présente en mode 1 ou 2 preuves.</p>`:""}
+   ${g.fake?`<p class="hint" style="margin:-8px 0 0">Orbes en pointillé : fausse preuve, toujours visible, même en 0 preuve.</p>`:""}
+   <div class="facts">
+     <div class="fact"><div class="lbl">Seuil de chasse</div><div>${g.seuil}</div></div>
+     <div class="fact"><div class="lbl">Vitesse</div><div>${g.vit}${(S.blood||GM()>1)?`<div class="bm-note">En jeu (${[GM()!==1?`entité ${Math.round(GM()*100)} %`:null,S.blood?"Lune de sang +15 %":null].filter(Boolean).join(" + ")}) : ${fmtS(g.spd[0])} à ${fmtS(g.spd[1])} m/s</div>`:""}</div></div>
+     <div class="fact"><div class="lbl">Accélération LdV</div><div>${{oui:"Oui (×1,65 en 13 s)",non:"Non",spécial:"Particulière"}[g.los]}</div></div>
+   </div>
+   <div class="row"><button class="btn primary" id="play">▶ Écouter le rythme des pas (${fmtS(g.spd[0])} m/s)</button><button class="btn" id="play2">▶ Vitesse max (${fmtS(g.spd[1])} m/s)</button></div>
+   <div class="sec"><h3>Capacités</h3><ul>${li(g.capa)}</ul></div>
+   <div class="sec"><h3>Comportements & indices</h3><ul>${li(g.indices)}</ul></div>
+   <div class="sec ok"><h3>Tests de confirmation</h3><ul>${li(g.confirm)}</ul></div>
+   <div class="sec ko"><h3>Tests d'élimination</h3><ul>${li(g.elim)}</ul></div>`;
+  $("#play").onclick=()=>metro(g.spd[0]*BM()); $("#play2").onclick=()=>metro(g.spd[1]*BM());
+  dlg.showModal();
+}
+$("#dlgClose").onclick=()=>dlg.close();
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
+dlg.addEventListener("close",()=>metroStop());
+
+/* ---------------- vitesse / tap ---------------- */
+function mult(){return GM()}
+function multIn(){return mult()*BM()}
+const speedToBpm=x=>60/((1/(x*mult()))-0.075);   // x = vitesse réelle en jeu
+const bpmToSpeed=b=>b/(multIn()*(60+b*0.075));   // ramène à la vitesse de base hors Lune de sang
+let taps=[];
+function tap(){
+  const now=performance.now();
+  if(taps.length && now-taps[taps.length-1]>2500) taps=[];
+  taps.push(now); if(taps.length>16) taps.shift();
+  const b=$("#tapbtn"); b.classList.add("hit"); setTimeout(()=>b.classList.remove("hit"),90);
+  if(taps.length<3) {$("#matches").textContent="Continuez à taper…"; return;}
+  const iv=[]; for(let i=1;i<taps.length;i++) iv.push(taps[i]-taps[i-1]);
+  iv.sort((a,b)=>a-b); const mid=iv.slice(Math.floor(iv.length*0.2),Math.ceil(iv.length*0.8)||1);
+  const avg=mid.reduce((a,b)=>a+b,0)/mid.length; const bpm=60000/avg;
+  S.speed=bpmToSpeed(bpm);
+  $("#bpm").textContent=Math.round(bpm); $("#ms").textContent=fmt(S.speed)+(S.blood?" (base)":"");
+  showMatches(); if(S.spdf){renderEv();renderGrid();}
+}
+function showMatches(){
+  if(S.speed==null) return;
+  const v=S.speed, base=[], los=[];
+  GHOSTS.forEach(g=>{
+    if(g.id==="mimic")return;
+    const [a,b]=g.spd; if(v<a-0.12||v>b+0.12) return;
+    const nearBase=Math.abs(v-a)<=0.12; (nearBase?base:los).push(g.fr);
+  });
+  $("#matches").innerHTML=`<b>Vitesse de base proche :</b> ${base.join(", ")||"aucune"}<br><b>Possible (LdV / état) :</b> ${los.join(", ")||"aucune"}`;
+}
+function tapReset(){taps=[];S.speed=null;$("#bpm").textContent="0";$("#ms").textContent="0";$("#matches").innerHTML="Tapez au moins 3 fois au rythme des pas pendant une chasse. Clavier <kbd>F</kbd> pour taper, <kbd>R</kbd> pour remettre à zéro.";if(S.spdf){renderEv();renderGrid();}}
+$("#tapReset").onclick=tapReset;
+$("#tapbtn").addEventListener("pointerdown",e=>{e.preventDefault();tap()});
+$("#tapbtn").addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();tap()}});
+$("#gspd").onchange=()=>{if(taps.length>=3){taps=taps.slice();} diffCheck(); refreshAll();};
+function refreshAll(){
+  // les vitesses affichées dépendent de la Lune de sang et du réglage de vitesse d'entité
+  document.body.classList.toggle("bm",S.blood||GM()>1);
+  recompute(); update();
+  if(typeof renderDiff==="function") renderDiff();
+  if(typeof renderSpdTbl==="function") renderSpdTbl();
+  if(typeof renderDiffTbl==="function") renderDiffTbl();
+}
+function setBlood(on){
+  S.blood=!!on;
+  $("#blood").setAttribute("aria-pressed",String(S.blood));
+  $("#bmBtn").setAttribute("aria-pressed",String(S.blood));
+  refreshAll();
+}
+$("#blood").onclick=()=>setBlood(!S.blood);
+$("#bmBtn").onclick=()=>setBlood(!S.blood);
+
+/* ---------------- difficulté ---------------- */
+function hostDiff(){
+  const d=D();
+  try{ window.chrome && window.chrome.webview && window.chrome.webview.postMessage(
+    JSON.stringify({type:"diff",label:d.n,grace:d.grace,hunt:d.hunt,size:MSZ()})); }catch(e){}
+}
+function renderDiff(){
+  const d=D();
+  $("#diffsel").value=d.id;
+  $("#mapsel").value=String(S.map);
+  const libre=!!(d.free||d.id==="defi");
+  $("#dcustom").hidden=!libre;
+  if(libre){ $("#dgrace").value=String(S.cgrace); $("#dhunt").value=S.chunt; }
+  const pct=x=>Math.round(x*100)+" %";
+  const z=MSZ(), L=HLEN();
+  // perte de santé mentale : base de la carte × réglage de la difficulté (+1 en Lune de sang)
+  const mu=d.drain/100+(S.blood?1:0);
+  const dr=z<0?null:SIZES[z].drain[1]*mu;
+  const chips=[
+    [d.free?"preuves libres":(d.ev+(d.ev>1?" preuves":" preuve")+(d.hid?` · ${d.hid} cachée${d.hid>1?"s":""}`:"")), "acc"],
+    ...(z<0?[["taille de carte non précisée","no"]]:[[SIZES[z].n.toLowerCase()+" carte","acc"]]),
+    ["grâce "+d.grace+" s", d.grace<=2?"no":""],
+    [L?`chasse ${L} s`:"chasse "+d.hunt.join(" / ")+" s", ""],
+    ...(dr?[[`−${fmt(dr)} %/s · ${fmt(dr/2)} en solo`,""]]:[]),
+    ...(z<0?[]:[[`${SIZES[z].light} lumières max`,""]]),
+    ["fantôme "+pct(d.gs), d.gs>1?"no":""],
+    ["joueur "+pct(d.ps), d.ps<1?"no":""],
+    ["santé au départ "+d.san0+" %", d.san0<75?"no":""],
+    ["perte de santé ×"+fmt(d.drain/100).replace(",00",""), d.drain>100?"no":""],
+    ["cachet "+d.pill+" %", ""],
+    [d.cursed+" objet"+(d.cursed>1?"s":"")+" maudit"+(d.cursed>1?"s":""), ""],
+    ["prépa "+(d.setup?d.setup+" s":"aucune"), d.setup?"":"no"],
+    ["gain "+d.mult, ""]
+  ];
+  $("#dchips").innerHTML=chips.map(([t,c])=>`<span class="dchip ${c}">${t}</span>`).join("");
+  if(d.id==="defi") $("#dchips").innerHTML=`<span class="dchip no">réglages imposés</span>`+$("#dchips").innerHTML;
+  $("#dnote").innerHTML=(d.lvl!==undefined?`Débloquée au niveau ${d.lvl}. `:"")+d.note
+    +(d.pre?` <b>Non confirmé</b> : valeurs données par une seule source.`:"");
+}
+function setDiff(id,keepEv){
+  const d=DIFFS.find(x=>x.id===id); if(!d) return;
+  S.diff=id;
+  if(!d.free && !keepEv){
+    S.n=d.ev;
+    const g=$("#gspd"); if(g) g.value=String(d.gs);
+  }
+  renderDiff(); hostDiff(); refreshAll();
+}
+function diffCheck(){   // un réglage manuel qui sort du préréglage → on bascule en perso
+  const d=D();
+  if(!d.free && (S.n!==d.ev || Math.abs(GM()-d.gs)>0.001)) S.diff="perso";
+  renderDiff(); hostDiff();
+}
+$("#diffsel").innerHTML=DIFFS.map(d=>`<option value="${d.id}">${d.n}</option>`).join("");
+$("#diffsel").onchange=e=>setDiff(e.target.value);
+$("#mapsel").innerHTML=`<option value="-1">— taille inconnue —</option>`+
+  SIZES.map((sz,i)=>`<optgroup label="${sz.n}s cartes">`+
+    MAPS.map((m,j)=>m.s===i?`<option value="${j}">${m.n}</option>`:"").join("")+`</optgroup>`).join("");
+$("#mapsel").onchange=e=>{S.map=+e.target.value; save(); renderDiff(); hostDiff(); Object.values(T).forEach(t=>t.render());};
+$("#dgrace").onchange=e=>{S.cgrace=+e.target.value; save(); renderDiff(); hostDiff(); Object.values(T).forEach(t=>t.render());};
+$("#dhunt").onchange=e=>{S.chunt=e.target.value; save(); renderDiff(); hostDiff(); Object.values(T).forEach(t=>t.render());};
+function renderMapTbl(){
+  const t=$("#maptbl"); if(!t) return;
+  t.innerHTML=MAPS.map((m,j)=>`<tr class="click${j===S.map?' on':''}" data-j="${j}"><td><b>${m.n}</b></td><td>${SIZES[m.s].n}</td><td class="num">${m.lvl}</td><td class="num">${HUNTSET.low[m.s]} / ${HUNTSET.med[m.s]} / ${HUNTSET.high[m.s]} s</td><td class="num">${fmt(SIZES[m.s].drain[1])} %/s</td><td class="num">${SIZES[m.s].light}</td><td class="num">${SIZES[m.s].gain[0]} $ / ${SIZES[m.s].gain[1]} $</td></tr>`).join("");
+  $$("#maptbl tr").forEach(tr=>tr.onclick=()=>{S.map=+tr.dataset.j; save(); renderDiff(); hostDiff(); renderMapTbl(); $("#tab-enq").click();});
+}
+function renderDiffTbl(){
+  const pct=x=>Math.round(x*100)+" %";
+  $("#difftbl tbody").innerHTML=DIFFS.filter(d=>!d.free).map(d=>`<tr${d.id===S.diff?' class="on"':''}>
+    <td><b>${d.n}</b>${d.pre?'<br><span class="hint">préréglage perso</span>':''}${d.id==="defi"?'<br><span class="hint">varie chaque semaine</span>':''}</td>
+    <td class="num">${d.pre?50:(d.lvl!==undefined?d.lvl:"—")}</td><td>${d.mult}</td>
+    <td class="num">${d.ev}${d.hid?` <span class="hint">(+${d.hid} cachée${d.hid>1?"s":""})</span>`:""}</td>
+    <td class="num">${d.setup?d.setup+" s":"—"}</td><td class="num">${d.san0} %</td><td class="num">${d.drain} %</td>
+    <td class="num">${d.pill} %</td><td class="num">${d.grace} s</td><td class="num">${d.hunt.join(" / ")} s</td>
+    <td class="num">${pct(d.gs)}</td><td class="num">${pct(d.ps)}</td><td class="num">${d.cursed}</td>
+    <td class="num">${d.fing?d.fing+" s":"—"}</td><td class="num">${d.ins}</td></tr>`).join("");
+}
+function recompute(){const b=+$("#bpm").textContent; if(b){S.speed=bpmToSpeed(b);$("#ms").textContent=fmt(S.speed);showMatches();renderEv();renderGrid();}}
+
+/* métronome */
+let AC=null, mTimer=null;
+function click(t){const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=180;o.type="triangle";g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.5,t+0.005);g.gain.exponentialRampToValueAtTime(0.0001,t+0.09);o.connect(g).connect(AC.destination);o.start(t);o.stop(t+0.1);}
+function metro(sp){
+  metroStop(); try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();}catch(e){return}
+  AC.resume&&AC.resume();
+  const period=60/speedToBpm(sp); let t=AC.currentTime+0.05; const end=t+6;
+  (function loop(){while(t<AC.currentTime+0.2&&t<end){click(t);t+=period;} if(t<end) mTimer=setTimeout(loop,50);})();
+}
+function metroStop(){clearTimeout(mTimer);}
+
+/* ---------------- minuteurs ---------------- */
+class Timer{
+  constructor(id,max,marks,msg){this.el=$("#"+id);this.max=max;this.marks=marks;this.msg=msg;this.acc=0;this.t0=null;this.iv=null;
+    const bar=this.el.querySelector(".bar"); marks.forEach(m=>{const s=document.createElement("span");s.className="mk";s.style.left=(m/max*100)+"%";bar.appendChild(s)});
+    this.el.querySelector(".tmain").onclick=()=>this.toggle();
+    this.el.querySelector(".trs").onclick=()=>this.reset();}
+  elapsed(){return this.acc+(this.t0?(performance.now()-this.t0)/1000:0);}
+  toggle(){if(this.t0) this.pause(); else this.start();}
+  start(){this.t0=performance.now();this.el.classList.add("run");this.el.classList.remove("pause");clearInterval(this.iv);this.iv=setInterval(()=>this.render(),200);this.render();}
+  pause(){this.acc=this.elapsed();this.t0=null;clearInterval(this.iv);this.el.classList.remove("run");this.el.classList.add("pause");this.render();}
+  reset(){clearInterval(this.iv);this.t0=null;this.acc=0;this.el.classList.remove("run","pause");this.render();}
+  stop(){this.reset();}
+  render(){const s=this.elapsed(),m=Math.floor(s/60),r=Math.floor(s%60);this.el.querySelector(".t").textContent=m+":"+String(r).padStart(2,"0");
+    this.el.querySelector(".fill").style.width=Math.min(100,s/this.max*100)+"%";
+    this.el.querySelector(".ms").innerHTML=(this.el.classList.contains("pause")?"⏸ En pause · ":"")+(s?this.msg(s):"");}
+}
+const T={
+ smudge:new Timer("tm-smudge",180,[60,90,180],s=>s<60?"Aucune chasse possible":s<90?"<b>Chasse possible : Démon</b>":s<180?"<b>Chasse possible : sauf Esprit</b>":"<b>Toutes peuvent chasser</b>"),
+ hunt:new Timer("tm-hunt",60,[15,20,30,40,50],s=>{const d=D();
+   if(s<d.grace) return `<b>Période de grâce (${d.grace} s)</b> : il ne peut pas tuer`;
+   const L=HLEN();
+   if(L) return s<L ? `Chasse en cours · elle dure ${L} s ici`
+                    : `<b>Au-delà de ${L} s</b> : chasse maudite ou morts qui rallongent`;
+   if(s<d.hunt[0]) return "Chasse en cours";
+   if(s<d.hunt[1]) return `<b>Terminée sur petite carte</b> (${d.hunt[0]} s)`;
+   if(s<d.hunt[2]) return `<b>Terminée sauf grande carte</b> (${d.hunt[1]} s)`;
+   return `<b>Au-delà du maximum</b> (${d.hunt[2]} s) : chasse maudite ou morts qui rallongent`;}),
+ cd:new Timer("tm-cd",25,[20,25],s=>s<20?"Pas de nouvelle chasse":s<25?"<b>Démon peut rechasser</b>":"<b>Nouvelle chasse possible</b>")
+};
+
+/* ---------------- clavier ---------------- */
+function onKey(e){
+  if(e.target.matches && e.target.matches("input,select,textarea")||e.ctrlKey||e.metaKey||e.altKey) return;
+  if(dlg.open) return;
+  const k=e.key.toLowerCase();
+  const code=codeFromKey(e);
+  const i=EV_ORDER.findIndex(x=>EV[x].key===k);
+  if(i>=0){S.ev[EV_ORDER[i]]=(S.ev[EV_ORDER[i]]+1)%3;update();return;}
+  const tk=["smudge","hunt","cd"].find(n=>S.keys[n]===code);
+  if(tk){ e.shiftKey?T[tk].reset():T[tk].toggle(); return; }
+  if(code===S.keys.tap){tap();return;}
+  if(code===S.keys.reset){tapReset();return;}
+  else if(k==="backspace"){e.preventDefault();resetAll();}
+}
+document.addEventListener("keydown",onKey);
+
+/* ---------------- raccourcis & overlay ---------------- */
+function hostKeys(){
+  try{ window.chrome && window.chrome.webview && window.chrome.webview.postMessage(JSON.stringify({type:"keys",keys:S.keys})); }catch(e){}
+}
+const KEYLBL={smudge:"Encens",hunt:"Chasse",cd:"Recharge",tap:"Tap vitesse",reset:"Remise à 0 du tap"};
+const NUMPAD={NumpadAdd:"num+",NumpadSubtract:"num-",NumpadMultiply:"num*",NumpadDivide:"num/",NumpadDecimal:"num.",NumpadEnter:"numentree"};
+function codeFromKey(e){
+  if(e.code && e.code.startsWith("Numpad")){
+    if(NUMPAD[e.code]) return NUMPAD[e.code];
+    const d=e.code.replace("Numpad",""); if(/^\d$/.test(d)) return "num"+d;
+  }
+  const k=(e.key||"").toLowerCase();
+  if(/^f\d{1,2}$/.test(k)) return k;
+  return k.length===1 ? k : "";
+}
+function codeLabel(c){
+  if(!c) return "—";
+  if(c==="mouse1") return "Clic molette";
+  if(c==="mouse3") return "Souris 4";
+  if(c==="mouse4") return "Souris 5";
+  if(c==="numentree") return "Entrée (pavé)";
+  if(c.startsWith("num")) return "Pavé " + c.slice(3);
+  return c.toUpperCase();
+}
+let capturing=null;
+function renderKeys(){
+  $("#keys").innerHTML=Object.keys(KEYLBL).map(n=>`<button class="btn keyb" data-k="${n}">${KEYLBL[n]} <kbd>${capturing===n?"…":codeLabel(S.keys[n])}</kbd></button>`).join("");
+  $$("#keys .keyb").forEach(b=>b.onclick=()=>{capturing=b.dataset.k;renderKeys();});
+  $$("#tm-smudge kbd")[0].textContent=codeLabel(S.keys.smudge);
+  $$("#tm-hunt kbd")[0].textContent=codeLabel(S.keys.hunt);
+  $$("#tm-cd kbd")[0].textContent=codeLabel(S.keys.cd);
+  // le texte d'aide et les info-bulles suivent les touches réellement choisies
+  const kb=n=>`<kbd>${codeLabel(S.keys[n])}</kbd>`;
+  const th=$("#tmhint");
+  if(th) th.innerHTML=`Clic (ou ${kb("smudge")} ${kb("hunt")} ${kb("cd")}) = démarrer / pause / reprendre · ↺ (ou <kbd>Maj</kbd> + la touche du minuteur) = remettre ce minuteur à zéro · <kbd>Retour arrière</kbd> = nouvelle enquête. Encens : repères 60 s (Démon) · 90 s · 180 s (Esprit). Recharge : 20 s Démon · 25 s les autres.`;
+  [["tm-smudge","smudge"],["tm-hunt","hunt"],["tm-cd","cd"]].forEach(([id,n])=>{
+    const b=$("#"+id+" .trs"); if(b) b.title="Remettre à zéro (Maj+"+codeLabel(S.keys[n])+")";
+  });
+}
+function assignKey(code){
+  Object.keys(S.keys).forEach(n=>{ if(S.keys[n]===code && n!==capturing) S.keys[n]=""; });
+  S.keys[capturing]=code; capturing=null; renderKeys(); save(); hostKeys();
+}
+document.addEventListener("keydown",e=>{
+  if(!capturing) return;
+  e.preventDefault(); e.stopPropagation();
+  if((e.key||"").toLowerCase()==="escape"){capturing=null;renderKeys();return;}
+  const c=codeFromKey(e);
+  if(c) assignKey(c);
+},true);
+// boutons de souris : tout sauf clic gauche (0) et clic droit (2)
+document.addEventListener("mousedown",e=>{
+  if(capturing){
+    if(e.button===0||e.button===2) return;
+    e.preventDefault(); e.stopPropagation();
+    assignKey("mouse"+e.button);
+    return;
+  }
+  if(e.button===0||e.button===2) return;
+  const code="mouse"+e.button;
+  const tk=["smudge","hunt","cd"].find(n=>S.keys[n]===code);
+  if(tk){ e.preventDefault(); T[tk].toggle(); return; }
+  if(S.keys.tap===code){ e.preventDefault(); tap(); }
+  else if(S.keys.reset===code){ e.preventDefault(); tapReset(); }
+},true);
+document.addEventListener("auxclick",e=>{ if(e.button===1) e.preventDefault(); },true);
+function setOverlay(on){
+  document.body.classList.toggle("ovl",on);
+  $("#ovBtn").textContent=on?"Quitter l'overlay":"Mode overlay";
+  try{localStorage.setItem(LS+"-ovl",on?"1":"")}catch(e){}
+}
+let pipWin=null, pipHolder=null, pipVideo=null, pipCanvas=null, pipRaf=null;
+async function openPip(){
+  const panel=$("#pnl-timers");
+  if(window.documentPictureInPicture){
+    try{
+      const w=await documentPictureInPicture.requestWindow({width:430,height:190});
+      pipWin=w;
+      [...document.querySelectorAll("style,link[rel=stylesheet]")].forEach(s=>w.document.head.appendChild(s.cloneNode(true)));
+      const theme=document.documentElement.getAttribute("data-theme"); if(theme) w.document.documentElement.setAttribute("data-theme",theme);
+      w.document.body.className="pipwin";
+      pipHolder=document.createElement("div"); panel.replaceWith(pipHolder); w.document.body.appendChild(panel);
+      w.document.addEventListener("keydown",onKey);
+      w.addEventListener("pagehide",()=>{ if(pipHolder){pipHolder.replaceWith(panel); pipHolder=null;} pipWin=null; });
+      return true;
+    }catch(e){}
+  }
+  return openVideoPip();
+}
+async function openVideoPip(){
+  try{
+    if(!pipCanvas){
+      pipCanvas=document.createElement("canvas"); pipCanvas.width=480; pipCanvas.height=170;
+      pipVideo=document.createElement("video"); pipVideo.muted=true; pipVideo.playsInline=true;
+      pipVideo.srcObject=pipCanvas.captureStream(10);
+    }
+    const draw=()=>{
+      const c=pipCanvas.getContext("2d"), st=getComputedStyle(document.body);
+      c.fillStyle=st.backgroundColor||"#0E1116"; c.fillRect(0,0,480,170);
+      const ink=st.color||"#E3E6EC";
+      [["Encens",T.smudge],["Chasse",T.hunt],["Recharge",T.cd]].forEach(([n,t],i)=>{
+        const x=12+i*156; const s=t.elapsed();
+        c.fillStyle=ink; c.globalAlpha=.6; c.font="13px sans-serif"; c.fillText(n,x,24);
+        c.globalAlpha=1; c.font="600 34px monospace";
+        c.fillText(Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0"),x,62);
+        c.globalAlpha=.55; c.font="11px sans-serif";
+        const msg=(t.el.classList.contains("pause")?"en pause":t.el.classList.contains("run")?"en cours":"arrêté");
+        c.fillText(msg,x,84);
+        const txt=(s?t.msg(s):"").replace(/<[^>]+>/g,"");
+        let line="",y=102;
+        txt.split(" ").forEach(w=>{const test=line?line+" "+w:w; if(c.measureText(test).width>140){c.fillText(line,x,y); y+=14; line=w;} else line=test;});
+        if(line) c.fillText(line,x,y);
+        c.globalAlpha=1;
+      });
+      pipRaf=requestAnimationFrame(draw);
+    };
+    cancelAnimationFrame(pipRaf); draw();
+    await pipVideo.play(); await pipVideo.requestPictureInPicture();
+    return true;
+  }catch(e){ return false; }
+}
+$("#pipBtn").onclick=async()=>{
+  if(pipWin){ pipWin.close(); return; }
+  if(document.pictureInPictureElement){ document.exitPictureInPicture(); return; }
+  const ok=await openPip();
+  if(!ok) alert("Votre navigateur refuse la fenêtre flottante ici. Utilisez le Mode overlay dans une seconde fenêtre, épinglée au premier plan (PowerToys : Win+Ctrl+T), ou ouvrez l'appli sur votre téléphone.");
+};
+$("#ovBtn").onclick=()=>setOverlay(!document.body.classList.contains("ovl"));
+try{if(localStorage.getItem(LS+"-ovl"))setOverlay(true);}catch(e){}
+renderKeys();
+setDiff(DIFFS.some(d=>d.id===S.diff)?S.diff:"pro");
+setBlood(S.blood);
+
+/* ---------------- onglets ---------------- */
+$$("nav.tabs button").forEach(b=>b.onclick=()=>{
+  $$("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",String(x===b)));
+  $$(".page").forEach(p=>p.hidden=p.id!=="p-"+b.dataset.tab);
+  try{localStorage.setItem(LS+"-tab",b.dataset.tab)}catch(e){}
+  window.scrollTo({top:0});
+});
+try{const t=localStorage.getItem(LS+"-tab"); if(t) $(`nav.tabs button[data-tab="${t}"]`)?.click();}catch(e){}
+
+/* ---------------- pages de référence ---------------- */
+function renderTable(q=""){
+  q=q.trim().toLowerCase();
+  const tb=$("#tbl tbody"); tb.innerHTML="";
+  GHOSTS.filter(g=>!q||JSON.stringify(g).toLowerCase().includes(q)||g.ev.some(k=>EV[k].long.toLowerCase().includes(q))).forEach(g=>{
+    const tr=document.createElement("tr"); tr.className="click";
+    tr.innerHTML=`<td><b>${g.fr}</b><br><span class="hint mono">${g.en}</span></td><td>${[...g.ev,...(g.fake?[g.fake]:[])].map(k=>`<span class="evt ${g.forced===k?'forced':''} ${g.fake===k?'fake':''}">${EV[k].fr}</span>`).join(" ")}</td><td>${g.seuil}</td><td>${g.vit}</td><td>${g.los}</td><td>${g.key}</td>`;
+    tr.onclick=()=>openGhost(g); tb.appendChild(tr);
+  });
+}
+$("#q").oninput=e=>renderTable(e.target.value);
+renderTable();
+
+function renderSpdTbl(){
+  $("#spdtbl").innerHTML=GHOSTS.filter(g=>g.vit!=="1,7 m/s").map(g=>`<tr class="click" data-id="${g.id}"><td><b>${g.fr}</b></td><td>${g.vit}${g.los==="non"?" · pas d'accélération LdV":""}</td><td class="num">${fmtS(g.spd[0])}</td><td class="num">${fmtS(g.spd[1])}</td></tr>`).join("");
+  $$("#spdtbl tr").forEach(tr=>tr.onclick=()=>openGhost(GHOSTS.find(g=>g.id===tr.dataset.id)));
+  $("#bmbanner").hidden=!S.blood;
+}
+renderSpdTbl();
+renderDiffTbl();
+renderMapTbl();
+$("#thaye").innerHTML=Array.from({length:11},(_,i)=>`<tr><td class="num">${i}</td><td class="num">${75-6*i} %</td><td class="num">${fmt(2.75-0.175*i)} m/s</td></tr>`).join("");
+$("#cursed").innerHTML=CURSED.map(c=>`<div class="item"><h4>${c.n}</h4><p>${c.how}</p><ul>${li(c.list)}</ul><p class="hint" style="margin-top:8px"><span class="tag">Risque</span><br>${c.risk}</p></div>`).join("");
+$("#equip").innerHTML=EQUIP.map(e=>`<div class="item"><h4>${e.n}</h4><p class="hint" style="margin-bottom:6px">${e.d}</p><ul>${e.t.map((x,i)=>`<li><b>Rang ${['I','II','III'][i]}</b> — ${x}</li>`).join('')}</ul>${e.note?`<p class="hint" style="margin-top:6px">${e.note}</p>`:''}</div>`).join("");
+$("#myths").innerHTML=MYTHS.map(([a,b])=>`<div class="item"><p class="hint" style="margin-bottom:4px">${a}</p><p>${b}</p></div>`).join("");
+
+update();
+
+/* ---------------- API pour l'appli de bureau (WebView2) ---------------- */
+window.phasmo = {
+  toggle(n){ T[n] && T[n].toggle(); },
+  reset(n){ T[n] && T[n].reset(); },
+  resetTimers(){ Object.values(T).forEach(t=>t.reset()); },
+  resetAll(){ resetAll(); },
+  tap(){ tap(); },
+  tapReset(){ tapReset(); },
+  desktop(){ document.body.classList.add("notm"); hostKeys(); hostDiff(); },
+  // l'appli de bureau propose ses raccourcis enregistrés : on les prend seulement
+  // si le journal n'a rien retenu de son côté (sinon c'est lui qui fait foi)
+  setKeys(k){
+    if(!k||HADKEYS) return;
+    Object.keys(S.keys).forEach(n=>{ if(k[n]) S.keys[n]=k[n]; });
+    HADKEYS=true; save(); renderKeys();
+  },
+  diff(id){ setDiff(id); },
+  overlay(on){ setOverlay(on===undefined ? !document.body.classList.contains("ovl") : !!on); },
+  state(){ return {left:GHOSTS.filter(g=>!reason(g)).map(g=>g.fr),
+    timers:Object.fromEntries(Object.entries(T).map(([k,t])=>[k,Math.round(t.elapsed())]))}; }
+};
+
+</script>
+</body>
+</html>

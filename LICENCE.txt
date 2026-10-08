@@ -1,0 +1,44 @@
+JOURNAL PHASMO — CONDITIONS D'UTILISATION
+==========================================
+
+Auteur  : Thibault.P (Shwarzyi)
+Création: 7 octobre 2026
+© 2026 Thibault.P (Shwarzyi). Tous droits réservés.
+
+
+CE QUI EST AUTORISÉ
+-------------------
+- Utiliser l'application, gratuitement, autant que vous voulez.
+- La transmettre telle quelle à qui vous voulez, sans rien changer,
+  en gardant ce fichier et la mention de l'auteur.
+
+
+CE QUI NE L'EST PAS, SANS ACCORD ÉCRIT DE L'AUTEUR
+---------------------------------------------------
+- La vendre, ou la faire payer sous quelque forme que ce soit.
+- En diffuser une version modifiée.
+- En retirer le nom de l'auteur, la signature intégrée ou ce fichier.
+- En reprendre le code ou les données dans un autre projet diffusé.
+
+
+GARANTIE
+--------
+Aucune. Le logiciel est fourni tel quel ; l'auteur ne répond pas des
+conséquences de son utilisation.
+
+
+MENTION OBLIGATOIRE
+-------------------
+Journal Phasmo est une aide de jeu non officielle, sans aucun lien avec
+Kinetic Games. « Phasmophobia », ses noms, ses contenus et ses marques
+appartiennent à Kinetic Games. Les droits de l'auteur portent sur le code,
+la mise en page, la rédaction et l'organisation des données de cette
+application — pas sur le jeu ni sur ses contenus.
+
+
+DROIT APPLICABLE
+----------------
+Droit français. En France, la protection par le droit d'auteur naît de la
+création elle-même : aucune formalité n'est nécessaire pour en bénéficier.
+Le fichier EMPREINTES.txt et le certificat intégré à l'application servent
+uniquement à établir, le cas échéant, ce qui existait et à quelle date.
