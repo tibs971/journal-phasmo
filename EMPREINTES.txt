@@ -4,7 +4,7 @@ EMPREINTES DU PROJET — JOURNAL PHASMO
 Auteur             : Thibault.P (Shwarzyi)
 Projet             : Journal Phasmo — aide d'identification pour Phasmophobia
 Date de creation   : 7 octobre 2026
-Releve etabli le   : 08/10/2026
+Releve etabli le   : 09/10/2026
 Conçu avec         : Claude (Anthropic), modele claude-opus-5, mode Cowork
 Technique          : .NET 8 / WPF / WebView2 + page HTML-CSS-JS autonome
 
@@ -28,14 +28,14 @@ c852c0d983b1f69a9ead2ed156222fd340416eb7416daad29174d06c4fb86351  CertificateWin
 05b5b0ed98a7eaafb44ca9ec38f103572df5c90f0533a572ce97641b2336f449  CodeDialog.xaml.cs
 0c1c5b8d82edffbef62ff1433c3df9e0e44853d4cf3a17d3a991d80502263c42  Hotkeys.cs
 e875e6fead02503dc4fc7d49c1e1bec5f6f1c27109f9cbf8ee730df43857ae87  LICENCE.txt
-7cabdcf04388feab705b19958402c2e6ff74d979a0d8d9d587227820afc57336  LISEZ-MOI.md
+d78741537d139c9c4f3492201778623a52f5b563de39227b519baecb7f16d058  LISEZ-MOI.md
 c42843af4408cbba13258d271eb8f7b3d88b0a14685d7911cdff77d026559ede  MainWindow.xaml
 85c8a10ba633a0f79949a0ea7b7329b3b0b4dd0eec2cad0d570538d135a517c9  MainWindow.xaml.cs
 e0b4284d8885724cd808c6879a81ebaaff9c7248a8614ff34c14a39ea3c5717f  MouseHook.cs
 8dd94cd190eeee77e575285fb64ae755593370b6bbde60181fab44b0c6cced42  PhasmoCompanion.csproj
 9d56253a54627bbd63cc14cbbe2fa9b0df0f25c8f79297020f79249aa8bd1ac7  README.md
 1a128cd8ed32f9707ff9f8f1c6042bd59f8c25c95fccb45e77358c09e5a4836b  Signature.cs
-44d49462813497545b7b11099722de8723f11397bd2042eafb6760f64dae9ac9  SignatureHook.cs
+4d37374671c98b127a8ae4bc8a23eefca3785c1d31791915572383588fa359d2  SignatureHook.cs
 b16e40264e892357a0c78e95ee78ac331d5cc9ed5798d23d21d4cccce2f7fe69  TimerWindow.xaml
 57235e9312754c6faa1f32d4c611a530b27b3e03a6232377eea5e9fa332bd225  TimerWindow.xaml.cs
 4d1fcb38c69d63be6140bd3119df99bd355b5aff4f1c86758169891f2251ca4c  app.manifest
@@ -43,7 +43,7 @@ b16e40264e892357a0c78e95ee78ac331d5cc9ed5798d23d21d4cccce2f7fe69  TimerWindow.xa
 cb0c194d8da77b59271da306e4c2fa6b881effc067b178ba5fb8f490cc3e9782  publier.cmd
 --- EMPREINTE GLOBALE ---------------------------------------------------
 
-329857066d4a8b1c2286ccc827ae3de31ab8e0757e008be41a70a0ec1a059553
+dcf00caad1cf27039185e57c92df5f7cd415f7b8397135ed58de7e120167358c
 
   (SHA-256 de la liste ci-dessus : resume l'etat complet du projet
    a cette date en un seul nombre)
