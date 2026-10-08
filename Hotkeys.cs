@@ -90,16 +90,6 @@ public sealed class HotkeyManager
 
     public readonly Dictionary<HkAction, Hotkey> Map = new();
 
-    /// <summary>
-    /// Raccourci discret de la signature d'auteur : Ctrl + Alt + la touche « @ »
-    /// (celle du 0 sur un clavier français). Volontairement absent de la liste Actions :
-    /// il n'apparaît donc ni dans le panneau des réglages, ni dans le fichier enregistré.
-    /// </summary>
-    public const int IdSignature = 999;
-    public const int IdSignatureBis = 998;
-    public readonly Hotkey Signature = new(2 | 1, 0x30);       // Ctrl + Alt + 0/@
-    public readonly Hotkey SignatureBis = new(2 | 1, 0x60);    // secours : Ctrl + Alt + pavé 0
-
     private static readonly string Path_ = System.IO.Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhasmoCompanion", "hotkeys.txt");
 
@@ -163,16 +153,12 @@ public sealed class HotkeyManager
             if (!RegisterHotKey(hwnd, (int)a + 100, hk.Mods | MOD_NOREPEAT, hk.Vk))
                 failed.Add($"{label} ({hk})");
         }
-        RegisterHotKey(hwnd, IdSignature, Signature.Mods | MOD_NOREPEAT, Signature.Vk);
-        RegisterHotKey(hwnd, IdSignatureBis, SignatureBis.Mods | MOD_NOREPEAT, SignatureBis.Vk);
         return failed;
     }
 
     public void Unregister(IntPtr hwnd)
     {
         foreach (var (a, _) in Actions) UnregisterHotKey(hwnd, (int)a + 100);
-        UnregisterHotKey(hwnd, IdSignature);
-        UnregisterHotKey(hwnd, IdSignatureBis);
     }
 
     public static HkAction FromId(int id) => (HkAction)(id - 100);

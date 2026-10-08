@@ -66,6 +66,7 @@ public partial class MainWindow : Window
     private readonly TimerWindow _timers = new();
     private readonly HotkeyManager _hotkeys = new();
     private readonly MouseHook _mouse = new();
+    private readonly SignatureHook _signature = new();
     private bool _ready;
 
     /// <summary>
@@ -85,13 +86,14 @@ public partial class MainWindow : Window
         LoadSettings();
         _uiReady = true;
         _mouse.ButtonPressed += OnMouseButton;
+        _signature.Declenche += OuvrirSignature;
         Loaded += async (_, _) =>
         {
             if (_timers.EtaitVisible) _timers.Show();
             BtnTimers.Opacity = _timers.IsVisible ? 1.0 : 0.45;
             await InitWeb();
         };
-        Closed += (_, _) => { _timers.SaveSettings(); _timers.Close(); };
+        Closed += (_, _) => { _timers.SaveSettings(); _timers.Close(); _signature.Dispose(); };
         Closing += (_, _) => SaveSettings();
     }
 
@@ -420,8 +422,6 @@ public partial class MainWindow : Window
         if (msg == WM_GETMINMAXINFO) { LimiterALaZoneDeTravail(hwnd, lParam); return IntPtr.Zero; }
         if (msg != WM_HOTKEY) return IntPtr.Zero;
         var id = wParam.ToInt32();
-        if (id is HotkeyManager.IdSignature or HotkeyManager.IdSignatureBis)
-        { OuvrirSignature(); handled = true; return IntPtr.Zero; }
         if (id < 100 || id > 199) return IntPtr.Zero;
         Run(HotkeyManager.FromId(id));
         handled = true;

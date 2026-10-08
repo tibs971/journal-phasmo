@@ -133,9 +133,14 @@ faisait oublier les raccourcis à chaque fermeture.
 ## Signature d'auteur
 
 L'application contient un panneau de signature, ouvert par une combinaison de touches connue
-de son auteur et protégé par deux codes successifs. Ni la combinaison ni les codes ne sont
-écrits ici ni ailleurs dans le projet : seules des empreintes SHA-256 salées figurent dans le
-code, donc ils n'apparaissent pas non plus en clair dans l'exécutable.
+de son auteur et protégé par deux codes successifs. Les codes ne sont écrits nulle part :
+seules des empreintes SHA-256 salées figurent dans le code, donc ils n'apparaissent pas en
+clair dans l'exécutable.
+
+La combinaison exige un Ctrl réellement enfoncé, pas celui qu'AltGr fabrique : sous Windows,
+AltGr *est* Ctrl + Alt, si bien qu'un raccourci classique se déclencherait à chaque fois qu'on
+tape le caractère concerné. D'où le hook clavier de `SignatureHook.cs`, qui compare les
+horodatages pour faire la différence — et qui ne consomme jamais aucune touche.
 
 Le panneau final affiche l'auteur, la date de création, l'outil utilisé et sa version, et
 surtout l'**empreinte SHA-256 de l'exécutable**. C'est elle qui a une vraie valeur de preuve :

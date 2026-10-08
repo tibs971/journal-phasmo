@@ -453,6 +453,26 @@ body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
       <li>Recharge après une chasse : 25 s (Démon 20 s)</li></ul></div>
   </div>
 
+  <p class="lbl">Les distances qui décident</p>
+  <div class="cols">
+    <div class="item"><h4>À quelle distance elle tue</h4><p><b>1,1 m : mort immédiate</b> si elle vous voit. <b>1,5 m : mort au bout d'une seconde</b> — c'est la seconde où l'on s'en sort en tournant un coin. Deogen : deux secondes, il vous colle mais tue lentement. Kormos : 0,5 et 0,6 m, il faut vraiment qu'il vous touche. L'Aswang ne peut pas tuer dans une vraie cachette : la chasse s'arrête à la place.</p></div>
+    <div class="item"><h4>À quelle distance elle vous repère</h4><ul>
+      <li><b>Vue</b> : 75 m, sur 360° — elle n'a pas de dos. Le verre et les barreaux de cellule bloquent</li>
+      <li><b>Voix</b> : 9 m, même étage — y compris le chat global sans parler (2,5 m pour le Yokai)</li>
+      <li><b>Électronique tenue, à la ceinture ou sur la tête</b> : 7,5 m (2,5 m Yokai)</li>
+      <li>N'attirent pas : vos pas (sauf Kormos), les portes, l'électronique posée au sol ou éteinte, le crucifix, l'encens allumé, les bougies</li>
+      <li><b>Kormos</b> : entend vos pas à 30 m en sprint, 15 m en marchant, 10 m accroupi</li></ul></div>
+    <div class="item"><h4>Ce que vous voyez et entendez</h4><ul>
+      <li>Pas et vocalises de l'entité : <b>20 m</b> à l'oreille nue (12 m pour le Myling)</li>
+      <li>Électronique qui grésille et lumières qui clignotent : <b>10 m</b> (15 m Raiju)</li>
+      <li>Vos battements de cœur : 10 m, bloqués par un mur ou une porte, pas par un meuble</li>
+      <li>Clignotement du modèle : cycle de 0,3 à 1 s ; <b>Fantôme 1 à 2 s</b>, d'où ses longues disparitions</li>
+      <li>L'Obake change de forme vers 7 à 9 s après la grâce : une chasse courte peut ne rien montrer</li></ul></div>
+    <div class="item"><h4>Objets lancés</h4><p>Dès la 4<sup>e</sup> seconde de chasse, une chance sur deux toutes les demi-secondes — <b>100 % pour le Poltergeist</b>, qui mitraille sans interruption. Hors chasse, le Poltergeist entre en mode rafale une fois sur cinq et vous coûte 2 % de santé mentale par objet projeté.</p></div>
+    <div class="item"><h4>Portes</h4><p>À partir de 3 s après le début, puis toutes les 4 à 8 s, l'entité ouvre les portes — sauf celles de sortie, verrouillées pendant toute la chasse. Une porte que vous tenez résiste, sauf si elle vous a repéré.</p></div>
+    <div class="item"><h4>Chance de chasser</h4><p>Quand l'entité sort d'un temps mort et que la santé est sous son seuil : <b>une chance sur dix</b>. Vingt-cinq points sous le seuil, elle monte à <b>une sur six</b>. D'où l'impression que tout s'accélère d'un coup en fin de partie.</p></div>
+  </div>
+
   <p class="lbl">Déroulement</p>
   <div class="cols">
     <div class="item"><h4>Période de grâce</h4><p>Au début de la chasse, l'entité ne peut pas tuer : 5 s (Amateur), 4 s (Intermédiaire), 3 s (Professionnel), 2 s (Cauchemar / Démence). Attention : après un Aswang, la chasse suivante fonce vers le joueur caché même pendant la grâce.</p></div>
@@ -513,7 +533,9 @@ body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
   <div class="cols">
     <div class="item"><h4>La recharge ne bouge pas</h4><p>Le délai minimum entre deux chasses reste <b>25 s</b> (20 s pour le Démon) à toutes les difficultés : ce n'est pas un réglage. Ce qui change avec la difficulté, c'est la <b>période de grâce</b> en début de chasse (5 s en Amateur, 0 s en Apocalypse III) et la <b>durée</b> de la chasse.</p></div>
     <div class="item"><h4>Durée de chasse selon la carte</h4><p>Le réglage « durée de chasse » donne trois paliers, et la valeur dépend ensuite de la taille de la carte : <b>basse</b> 15 / 30 / 40 s, <b>moyenne</b> 20 / 40 / 50 s, <b>haute</b> 30 / 50 / 60 s (petite / moyenne / grande). Chaque mort peut la rallonger si l'option est active (+15 à +45 s).</p></div>
-    <div class="item"><h4>Preuves cachées</h4><p>En Cauchemar et en Démence, l'entité possède toujours ses 3 preuves : seules 2 ou 1 vous sont montrées. Les preuves que vous ne trouverez jamais ne sont donc pas « absentes », elles sont masquées — d'où l'intérêt des comportements. Une preuve forcée (★) reste toujours affichée.</p></div>
+    <div class="item"><h4>Preuves cachées</h4><p>En Cauchemar, 2 preuves sur 3 sont tirées au sort ; en Démence, une seule. <b>La preuve écartée est inobtenable</b> : l'entité ne la produira jamais, inutile de la chercher. Son identité, elle, garde bien ses 3 preuves — c'est pour cela qu'on continue de raisonner sur le trio complet dans le journal, en cochant seulement ce qu'on trouve.</p></div>
+    <div class="item"><h4>Preuves forcées (★)</h4><p>Cinq entités ont une preuve qui ne peut jamais être celle qu'on vous cache, parce que leur capacité en dépend : <b>Deogen</b> et <b>Moroï</b> (Spirit Box), <b>Goryo</b> (D.O.T.S.), <b>Hantu</b> (Glaciales), <b>Obake</b> (UV). Aucune autre, malgré ce qu'affirment beaucoup de fiches : ni la Mare, ni l'Onryo, ni les Jumeaux, ni l'Oni. <b>En mode 0 preuve, la règle ne s'applique plus</b> : plus rien n'est trouvable.</p></div>
+    <div class="item"><h4>Le Mimic compte à part</h4><p>Ses Orbes ne sont pas une preuve forcée mais une <b>fausse quatrième preuve</b>, toujours présente, même en mode 0. D'où la règle qui le trahit sans discussion : <b>3 preuves trouvées en Cauchemar, 2 en Démence, ou la moindre Orbe en mode 0 preuve</b> — c'est lui. En revanche, aucune de ses trois vraies preuves n'est garantie.</p></div>
     <div class="item"><h4>Objets maudits</h4><p>1 objet au hasard sur les difficultés normales, <b>aucun en Démence</b>, et de 0 à 7 en difficulté perso. Toute chasse déclenchée par un objet maudit ignore la recharge, n'a presque pas de grâce et dure 20 s de plus.</p></div>
     <div class="item"><h4>Santé mentale</h4><p>La perte passive est de 0,12 / 0,08 / 0,05 % par seconde (petite / moyenne / grande carte), <b>divisée par deux en solo</b>, puis multipliée par le réglage de la difficulté (50 % à 200 %). Les seuils de chasse des entités, eux, ne changent jamais.</p></div>
     <div class="item"><h4>Vitesse de l'entité</h4><p>Les préréglages Apocalypse montent l'entité à <b>150 %</b> : une entité « normale » passe de 1,70 à 2,55 m/s, et jusqu'à 4,21 m/s en ligne de vue. Le compteur de pas et le métronome tiennent compte du réglage (et de la Lune de sang par-dessus).</p></div>
@@ -738,8 +760,8 @@ const GHOSTS = [
 {id:"myling",fr:"Myling",en:"Myling",ev:["emf","uv","wr"],seuil:"50 %",seuilMax:50,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
  key:"Pas silencieux en chasse (audibles à 12 m au lieu de 20 m).",
  capa:["Ses bruits de pas et sons vocaux en chasse ne portent qu'à 12 m."],
- indices:["Sons paranormaux plus fréquents au micro parabolique.","Peut toujours émettre des sons vocaux en chasse (idée reçue)."],
- confirm:["Votre électronique clignote (≈10 m) mais vous n'entendez pas encore ses pas = Myling."],
+ indices:["Sons paranormaux plus fréquents au micro parabolique : 64 à 127 s, contre 80 à 127 s pour les autres.","Peut toujours émettre des sons vocaux en chasse (idée reçue)."],
+ confirm:["Deux sons paranormaux en moins de 80 s au micro parabolique ou à l'enregistreur sonore (définitif).","Votre électronique clignote (≈10 m) mais vous n'entendez pas encore ses pas = Myling."],
  elim:["Pas entendus de loin, avant le clignotement de l'électronique = pas un Myling."]},
 
 {id:"onryo",fr:"Onryo",en:"Onryo",ev:["sb","orb","frz"],seuil:"60 % · + chasse toutes les 3 flammes soufflées",seuilMax:999,vit:"1,7 m/s",spd:[1.7,2.81],los:"oui",
@@ -773,7 +795,7 @@ const GHOSTS = [
 {id:"mimic",fr:"Le Mimic",en:"The Mimic",ev:["sb","uv","frz"],fake:"orb",seuil:"Copie celui de l'entité imitée",seuilMax:999,vit:"Copie l'entité imitée",spd:[0.4,3.71],los:"spécial",
  key:"Orbes en plus de ses 3 preuves (même en 0 preuve). Imite les autres entités.",
  capa:["Commence en état « neutre » (il s'imite lui-même) : il se comporte comme une entité standard, sans capacité, seuil 50 %, vitesse 1,7 m/s.","Première tentative de changement 1 min après la première ouverture d'une porte de sortie, puis toutes les 30 s à 2 min.","Ne change jamais pendant une chasse ni pendant un événement.","Copie comportements, capacités, seuil et vitesse de n'importe quelle entité — mais jamais ses preuves."],
- indices:["Peut retomber sur « Mimic » en tirant au sort : il reste alors neutre, parfois bien plus d'une minute.","Ne peut pas imiter la Banshee ni la Dayan s'il a un modèle / nom masculin.","Montre toujours des Orbes (fausse preuve), même en mode 0 preuve : Orbes + 3 preuves = 4 preuves visibles.","Ne montre que ses propres preuves (UV, Spirit Box, Glaciales + faux Orbes).","Presque n'importe quel test de confirmation peut aussi correspondre au Mimic."],
+ indices:["Peut retomber sur « Mimic » en tirant au sort : il reste alors neutre, parfois bien plus d'une minute.","Ne peut pas imiter la Banshee ni la Dayan s'il a un modèle / nom masculin.","Montre toujours des Orbes (fausse preuve) : 4 preuves visibles en mode 3, 3 en Cauchemar, 2 en Démence, et des Orbes seules en mode 0 preuve — à chaque fois une de plus que ce que le mode autorise.","Ne montre que ses propres preuves (UV, Spirit Box, Glaciales + faux Orbes).","Presque n'importe quel test de confirmation peut aussi correspondre au Mimic."],
  confirm:["4 preuves trouvées dont Orbes = Mimic.","Comportements contradictoires (ex. vitesses incohérentes entre chasses).","Première minute (après ouverture de la porte) : comportement et vitesse strictement standards, même si la suite ne l'est pas."],
  elim:["Pas d'Orbes malgré une surveillance longue de la pièce = probablement pas un Mimic."]},
 
@@ -861,30 +883,30 @@ const EQUIP = [
  {n:"Briquet / allumettes",d:"Emplacement d'inventaire dédié. Rangs I et II consommables.",
   t:["Boîte d'allumettes · 10 allumettes × 10 s","Briquet · 5 min de gaz","Zippo · 10 min · fonctionne sous la pluie forte"],
   note:"Allumer un encens ou une bougie depuis l'inventaire coûte 1 allumette, ou 15 s de gaz. Depuis la v0.19, les rangs I et II ne s'allument plus du tout sous la pluie forte."},
- {n:"Détecteur EMF",d:"Électronique : attire l'entité à 7,5 m en chasse (2,5 m Yokai).",
+ {n:"Détecteur EMF",d:"Électronique : attire l'entité à 7,5 m en chasse (2,5 m Yokai). Portée de détection : 1,7 m au rang I, 2 m au rang II, 3,5 m au rang III.",
   t:["Aiguille analogique · portée 1,7 m","K2, 5 LED + son · portée 2 m","ParaMeter numérique · portée 3,5 m · suit 3 interactions, affiche distance et direction"],
   note:"EMF 5 = 33 % des émissions de niveau 2+ si l'entité a la preuve. La lecture reste affichée 20 s. Valeurs aléatoires 1–4 à moins de 10 m d'une entité visible."},
- {n:"Spirit Box",d:"Pose des questions à voix haute ; relance automatique toutes les 10 s.",
+ {n:"Spirit Box",d:"Pose des questions à voix haute ; relance automatique toutes les 10 s. <b>Deux chances sur trois de réponse par question</b>, et seulement dans le noir.",
   t:["Portée de réponse 3 m","Portée 4 m · écran (X = entendu, icône = réponse)","Portée 5 m · meilleur taux de réponse"],
-  note:"Portées issues d'un guide communautaire, non confirmées par le wiki."},
- {n:"Thermomètre",d:"Preuve Glaciales à 0 °C ou moins.",
+  note:"Portée : <b>la même pièce</b>, ou <b>3 m</b> si vous êtes dans une autre pièce. La lumière principale doit être éteinte — torche, UV, bâton lumineux, bougie, D.O.T.S. et détecteur de mouvement ne comptent pas comme lumière. Certaines entités ne répondent qu'à un joueur seul dans la pièce. Deogen : respiration lourde à 1 m, 33 % par question."},
+ {n:"Thermomètre",d:"Preuve Glaciales à 0 °C ou moins. <b>Sans la preuve, la pièce ne descend jamais sous 1 °C ; avec, elle va jusqu'à −10 °C.</b>",
   t:["Analogique, lecture continue 0,33 °C/s · erreur +3 °C · non électronique","Infrarouge, 2,5 s par mesure · erreur +3 °C","Therma-hygromètre, 1,5 s · erreur +2 °C"]},
  {n:"Livre d'écriture",d:"Tentative d'écriture toutes les 45 à 90 s.",
   t:["51 % de réussite · portée 3 m","67 % · portée 4 m","76 % · portée 5 m"],
-  note:"Non électronique. L'écriture produit un EMF 2 (33 % → 5)."},
- {n:"Lampe UV",d:"Révèle empreintes et traces (~20 s de durée).",
+  note:"Chance de réussite par tentative : <b>51 % au rang I, 67 % au rang II, 76 % au rang III</b> — un livre de rang I peut rester vierge longtemps sans rien prouver. Non électronique. L'écriture produit un EMF 2 (33 % → 5). Livre fermé ou hors de portée : aucune tentative."},
+ {n:"Lampe UV",d:"Révèle empreintes et traces. <b>Une empreinte s'efface en 120 s</b> (60 s en Démence). Temps d'apparition sous la lampe : 5 s au rang I, 10 s au bâton lumineux, 1,5 s au rang III.",
   t:["Lampe torche UV, faisceau étroit · 5 s pour révéler","Bâton lumineux : 60 s de pleine puissance, à resecouer · 10 s pour révéler · NON électronique","Lampe UV Pro, faisceau large · 1,5 s pour révéler"],
   note:"Les rangs I et III ne fonctionnent pas si les lampes sont désactivées en difficulté personnalisée."},
- {n:"Caméra vidéo",d:"Nécessaire pour les orbes et le D.O.T.S. du Goryo.",
+ {n:"Caméra vidéo",d:"Nécessaire pour les orbes et le D.O.T.S. du Goryo. Les orbes n'existent que <b>dans la pièce favorite</b> et seulement en vision nocturne — les lunettes du rang III d'équipement de tête ne les montrent pas. Le Goryo : deux fois sur trois en errance, et jamais si un joueur est dans sa pièce.",
   t:["Petit écran · vision nocturne verte · grosses interférences","Écran détaillé · vision nocturne noir et blanc · interférences moyennes","Grand écran · noir et blanc · interférences minimales"]},
  {n:"Appareil photo",d:"Photos illimitées, mais seules les 5 premières entrées du journal rapportent (doublons : 20 %).",
   t:["Pas d'écran · 3 s entre deux photos · n'attire l'entité qu'au déclenchement","Écran · 2 s","Écran · 1 s"],
   note:"Les rangs II et III attirent l'entité à 7,5 m en chasse."},
- {n:"Projecteur D.O.T.S.",d:"Preuve D.O.T.S.",
+ {n:"Projecteur D.O.T.S.",d:"Preuve D.O.T.S. La silhouette n'apparaît que quand l'entité entre en errance : <b>une fois sur trois</b> elle choisit la silhouette, et se dirige vers un point à moins de 2 m du joueur le plus proche. Soyez patient et restez dans la pièce.",
   t:["Stylo laser tenu en main ou posé · cône étroit · compte comme une lampe · attire l'entité quand il est tenu","Posé uniquement (sol, mur, plafond) · dôme moyen","Posé · cône motorisé balayant · plus grande couverture · bruyant, peut être mis en pause pour une zone réduite et silencieuse"]},
- {n:"Micro parabolique",d:"Cône de 110°. Capte les sons émis jusqu'à 3 s avant.",
+ {n:"Micro parabolique",d:"Cône de 110°. Capte les sons émis jusqu'à 3 s avant. Traverse les murs, mais doit être à l'intérieur du bâtiment.",
   t:["Portée 20 m · témoin lumineux · même étage","Portée 30 m · écran dB avec min/pic","Portée 30 m · écran sonar (position + volume) · détecte un étage au-dessus et en dessous"],
-  note:"Affiche des valeurs aléatoires pendant les chasses."},
+  note:"<b>Un son paranormal toutes les 80 à 127 s</b> — grognement, rire, parole ou chuchotement. Le Myling descend à 64–127 s : <b>deux sons en moins de 80 s, c'est lui</b>, aucune autre entité ne peut aller si vite. La Banshee remplace le son par un de ses 20 cris uniques dans 33 % des cas (en moyenne un cri toutes les 4 à 6 min) ; ce cri ne porte pas plus loin qu'un son normal. Entendre le son du Moroi vous maudit : perte de santé doublée jusqu'à la prise d'une pilule. Ces sons ne sont ni les vocalises d'événement ni celles de chasse, audibles à l'oreille nue à 20 m. L'écran affiche des valeurs aléatoires pendant les chasses."},
  {n:"Lampe torche",d:"Électronique : clignote à 10 m d'une entité en chasse (15 m Raiju), l'attire à 7,5 m.",
   t:["Faisceau étroit et faible","Tactique, même cône mais beaucoup plus lumineuse","Projecteur mobile, faisceau large et le plus lumineux"]},
  {n:"Équipement de tête",d:"N'occupe pas d'emplacement d'inventaire.",
@@ -1059,10 +1081,12 @@ const OBS = [
  {id:"oldslow",t:"Très rapide au début de partie, de plus en plus lent ensuite",g:["thaye","moroi","deildegast"]},
  {grp:"Sons & objets"},
  {id:"scream",t:"Cri unique au micro parabolique",g:["banshee"]},
- {id:"para",t:"Beaucoup de sons paranormaux au micro parabolique",s:"Indice, non définitif",g:["myling"]},
+ {id:"para80",t:"Deux sons paranormaux en moins de 80 s au micro parabolique",s:"Définitif : les autres entités espacent leurs sons de 80 à 127 s, le Myling de 64 à 127 s",g:["myling"]},
+ {id:"para",t:"Beaucoup de sons paranormaux au micro parabolique",s:"Impression seulement — chronométrez pour trancher",g:["myling"]},
+ {info:"Sons paranormaux (grognement, rire, parole, chuchotement) : toutes les 80 à 127 s. Ils ne s'entendent qu'au micro parabolique ou à l'enregistreur sonore, et n'ont rien à voir avec les vocalises d'événement ou de chasse."},
  {id:"breathsb",t:"Respiration lourde dans la Spirit Box à ~1 m",g:["deogen"]},
  {id:"age",t:"Âge qui change à la planche Ouija",g:["thaye"]},
- {id:"orb4",t:"Orbes visibles EN PLUS de 3 autres preuves",g:["mimic"]},
+ {id:"orb4",t:"Orbes EN PLUS du maximum de preuves du mode",s:"Orbes + 3 preuves en mode 3, + 2 en Cauchemar, + 1 en Démence, ou des Orbes seules en mode 0 preuve",g:["mimic"]},
  {id:"prints",t:"Empreinte à 6 doigts, double empreinte ou 5 empreintes",g:["obake"]},
  {id:"uvgone",t:"Les empreintes UV disparaissent anormalement vite",g:["obake"]},
  {id:"shadowevt",t:"Apparition sous forme d'ombre",s:"Définitif seulement pendant un événement d'objet maudit",g:["shade"]},
@@ -1094,6 +1118,7 @@ const OBS = [
  {id:"nosalt",t:"Est passé sur le sel sans jamais le perturber",g:["wraith","gallu"]},
  {id:"doorslam",t:"Porte fermée entièrement + chute de santé brutale",g:["yurei"]},
  {id:"lightoff",t:"Rééteint la lumière juste après que vous l'allumez",g:["mare"]},
+ {id:"twins2s",t:"Deux interactions à moins de 2 s d'intervalle, à deux endroits",s:"Définitif : toutes les autres entités attendent au moins 2 s entre deux interactions",g:["twins"]},
  {id:"multi",t:"Plusieurs objets projetés en même temps",g:["poltergeist"]},
  {id:"photo",t:"Disparaît quand on le prend en photo pendant un événement",g:["phantom"]},
  {id:"sixfinger",t:"Empreinte à 6 doigts ou double empreinte",g:["obake"]}
@@ -1345,7 +1370,7 @@ function openGhost(g){
    <div><h2>${g.fr}</h2><div class="sub">${g.en}</div></div>
    <p class="lead">${g.key}</p>
    <div class="evrow">${evs}</div>
-   ${g.forced?`<p class="hint" style="margin:-8px 0 0">★ Preuve forcée : toujours présente en mode 1 ou 2 preuves.</p>`:""}
+   ${g.forced?`<p class="hint" style="margin:-8px 0 0">★ Preuve forcée : jamais celle qu'on vous cache en mode 1 ou 2 preuves. En mode 0 preuve, la règle ne s'applique plus.</p>`:""}
    ${g.fake?`<p class="hint" style="margin:-8px 0 0">Orbes en pointillé : fausse preuve, toujours visible, même en 0 preuve.</p>`:""}
    <div class="facts">
      <div class="fact"><div class="lbl">Seuil de chasse</div><div>${g.seuil}</div></div>
