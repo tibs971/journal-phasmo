@@ -92,6 +92,15 @@ Tout cela se change dans ⚙.
 
 ## Plein écran
 
+> **Le jeu bascule tout seul du plein écran au mode fenêtré ?** C'est Windows : dès qu'une
+> fenêtre « toujours au-dessus » s'affiche par-dessus un jeu en plein écran **exclusif**, il
+> perd ce mode. Le journal n'est donc plus épinglé par défaut — le bouton 📌 (ou F7) reste là
+> si vous le voulez. Pour les minuteurs, l'option « Toujours au-dessus du jeu » est dans le
+> menu du clic droit ; décochez-la si vous jouez en plein écran exclusif, vous les retrouverez
+> en passant par Alt+Tab. En **plein écran sans bordure**, rien de tout cela ne se produit :
+> c'est le mode à préférer pour garder les minuteurs visibles en jeu.
+
+
 Une fenêtre « toujours au-dessus » s'affiche par-dessus un jeu en fenêtré ou en fenêtré sans
 bordure, mais pas en plein écran **exclusif** — c'est la limite de LiveSplit, et la raison pour
 laquelle Discord, lui, injecte une DLL dans le jeu. Phasmophobia étant un jeu Unity, son mode

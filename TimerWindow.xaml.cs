@@ -189,6 +189,17 @@ public partial class TimerWindow : Window
     }
 
     private void ResetAll_Click(object sender, RoutedEventArgs e) => ResetAll();
+
+    /// <summary>
+    /// Épinglage des minuteurs. Décoché, la fenêtre cesse de passer devant le jeu — c'est ce
+    /// qu'il faut faire si Phasmophobia est en plein écran EXCLUSIF, que Windows interrompt
+    /// dès qu'une fenêtre « toujours au-dessus » s'affiche par-dessus lui.
+    /// </summary>
+    private void Top_Click(object sender, RoutedEventArgs e)
+    {
+        Topmost = MiTop.IsChecked;
+        SaveSettings();
+    }
     private void Hide_Click(object sender, RoutedEventArgs e) => Hide();
 
     /// <summary>
@@ -272,6 +283,7 @@ public partial class TimerWindow : Window
                 "decor="   + BackgroundOpacity.ToString(inv),
                 "verrou="  + (MiLock.IsChecked ? "1" : "0"),
                 "autocd="  + (MiAutoCd.IsChecked ? "1" : "0"),
+                "dessus="  + (MiTop.IsChecked ? "1" : "0"),
                 "affichee=" + (IsVisible ? "1" : "0")
             });
         }
@@ -317,6 +329,7 @@ public partial class TimerWindow : Window
         if (v.TryGetValue("affichee", out var af)) EtaitVisible = af != "0";
         if (v.TryGetValue("verrou", out var lo)) MiLock.IsChecked = lo == "1";
         if (v.TryGetValue("autocd", out var ac)) MiAutoCd.IsChecked = ac == "1";
+        if (v.TryGetValue("dessus", out var de)) { MiTop.IsChecked = de == "1"; Topmost = MiTop.IsChecked; }
 
         // toujours passer par la propriété, même sans fichier : c'est elle qui applique
         // l'opacité à tous les pinceaux du décor et qui renforce le texte si besoin.

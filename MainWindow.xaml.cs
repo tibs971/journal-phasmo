@@ -653,7 +653,8 @@ public partial class MainWindow : Window
             File.WriteAllText(SettingsPath, string.Join(";",
                 r.Left.ToString(inv), r.Top.ToString(inv), r.Width.ToString(inv), r.Height.ToString(inv),
                 Opacity.ToString(inv), Topmost ? "1" : "0",
-                WindowState == WindowState.Maximized ? "1" : "0"));
+                WindowState == WindowState.Maximized ? "1" : "0",
+                "v2"));   // marqueur : le journal n'est plus épinglé par défaut
         }
         catch { }
     }
@@ -680,6 +681,11 @@ public partial class MainWindow : Window
                 Topmost = p[5] == "1";
             }
             if (p.Length >= 7 && p[6] == "1") WindowState = WindowState.Maximized;
+
+            // Fichier d'avant le changement : le journal y était épinglé par défaut, ce qui
+            // sortait le jeu du plein écran. On le désépingle une fois ; ensuite le choix
+            // de l'utilisateur est respecté.
+            if (p.Length < 8 || p[7] != "v2") Topmost = false;
         }
         catch { }
         finally { UpdateTopButton(); SyncOpacityCombo(); MajBoutonMax(); }

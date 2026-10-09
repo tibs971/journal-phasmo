@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Minuteurs"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
-        Topmost="True" ShowInTaskbar="False" ResizeMode="NoResize"
+        Topmost="True" ShowInTaskbar="False" ResizeMode="NoResize" ShowActivated="False"
         SizeToContent="WidthAndHeight" WindowStartupLocation="Manual"
         Left="40" Top="40" Opacity="1.0"
         MouseLeftButtonDown="Drag">
@@ -33,6 +33,8 @@
     <ContextMenu>
       <MenuItem x:Name="MiResetAll" Header="Tout remettre à zéro (F4)" Click="ResetAll_Click"/>
       <MenuItem x:Name="MiAutoCd" Header="Lancer la recharge à la fin de la chasse" IsCheckable="True" IsChecked="True"/>
+      <MenuItem x:Name="MiTop" Header="Toujours au-dessus du jeu" IsCheckable="True" IsChecked="True"
+                Click="Top_Click" ToolTip="À décocher si le jeu est en plein écran exclusif"/>
       <MenuItem x:Name="MiLock" Header="Verrouiller la position" IsCheckable="True"/>
       <MenuItem Header="Opacité du décor (texte intact)">
         <MenuItem Header="100 %" Tag="1.0"  Click="BgOpacity_Click"/>
