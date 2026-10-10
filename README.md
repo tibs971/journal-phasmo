@@ -38,7 +38,7 @@ Créé par **Thibault.P (Shwarzyi)** — gratuit, et qui le restera.
 
 **Jouer avec**
 
-- Une **fenêtre de minuteurs flottante**, façon LiveSplit : sans bordure, toujours au-dessus du jeu,
+- Une **fenêtre de minuteurs flottante**, façon LiveSplit : sans bordure, qui ne prend jamais le focus (option « toujours au-dessus » à cocher si le jeu est en fenêtré sans bordure),
   déplaçable, opacité du décor et du texte réglables séparément
 - Des **raccourcis globaux** qui fonctionnent pendant que Phasmophobia a le focus, entièrement
   remappables — touches, pavé numérique, boutons de souris

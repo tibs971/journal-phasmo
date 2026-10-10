@@ -2,7 +2,7 @@
 
 Deux fenêtres, comme LiveSplit :
 
-- **Les minuteurs** : petite fenêtre flottante sans bordure, toujours au-dessus du jeu,
+- **Les minuteurs** : petite fenêtre flottante sans bordure, qui ne prend jamais le focus (option « toujours au-dessus » à cocher si le jeu est en fenêtré sans bordure),
   déplaçable, opacité réglable. C'est elle que tu gardes visible en jouant.
 - **Le journal** : fenêtre d'application classique avec tout le reste — difficulté du contrat,
   preuves, les 30 entités, observations, mesure de vitesse, équipement, objets maudits, météo.

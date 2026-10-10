@@ -28,6 +28,9 @@
   --accent:#A68CFF; --accent-soft:#2A2244; --accent-ink:#130E24;
   --no:#F0736B; --no-soft:#3A1C1C; --warn:#F2B84B; --warn-soft:#3A2C12; --good:#5CC99A; --good-soft:#15322A;
 }
+:root{color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark}}
+:root[data-theme="dark"]{color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);padding-inline:16px;padding-block:0 40px}
 button,input,select{font:inherit;color:inherit}
@@ -273,9 +276,6 @@ body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-
-</head>
-<body>
 <div class="wrap">
 <header class="top">
   <div class="brand">
@@ -283,6 +283,7 @@ body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
     <p>Identification des 30 entités · données à jour v0.19 (sept. 2026) · aide non officielle</p>
   </div>
   <div class="row">
+    <button class="btn" id="themeBtn" title="Thème : automatique (suit Windows) → sombre → clair">🌓 Thème : auto</button>
     <button class="btn" id="bmBtn" aria-pressed="false" title="Toutes les vitesses affichées passent en vitesses Lune de sang (+15 %)">🌕 Lune de sang</button>
     <button class="btn" id="pipBtn" title="Fenêtre flottante toujours au-dessus du jeu">Minuteurs flottants</button>
     <button class="btn" id="ovBtn" title="Affichage compact pour jouer à côté du jeu">Mode overlay</button>
@@ -636,7 +637,6 @@ body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
 </div>
 
 <dialog id="dlg"><button class="btn close" id="dlgClose" aria-label="Fermer">Fermer</button><div class="dlg" id="dlgBody"></div></dialog>
-
 <script>
 const EV = {
   emf:{fr:"EMF 5", long:"EMF niveau 5", key:"1"},
@@ -984,7 +984,6 @@ const MAPS=[
  {n:"Brownstone High School",s:2,lvl:8},
  {n:"Sunny Meadows Mental Institution",s:2,lvl:17}
 ];
-
 const CURSED = [
  {n:"Planche Ouija",how:"Posez des questions à voix haute, puis dites « au revoir » pour finir.",list:[
   "« Où êtes-vous ? » → pièce actuelle de l'entité (−50 %)","« Êtes-vous ici / proche ? » → même pièce ou non (−20 %)","« Où est l'os ? » → pièce de l'os (−20 %)",
@@ -1440,6 +1439,22 @@ function setBlood(on){
 $("#blood").onclick=()=>setBlood(!S.blood);
 $("#bmBtn").onclick=()=>setBlood(!S.blood);
 
+/* ---------------- thème ---------------- */
+const THEMES=["auto","dark","light"], THLBL={auto:"🌓 Thème : auto",dark:"🌙 Thème : sombre",light:"☀ Thème : clair"};
+function getTheme(){
+  try{const t=localStorage.getItem(LS+"-theme"); if(THEMES.includes(t)) return t;}catch(e){}
+  return (window.chrome&&window.chrome.webview)?"dark":"auto";   // l'application Windows démarre en sombre
+}
+function setTheme(t,persist){
+  const r=document.documentElement;
+  if(t==="auto") r.removeAttribute("data-theme"); else r.setAttribute("data-theme",t);
+  const b=$("#themeBtn"); if(b){b.textContent=THLBL[t]; b.dataset.theme=t;}
+  if(persist){ try{localStorage.setItem(LS+"-theme",t);}catch(e){} }
+  try{ window.chrome&&window.chrome.webview&&window.chrome.webview.postMessage(JSON.stringify({type:"theme",theme:(t==="auto"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):t)})); }catch(e){}
+}
+$("#themeBtn").onclick=()=>setTheme(THEMES[(THEMES.indexOf(getTheme())+1)%3],true);
+setTheme(getTheme(),false);
+
 /* ---------------- difficulté ---------------- */
 function hostDiff(){
   const d=D();
@@ -1767,7 +1782,7 @@ window.phasmo = {
   state(){ return {left:GHOSTS.filter(g=>!reason(g)).map(g=>g.fr),
     timers:Object.fromEntries(Object.entries(T).map(([k,t])=>[k,Math.round(t.elapsed())]))}; }
 };
-
 </script>
+
 </body>
 </html>

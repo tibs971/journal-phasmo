@@ -432,7 +432,7 @@ public partial class MainWindow : Window
     private void ToggleTimers()
     {
         if (_timers.IsVisible) _timers.Hide();
-        else { _timers.Show(); _timers.Activate(); }
+        else _timers.Show();
         BtnTimers.Opacity = _timers.IsVisible ? 1.0 : 0.45;
         _timers.SaveSettings();          // afficher ou masquer est un choix, on le retient
     }

@@ -17,6 +17,19 @@ namespace PhasmoCompanion;
 /// </summary>
 public partial class TimerWindow : Window
 {
+    [System.Runtime.InteropServices.DllImport("user32.dll", EntryPoint = "GetWindowLongW")] private static extern int GetWL(IntPtr h, int i);
+    [System.Runtime.InteropServices.DllImport("user32.dll", EntryPoint = "SetWindowLongW")] private static extern int SetWL(IntPtr h, int i, int v);
+
+    /// <summary>Fenêtre qui ne prend jamais le focus : cliquer dessus ne fait pas perdre le jeu de vue
+    /// (c'est la perte de focus qui fait basculer certains jeux du plein écran au mode fenêtré).</summary>
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+        var h = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+        const int GWL_EXSTYLE = -20, WS_EX_NOACTIVATE = 0x08000000, WS_EX_TOOLWINDOW = 0x00000080;
+        SetWL(h, GWL_EXSTYLE, GetWL(h, GWL_EXSTYLE) | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW);
+    }
+
     public sealed class Chrono
     {
         private readonly Stopwatch _sw = new();
@@ -283,7 +296,7 @@ public partial class TimerWindow : Window
                 "decor="   + BackgroundOpacity.ToString(inv),
                 "verrou="  + (MiLock.IsChecked ? "1" : "0"),
                 "autocd="  + (MiAutoCd.IsChecked ? "1" : "0"),
-                "dessus="  + (MiTop.IsChecked ? "1" : "0"),
+                "dessus2=" + (MiTop.IsChecked ? "1" : "0"),
                 "affichee=" + (IsVisible ? "1" : "0")
             });
         }
@@ -329,7 +342,7 @@ public partial class TimerWindow : Window
         if (v.TryGetValue("affichee", out var af)) EtaitVisible = af != "0";
         if (v.TryGetValue("verrou", out var lo)) MiLock.IsChecked = lo == "1";
         if (v.TryGetValue("autocd", out var ac)) MiAutoCd.IsChecked = ac == "1";
-        if (v.TryGetValue("dessus", out var de)) { MiTop.IsChecked = de == "1"; Topmost = MiTop.IsChecked; }
+        if (v.TryGetValue("dessus2", out var de)) { MiTop.IsChecked = de == "1"; Topmost = MiTop.IsChecked; }
 
         // toujours passer par la propriété, même sans fichier : c'est elle qui applique
         // l'opacité à tous les pinceaux du décor et qui renforce le texte si besoin.
