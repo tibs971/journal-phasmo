@@ -154,6 +154,7 @@ select{background:var(--surface2);border:1px solid var(--line);border-radius:var
 .card.picked .pick{background:var(--good);color:#fff;border-color:var(--good)}
 .badge-pick{position:absolute;bottom:10px;right:10px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--good)}
 .chip.dead{opacity:.4;text-decoration:line-through}
+.chip.cut{background:var(--no-soft);border-color:var(--no);color:var(--no);text-decoration:line-through;opacity:1}
 #bmBtn[aria-pressed="true"]{background:var(--no-soft);border-color:var(--no);color:var(--no);font-weight:600}
 body.bm .st2.spd{background:var(--no-soft);color:var(--no)}
 .bm-note{font-size:12px;color:var(--no);margin-top:6px}
@@ -327,6 +328,16 @@ body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
       <p class="hint" id="dnote" style="margin:7px 0 0"></p>
     </div>
 
+    <div class="panel" id="pnl-ctx">
+      <p class="lbl" style="margin:0 0 7px">Contexte de la partie</p>
+      <div class="row">
+        <button class="chip" id="cxBlood" aria-pressed="false">🌕 Lune de sang</button>
+        <button class="chip" id="cxChm" aria-pressed="false">🔮 Chasse maudite</button>
+        <button class="chip" id="cxChmDone" aria-pressed="false">⏱ Maudite déjà passée</button>
+      </div>
+      <p class="hint" id="ctxnote" style="margin:7px 0 0"></p>
+    </div>
+
     <div class="panel" id="pnl-ev">
       <div class="row" style="justify-content:space-between">
         <p class="lbl" style="margin:0">Preuves de la partie</p>
@@ -346,15 +357,18 @@ body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
     <div class="panel filters" id="pnl-filters">
       <p class="lbl" style="margin:0">Observations en chasse</p>
       <div class="field"><label for="san">A chassé avec une santé moyenne de</label><input id="san" type="number" min="0" max="100" step="1" placeholder="—"><span>%</span></div>
+      <p class="hint" id="sanote" hidden style="margin:-2px 0 0"></p>
       <div>
-        <div class="hint" style="margin-bottom:5px">Accélération en ligne de vue (LdV)</div>
+        <div class="hint" style="margin-bottom:5px">Comment sa vitesse a changé en chasse</div>
         <div class="row" id="losf">
-          <button class="chip" data-v="oui" aria-pressed="false">A accéléré en me voyant</button>
-          <button class="chip" data-v="non" aria-pressed="false">N'a jamais accéléré</button>
+          <button class="chip" data-v="jump" aria-pressed="false" title="Pas de montée : il passe d'une vitesse à l'autre d'un coup">⚡ Vitesse maximale d'un coup (≤ 2 s)</button>
+          <button class="chip" data-v="prog" aria-pressed="false" title="La montée standard en ligne de vue, étalée sur 13 s">📈 Sa vitesse monte progressivement</button>
+          <button class="chip" data-v="non" aria-pressed="false" title="Vitesse constante du début à la fin">➖ Sa vitesse ne monte jamais</button>
         </div>
+        <p class="hint" style="margin:5px 0 0"><b>📈 Progressivement</b> : la montée standard en ligne de vue. À partir de 1,70 m/s, +5 % par seconde tant qu'il vous voit, jusqu'à 2,81 m/s au bout de <b>13 s</b>. Il garde cette vitesse en vous cherchant, puis redescend très lentement (≈ 65 s) ; un encens qui le touche remet tout à zéro. L'<b>Aswang</b> fait la même montée mais en 8,7 s.<br><b>⚡ D'un coup</b> : la vitesse saute d'un palier à l'autre, sans montée. Revenant (1,0 → 3,0 dès qu'il vous détecte), Djinn (2,5 de loin, disjoncteur allumé), Raiju (2,5 près de l'électronique), Dayan (2,25 si vous bougez, 1,2 si vous vous figez), Deogen (3,0 de loin, 0,4 tout près), Kormos (×1,3 vers un bruit), Hantu (selon la température de la pièce), Obambo et Gallu (selon leur état).</p>
       </div>
       <div>
-        <div class="hint" style="margin-bottom:5px">Vitesse de base observée (sans LdV)</div>
+        <div class="hint" style="margin-bottom:5px">Vitesse de base observée (sans LdV) — <b>1 clic</b> : vitesse vue · <b>2 clics</b> : vitesse barrée</div>
         <div class="row" id="catf">
           <button class="chip" data-v="tlent" aria-pressed="false"></button>
           <button class="chip" data-v="lent" aria-pressed="false"></button>
@@ -362,6 +376,7 @@ body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
           <button class="chip" data-v="rapide" aria-pressed="false"></button>
           <button class="chip" data-v="trapide" aria-pressed="false"></button>
         </div>
+        <p class="hint" style="margin:5px 0 0">Une vitesse <b>vue</b> ne garde que les entités capables de l'atteindre. Une vitesse <b>barrée</b> élimine toutes celles qui peuvent l'atteindre : à n'utiliser que si vous avez vraiment pu le vérifier (chasse entière, conditions réunies — disjoncteur, température, électronique). Le Mimic n'est jamais éliminé par une vitesse barrée, il copie celle de l'entité imitée.</p>
       </div>
       <div class="row">
         <button class="chip" id="spdf" aria-pressed="false">Filtrer avec la vitesse mesurée</button>
@@ -432,6 +447,42 @@ body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
   <p class="intro">Vue comparée des 30 entités. Cliquez une ligne pour ouvrir la fiche complète. Vitesses à 100 % de vitesse d'entité, hors Lune de sang.</p>
   <input class="search" id="q" type="search" placeholder="Rechercher (nom, preuve, comportement…)">
   <div class="tbl"><table id="tbl"><thead><tr><th>Entité</th><th>Preuves</th><th>Seuil de chasse</th><th>Vitesse</th><th>LdV</th><th>Signe distinctif</th></tr></thead><tbody></tbody></table></div>
+
+  <p class="lbl">Mode sans preuve : le tell décisif de chaque entité</p>
+  <p class="hint" style="margin:0 0 10px">En 0 preuve, l'identification repose entièrement sur le comportement. <b>29 entités sur 30 ont au moins un comportement qui les prouve toutes seules</b> ; seul le Goryo n'en a aucun et se trouve par élimination. Les tests ci-dessous sont ceux qui ne laissent aucun doute — cochez-les dans l'enquête, ils suffisent.</p>
+  <div class="tbl"><table><thead><tr><th>Entité</th><th>Ce qui la prouve sans aucune preuve</th><th>Où regarder</th></tr></thead><tbody>
+    <tr><td><b>Esprit</b></td><td>Aucune chasse pendant 180 s après un encens, santé déjà basse</td><td class="hint">Encens</td></tr>
+    <tr><td><b>Spectre</b></td><td>Pic d'EMF qui surgit près d'un joueur, loin de sa pièce ; visible sur une photo étiquetée « Fantôme »</td><td class="hint">EMF, photo</td></tr>
+    <tr><td><b>Fantôme</b></td><td>Presque invisible en chasse : longues disparitions entre les clignotements ; disparaît si on le photographie en événement</td><td class="hint">Chasse</td></tr>
+    <tr><td><b>Poltergeist</b></td><td>Plusieurs objets projetés d'un coup, et rafales d'objets pendant la chasse</td><td class="hint">Chasse</td></tr>
+    <tr><td><b>Banshee</b></td><td>Un de ses 20 cris uniques au micro parabolique ; elle ignore tout le monde sauf sa cible</td><td class="hint">Micro parabolique</td></tr>
+    <tr><td><b>Djinn</b></td><td>Très rapide de loin disjoncteur allumé, vitesse normale tout près</td><td class="hint">Chasse</td></tr>
+    <tr><td><b>Cauchemar (Mare)</b></td><td>Rééteint la lumière juste après que vous l'allumez ; n'allume jamais rien</td><td class="hint">Hors chasse</td></tr>
+    <tr><td><b>Revenant</b></td><td>Très lent tant qu'il ne vous a pas vu (1 m/s), puis 3 m/s d'un coup</td><td class="hint">Tap en chasse</td></tr>
+    <tr><td><b>Ombre</b></td><td>Apparition sous forme d'ombre pendant un événement d'objet maudit</td><td class="hint">Objet maudit</td></tr>
+    <tr><td><b>Démon</b></td><td>Chasse 60 à 90 s après un encens, ou rechasse 20 à 25 s après la chasse précédente</td><td class="hint">Encens, minuteur</td></tr>
+    <tr><td><b>Yurei</b></td><td>Après un encens, plus aucune activité hors de sa pièce pendant 90 s ; porte fermée entièrement + chute de santé brutale</td><td class="hint">Encens</td></tr>
+    <tr><td><b>Oni</b></td><td>Très visible en chasse (clignote en restant visible) et aucune accélération en ligne de vue</td><td class="hint">Chasse</td></tr>
+    <tr><td><b>Yokai</b></td><td>Ne vous entend qu'à 2,5 m en chasse : parlez à 5 m, il ne vient pas</td><td class="hint">Chasse</td></tr>
+    <tr><td><b>Hantu</b></td><td>Souffle glacé qui sort de l'entité, disjoncteur coupé ; vitesse selon la température de la pièce</td><td class="hint">Chasse</td></tr>
+    <tr><td><b>Goryo</b></td><td><b>Aucun tell comportemental.</b> En 0 preuve, il se trouve <b>par élimination</b> des 29 autres. Seul appui : il ne change jamais de pièce favorite (vérifiable au miroir hanté).</td><td class="hint">Élimination</td></tr>
+    <tr><td><b>Myling</b></td><td>Deux sons paranormaux en moins de 80 s au micro parabolique ; ses sons de chasse ne portent qu'à 12 m</td><td class="hint">Micro parabolique</td></tr>
+    <tr><td><b>Onryo</b></td><td>Chasse juste après avoir soufflé une flamme (la 3e) ; ne chasse pas près d'une flamme allumée</td><td class="hint">Bougies</td></tr>
+    <tr><td><b>Les Jumeaux</b></td><td>Deux interactions à moins de 2 s d'intervalle, à deux endroits différents</td><td class="hint">Hors chasse</td></tr>
+    <tr><td><b>Raiju</b></td><td>Fonce près des appareils électroniques allumés (portée 15 m)</td><td class="hint">Chasse</td></tr>
+    <tr><td><b>Obake</b></td><td>Change de modèle en pleine chasse</td><td class="hint">Chasse</td></tr>
+    <tr><td><b>Le Mimic</b></td><td>Orbes fantomatiques en plus du maximum du mode — elles restent visibles <b>même en 0 preuve</b>, c'est le tell le plus facile du jeu</td><td class="hint">Caméra</td></tr>
+    <tr><td><b>Moroï</b></td><td>Aveuglement à l'encens nettement plus long (7 s) ; accélère quand votre santé baisse</td><td class="hint">Encens, Tap</td></tr>
+    <tr><td><b>Deogen</b></td><td>Sait toujours où vous êtes ; fonce droit sur vous puis s'arrête presque à votre contact</td><td class="hint">Chasse</td></tr>
+    <tr><td><b>Thayé</b></td><td>Âge qui change à la planche Ouija ; ralentit avec le temps passé près de lui</td><td class="hint">Ouija</td></tr>
+    <tr><td><b>Gallu</b></td><td>Aveuglement à l'encens très court (4 s enragé) ; ignore le sel de rang III ; crucifix efficace au-delà de 3 m</td><td class="hint">Encens, sel</td></tr>
+    <tr><td><b>Dayan</b></td><td>Accélère quand vous bougez, ralentit quand vous vous figez</td><td class="hint">Chasse</td></tr>
+    <tr><td><b>Obambo</b></td><td>Change brusquement de vitesse sans vous avoir vu, vitesse de base lente</td><td class="hint">Tap en chasse</td></tr>
+    <tr><td><b>Kormos</b></td><td>Vous suit au bruit de vos pas sans vous voir ; immobile et silencieux, vous êtes invisible pour lui</td><td class="hint">Chasse</td></tr>
+    <tr><td><b>Aswang</b></td><td>La chasse s'arrête net quand il vous atteint dans une cachette officielle</td><td class="hint">Chasse</td></tr>
+    <tr><td><b>Deildegast</b></td><td>Ralentit à chaque objet différent utilisé (−0,1 m/s, jusqu'à 0,4), pas avec le temps ; âge inchangé à la Ouija</td><td class="hint">Tap, Ouija</td></tr>
+  </tbody></table></div>
+  <p class="hint" style="margin:-12px 0 22px">Trois tests ouvrent la moitié du tableau : <b>l'encens</b> (Esprit, Démon, Yurei, Moroï, Gallu), le <b>Tap pendant la chasse</b> (Revenant, Deogen, Dayan, Obambo, Deildegast, Djinn, Raiju, Hantu) et le <b>micro parabolique</b> (Banshee, Myling). Le Mimic se repère à la caméra avant même d'avoir commencé.</p>
 </section>
 
 <!-- ================= CHASSES ================= -->
@@ -492,6 +543,33 @@ body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
       <li>Sel rang III : ralentit l'entité de 50 % pendant 2 s</li>
       <li>Portée de mort : 1,1 m immédiat / 1,5 m après 1 s (Kormos 0,5 / 0,6 m)</li>
       <li>Aswang : vous atteindre dans une cachette officielle termine la chasse</li></ul></div>
+  </div>
+
+  <p class="lbl">Comment il vous trouve pendant la chasse</p>
+  <div class="cols">
+    <div class="item"><span class="tag acc">Vue</span><h4>Il voit à 360°, jusqu'à 75 m</h4>
+      <p>Aucune notion de « derrière lui » : s'il n'y a pas d'obstacle, il vous voit. Les murs, le verre et les portes de cellule coupent la vue ; les objets lancés ne la coupent pas.</p>
+      <p class="hint" style="margin:6px 0 0">Vous portez 6 points de repère, 3 en haut et 3 en bas : il lui faut les 3 d'un même groupe. Se baisser derrière un meuble cache vraiment.</p></div>
+
+    <div class="item"><span class="tag acc">Oreille</span><h4>Il vous entend parler à 9 m</h4>
+      <p>Sur le même étage uniquement. Le micro ouvert compte : taisez-vous ou coupez le micro pendant une chasse.</p>
+      <p class="hint" style="margin:6px 0 0"><b>Yokai</b> : 2,5 m seulement. <b>Kormos</b> : il entend aussi vos pas, de très loin (sprint 30 m, marche 15 m, accroupi 10 m).</p></div>
+
+    <div class="item"><span class="tag acc">Électronique</span><h4>Un appareil allumé l'attire à 7,5 m</h4>
+      <p>Compte : ce que vous tenez en main, ce que vous portez sur la tête, une lampe de poche allumée. Ne compte pas : un objet posé au sol, la main secondaire, la lampe d'épaule, la lampe UV.</p>
+      <p class="hint" style="margin:6px 0 0">Poser son matériel allumé loin de soi avant une chasse, c'est se fabriquer un leurre. <b>Raiju</b> : il fonce vers l'électronique, portée 15 m.</p></div>
+
+    <div class="item"><span class="tag no">Le vrai piège</span><h4>Une chasse sur deux commence là où il vous a vu</h4>
+      <p>Au début de chaque chasse, l'entité a <b>1 chance sur 2</b> de filer droit vers le dernier endroit où elle a vu un joueur à la chasse précédente. Elle ne retient qu'un seul point.</p>
+      <p class="hint" style="margin:6px 0 0">Donc non : s'il vient droit sur vous, ce n'est pas un indice d'entité. Changez de cachette entre deux chasses.</p></div>
+
+    <div class="item"><span class="tag no">Définitif</span><h4>Celui qui sait toujours où vous êtes</h4>
+      <p>Un seul : le <b>Deogen</b>. Il garde la ligne de vue sur tous les joueurs en permanence, même cachés, même à l'autre bout de la carte. Il fonce (3 m/s au-delà de 6 m) puis tombe à 0,4 m/s à moins de 2,5 m de vous.</p>
+      <p class="hint" style="margin:6px 0 0">L'<b>Aswang</b> est différent : il ne sait pas où vous êtes, mais après vous avoir sorti d'une cachette, il revient droit sur vous à la chasse suivante. La <b>Banshee</b>, elle, ignore tout le monde sauf sa cible tant que celle-ci est dans la zone.</p></div>
+
+    <div class="item"><span class="tag acc">Cachettes</span><h4>Une porte fermée ne sauve qu'à temps</h4>
+      <p>S'il vous a repéré dans un placard, un casier ou une petite tente, il pose un point devant la porte et vient l'ouvrir en arrivant : c'est en général la mort.</p>
+      <p class="hint" style="margin:6px 0 0">Entrer <b>avant</b> qu'il vous voie et refermer, ça marche. Entrer sous ses yeux, non. Un encens qui le touche le met 5 s sans détection ni mise à mort, et lui fait perdre toute la vitesse accumulée.</p></div>
   </div>
 
   <p class="lbl">Durée d'une chasse</p>
@@ -609,7 +687,44 @@ body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
 <!-- ================= OBJETS MAUDITS ================= -->
 <section id="p-obj" class="page ref" hidden>
   <h2>Objets maudits</h2>
-  <p class="intro">Un seul par contrat (sauf réglages). Toute chasse déclenchée par un objet maudit est « maudite » : +20 s, période de grâce raccourcie, et les chasses suivantes sont aussi allongées.</p>
+  <p class="intro">Un seul par contrat (sauf réglages). Toute chasse déclenchée par un objet maudit est une « chasse maudite », et elle ne suit pas les mêmes règles qu'une chasse normale.</p>
+
+  <p class="lbl">🔮 La chasse maudite — règles et conséquences pour l'enquête</p>
+  <div class="cols">
+    <div class="item"><span class="tag no">Règles</span><h4>En quoi elle diffère d'une chasse normale</h4><ul>
+      <li><b>Elle part à n'importe quelle santé</b>, même à 100 %, et elle ignore la recharge : elle peut suivre immédiatement une autre chasse.</li>
+      <li><b>Période de grâce : 1 s</b> au lieu de 2 à 5 s selon la difficulté. Vous avez à peine le temps de vous cacher.</li>
+      <li><b>Elle met fin à la préparation</b> si elle est déclenchée pendant celle-ci.</li>
+      <li><b>Durée normale</b> pour la difficulté et la taille de carte, mais <b>toutes les chasses du contrat durent ensuite 20 s de plus</b>, celle en cours comprise.</li>
+      <li><b>Seul un crucifix rang III avec ses 2 charges</b> peut l'empêcher (il consomme les deux). Aucun autre rang, aucune autre charge.</li>
+      <li><b>L'encens n'empêche rien</b> : il aveugle l'entité 5 s pendant la chasse, c'est tout.</li>
+      <li>Après elle, les chasses redeviennent normales : seuil de santé et recharge de 25 s (20 s pour le Démon) s'appliquent de nouveau.</li></ul></div>
+
+    <div class="item"><span class="tag no">Déductions à jeter</span><h4>Ce qui ne prouve plus rien</h4>
+      <p>Si la chasse a été déclenchée par un objet maudit, toutes ces déductions sont fausses — cochez « Chasse maudite » dans l'enquête et l'appli les désactive toute seule :</p><ul>
+      <li>« Il a chassé à 90 % de santé, donc Démon » — non : n'importe quelle entité le fait.</li>
+      <li>« Il a chassé au-dessus de 35 %, donc pas une Ombre » — non.</li>
+      <li>« Il a rechassé en moins de 25 s, donc Démon » — non : la recharge est ignorée.</li>
+      <li>« Il a chassé moins de 180 s après l'encens, donc pas un Esprit » — non : l'encens ne bloque pas une chasse maudite.</li>
+      <li>« Il a chassé 60 à 90 s après l'encens, donc Démon » — non.</li>
+      <li>« Il a chassé avec une flamme allumée, donc pas un Onryo » — non.</li>
+      <li>« Il a chassé pendant que j'étais dans sa pièce, donc pas une Ombre » — non.</li>
+      <li>« La lumière de sa pièce était allumée, donc pas une Jument » — non.</li></ul></div>
+
+    <div class="item"><span class="tag acc">Déductions à garder</span><h4>Ce qui reste parfaitement valable</h4>
+      <p>Une chasse maudite est une vraie chasse : tout ce qui s'observe <b>pendant</b> reste bon à prendre, et c'est souvent l'occasion la plus sûre de le faire, puisque vous choisissez le moment.</p><ul>
+      <li>Vitesse de base et accélération en ligne de vue (Tap au rythme des pas).</li>
+      <li>Visibilité du modèle, changement de forme, souffle glacé, forme d'ombre.</li>
+      <li>Façon de vous traquer : Deogen, Aswang, Kormos, Yokai, Myling, Banshee…</li>
+      <li>Objets lancés en chasse, aveuglement à l'encens, sel, portée de mort.</li></ul>
+      <p class="hint" style="margin:8px 0 0">Astuce : lancer soi-même une chasse maudite en début de partie, santé haute et crucifix III en main, c'est la façon la plus propre de mesurer une vitesse sans rien perdre.</p></div>
+
+    <div class="item"><span class="tag no">Lune de sang + objet maudit</span><h4>Le cumul</h4>
+      <p>Les deux se cumulent sans se gêner : la chasse maudite donne le moment (n'importe quelle santé, grâce de 1 s), la Lune de sang donne la vitesse (+15 %).</p>
+      <p>Cochez les deux dans le contexte de l'enquête : l'appli désactive les déductions par seuil, allonge les chasses de 20 s et passe toutes les vitesses en valeurs Lune de sang.</p></div>
+  </div>
+
+  <p class="lbl">Les sept objets</p>
   <div class="cols" id="cursed"></div>
 </section>
 
@@ -618,7 +733,7 @@ body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
   <h2>Météo &amp; idées reçues</h2>
   <p class="intro">La météo change la visibilité, le bruit ambiant et parfois la vitesse de l'entité.</p>
   <div class="tbl"><table><thead><tr><th>Météo</th><th>Lumière</th><th>Visibilité</th><th>Bruit</th><th>Temp.</th><th>Effet en jeu</th></tr></thead><tbody>
-    <tr><td><b>Lune de sang</b></td><td>Modeste</td><td>Élevée</td><td>Moyen</td><td class="num">13 °C</td><td>2 % de chance sur toute carte. Entité <b>+15 % de vitesse</b> en chasse, perte de santé passive +100 %, plus d'événements, +10 % de paie.</td></tr>
+    <tr class="on"><td><b>Lune de sang</b></td><td>Modeste</td><td>Élevée</td><td>Moyen</td><td class="num">13 °C</td><td>Rare (≈ 2 %). Ciel rouge et pluie fine. Entité <b>+15 % de vitesse</b> en chasse, <b>perte de santé passive ×2</b>, <b>+10 % de paie</b>. Détail complet plus bas.</td></tr>
     <tr><td>Temps clair</td><td>Faible</td><td>Élevée</td><td>Faible</td><td class="num">13 °C</td><td>Aucun.</td></tr>
     <tr><td>Brouillard</td><td>Modeste</td><td>Faible</td><td>Faible</td><td class="num">13 °C</td><td>Gêne dehors (Camp Woodwind, Maple Lodge) et les caméras extérieures. N'affecte pas la vision de l'entité.</td></tr>
     <tr><td>Pluie forte</td><td>Faible</td><td>Modeste</td><td>Fort</td><td class="num">8 °C</td><td>Couvre les interactions, tonnerre qui masque les pas. Éteint lumières à feu / briquets rang I-II sous la pluie. Éclairs = lumière brève.</td></tr>
@@ -628,6 +743,44 @@ body.notm #pnl-timers, body.notm #pipBtn, body.notm #ovBtn{display:none}
     <tr><td>Vent</td><td>Faible</td><td>Élevée</td><td>Moyen</td><td class="num">8 °C</td><td>Bruit de vent et de feuilles, rarement gênant.</td></tr>
     <tr><td>Serviteurs de la forêt (événement)</td><td colspan="4">—</td><td>Serviteur chanceux : entité −10 % de vitesse ; malchanceux : +10 %. Cumulables.</td></tr>
   </tbody></table></div>
+
+  <p class="lbl">🌕 Lune de sang — tout ce qui change</p>
+  <div class="cols">
+    <div class="item"><span class="tag no">Ce qui change vraiment</span><h4>Les trois seuls effets</h4><ul>
+      <li><b>Vitesse de l'entité +15 % en chasse.</b> 1,70 m/s devient 1,96 ; 2,81 (vitesse maximale en ligne de vue) devient 3,23. Toutes les vitesses de l'appli passent en valeurs Lune de sang dès que le contexte est coché.</li>
+      <li><b>Perte de santé passive ×2.</b> Elle se cumule avec le réglage de difficulté : en Professionnel (×2), on tombe à ×4 de la valeur de base de la carte.</li>
+      <li><b>Paie du contrat +10 %.</b></li></ul>
+      <p class="hint" style="margin:8px 0 0">Reconnaissable au ciel rouge et à la pluie fine depuis le camion. 13 °C dehors, visibilité élevée, bruit moyen.</p></div>
+
+    <div class="item"><span class="tag acc">Ce qui ne change PAS</span><h4>Ne vous laissez pas piéger</h4><ul>
+      <li>Les <b>preuves</b> sont les mêmes : aucune n'est ajoutée, retirée ni cachée.</li>
+      <li>Les <b>seuils de chasse</b> de chaque entité sont inchangés (Démon 70 %, Ombre 35 %, Jument 60 % lumière éteinte…). C'est la santé qui descend plus vite, pas le seuil qui monte.</li>
+      <li>La <b>durée des chasses</b>, la <b>période de grâce</b> et la <b>recharge</b> (25 s, 20 s pour le Démon) sont inchangées.</li>
+      <li>Les <b>comportements</b> propres à chaque entité sont intacts.</li></ul></div>
+
+    <div class="item"><span class="tag no">Piège d'enquête n° 1</span><h4>Une chasse très tôt n'est pas un Démon</h4>
+      <p>La santé tombe deux fois plus vite : le groupe passe sous 50 % en moitié moins de temps. Une première chasse qui arrive très tôt dans la partie est donc <b>normale</b> en Lune de sang.</p>
+      <p class="hint" style="margin:6px 0 0">Ce qui reste valable pour le Démon : chasser alors que la santé <b>mesurée au moniteur</b> est au-dessus de 70 %, rechasser 20 à 25 s après la chasse précédente, chasser 60 à 90 s après un encens.</p></div>
+
+    <div class="item"><span class="tag no">Piège d'enquête n° 2</span><h4>Mesurez toujours la santé, jamais le temps</h4>
+      <p>Toutes les déductions par seuil (Ombre au-dessus de 35 %, Jument, Onryo…) se font avec le <b>pourcentage lu sur le moniteur du camion</b> ou le capteur de santé. En Lune de sang, « ça fait longtemps qu'on est dedans » ne veut plus rien dire.</p>
+      <p class="hint" style="margin:6px 0 0">Le Moroï double lui aussi la perte passive et la lumière n'y change rien : avec la Lune de sang, la chute est ×4 et devient très visible — c'est en soi un bon indice de Moroï.</p></div>
+
+    <div class="item"><span class="tag acc">Vitesses</span><h4>Les repères décalés</h4>
+      <div class="tbl" style="margin:6px 0 0"><table><tbody>
+        <tr><td>Très lente (Revenant non détecté)</td><td class="num">1,00</td><td class="num">→ 1,15 m/s</td></tr>
+        <tr><td>Lente (Jumeaux lent, Hantu chaud)</td><td class="num">1,40</td><td class="num">→ 1,61 m/s</td></tr>
+        <tr><td>Normale (standard)</td><td class="num">1,70</td><td class="num">→ 1,96 m/s</td></tr>
+        <tr><td>Rapide (Jumeaux rapide, Raiju actif)</td><td class="num">2,00</td><td class="num">→ 2,30 m/s</td></tr>
+        <tr><td>Très rapide (Revenant détecté)</td><td class="num">3,00</td><td class="num">→ 3,45 m/s</td></tr>
+        <tr><td>Maximum en ligne de vue</td><td class="num">2,81</td><td class="num">→ 3,23 m/s</td></tr>
+      </tbody></table></div>
+      <p class="hint" style="margin:6px 0 0">Le Tap et le tableau des entités appliquent déjà ces valeurs quand la Lune de sang est cochée. Le réglage « vitesse d'entité » du contrat se multiplie par-dessus.</p></div>
+
+    <div class="item"><span class="tag acc">Température</span><h4>Hantu et Températures glaciales</h4>
+      <p>La Lune de sang est une nuit à 13 °C, comme un temps clair : rien n'aide les pièces à descendre. Pour un Hantu, il faut toujours couper le disjoncteur et laisser le froid s'installer avant de juger sa vitesse.</p>
+      <p class="hint" style="margin:6px 0 0">La neige (5 °C) reste la seule météo qui rend le souffle visible partout et peut masquer le tell de la pièce.</p></div>
+  </div>
 
   <p class="lbl">Idées reçues</p>
   <div class="cols" id="myths"></div>
@@ -1040,20 +1193,21 @@ const OBS = [
  {id:"x_photo",t:"Visible sur une photo étiquetée « Fantôme »",x:["phantom"]},
  {id:"x_dots",t:"D.O.T.S. vu à l'œil nu ou avec quelqu'un dans la pièce",x:["goryo"]},
  {id:"x_room",t:"A changé de pièce favorite (orbes / miroir)",x:["goryo"]},
- {id:"x_flame",t:"A chassé alors qu'une flamme était allumée près de lui",x:["onryo"]},
- {id:"x_smudge",t:"A chassé entre 90 et 180 s après l'encens",x:["spirit"]},
+ {id:"x_flame",trig:1,t:"A chassé alors qu'une flamme était allumée près de lui",x:["onryo"]},
+ {id:"x_smudge",trig:1,t:"A chassé entre 90 et 180 s après l'encens",x:["spirit"]},
  {id:"x_male",t:"Nom ou modèle masculin",x:["banshee","dayan"]},
  {info:"Nom ou modèle féminin : n'élimine personne, toutes les entités peuvent être féminines. Seules la Banshee et la Dayan le sont TOUJOURS."},
  {id:"x_nobreath",t:"Pas de souffle glacé en chasse, disjoncteur coupé",x:["hantu"]},
  {id:"x_heard",t:"En chasse, vous a entendu parler ou repéré votre électronique à plus de 3 m",x:["yokai"]},
  {id:"x_stillseen",t:"Vous a repéré de loin alors que vous étiez immobile et silencieux",x:["kormos"]},
  {id:"x_hidekill",t:"A ouvert votre cachette et la chasse a continué",x:["aswang"]},
- {id:"x_notarget",t:"A chassé au-dessus de 40 % lumière de sa pièce allumée",x:["mare"]},
+ {id:"x_notarget",trig:1,t:"A chassé au-dessus de 40 % lumière de sa pièce allumée",x:["mare"]},
  {id:"x_tv",t:"A allumé un téléviseur / un ordinateur",x:["mare"]},
- {id:"x_shade_room",t:"A chassé ou fait de l'EMF alors que j'étais dans sa pièce",x:["shade"]},
+ {id:"x_shade_room",t:"A fait de l'EMF alors que j'étais dans sa pièce",x:["shade"]},
+ {id:"x_shade_hunt",trig:1,t:"A chassé alors que j'étais dans sa pièce",x:["shade"]},
  {id:"x_book",t:"A lancé le livre d'écriture",s:"Valable seulement en 3 preuves : une entité qui a l'Écriture ne peut plus lancer le livre",n3:true,x:["spirit", "poltergeist", "mare", "revenant", "shade", "demon", "myling", "moroi", "deogen", "thaye", "obambo", "aswang", "deildegast"]},
  {id:"x_salt6",t:"Plus de 4 empreintes de suite dans le sel",s:"Jusqu'à 6 : Gallu affaibli",x:["wraith"]},
- {id:"x_cd25",t:"A rechassé moins de 25 s après la fin de la chasse précédente",x:["spirit","wraith","phantom","poltergeist","banshee","jinn","mare","revenant","shade","yurei","oni","yokai","hantu","goryo","myling","onryo","twins","raiju","obake","moroi","deogen","thaye","gallu","dayan","obambo","kormos","aswang","deildegast"]},
+ {id:"x_cd25",trig:1,t:"A rechassé moins de 25 s après la fin de la chasse précédente",x:["spirit","wraith","phantom","poltergeist","banshee","jinn","mare","revenant","shade","yurei","oni","yokai","hantu","goryo","myling","onryo","twins","raiju","obake","moroi","deogen","thaye","gallu","dayan","obambo","kormos","aswang","deildegast"]},
  {grp:"Vitesse vérifiée — élimine"},
  {id:"x_noelec",t:"N'a PAS accéléré en passant près d'une électronique allumée",s:"À vérifier une chasse entière, appareil posé au sol",x:["raiju"]},
  {id:"x_nofar",t:"N'a PAS foncé de loin alors que le disjoncteur était allumé",x:["jinn"]},
@@ -1078,6 +1232,8 @@ const OBS = [
  {id:"elec",t:"Fonce près des appareils électroniques allumés",g:["raiju"]},
  {id:"farfast",t:"Très rapide de loin, disjoncteur allumé, puis normal tout près",g:["jinn"]},
  {id:"oldslow",t:"Très rapide au début de partie, de plus en plus lent ensuite",g:["thaye","moroi","deildegast"]},
+ {id:"objslow",t:"Ralentit à chaque objet utilisé, pas avec le temps",s:"Définitif : −0,1 m/s par objet différent manipulé, n'importe où, même dans le camion",g:["deildegast"]},
+ {id:"sanfast",t:"Accélère quand votre santé baisse, ralentit après un cachet",s:"Définitif : sa vitesse suit la santé du joueur le plus proche",g:["moroi"]},
  {grp:"Sons & objets"},
  {id:"scream",t:"Cri unique au micro parabolique",g:["banshee"]},
  {id:"para80",t:"Deux sons paranormaux en moins de 80 s au micro parabolique",s:"Définitif : les autres entités espacent leurs sons de 80 à 127 s, le Myling de 64 à 127 s",g:["myling"]},
@@ -1085,6 +1241,7 @@ const OBS = [
  {info:"Sons paranormaux (grognement, rire, parole, chuchotement) : toutes les 80 à 127 s. Ils ne s'entendent qu'au micro parabolique ou à l'enregistreur sonore, et n'ont rien à voir avec les vocalises d'événement ou de chasse."},
  {id:"breathsb",t:"Respiration lourde dans la Spirit Box à ~1 m",g:["deogen"]},
  {id:"age",t:"Âge qui change à la planche Ouija",g:["thaye"]},
+ {id:"x_agesame",t:"Même âge à la planche Ouija après plusieurs minutes passées près de lui",s:"Le Thayé vieillit dès qu'un joueur reste dans sa pièce",x:["thaye"]},
  {id:"orb4",t:"Orbes EN PLUS du maximum de preuves du mode",s:"Orbes + 3 preuves en mode 3, + 2 en Cauchemar, + 1 en Démence, ou des Orbes seules en mode 0 preuve",g:["mimic"]},
  {id:"prints",t:"Empreinte à 6 doigts, double empreinte ou 5 empreintes",g:["obake"]},
  {id:"uvgone",t:"Les empreintes UV disparaissent anormalement vite",g:["obake"]},
@@ -1098,9 +1255,11 @@ const OBS = [
  {id:"cruci_near",t:"Crucifix inefficace alors que j'étais à portée",s:"Crucifix déjà utilisé ? Sinon : Gallu enragé (−2 m)",g:["gallu"]},
  {id:"nosalt_slow",t:"Pas ralenti par le sel de rang III",g:["gallu"]},
  {id:"trapped",t:"Après un encens, plus aucune activité hors de sa pièce (90 s)",g:["yurei"]},
- {id:"smudge180",t:"Aucune chasse pendant 180 s après l'encens, santé basse",s:"Indice fort",g:["spirit"]},
+ {id:"smudge180",trig:1,t:"Aucune chasse pendant 180 s après l'encens, santé basse",s:"Indice fort",g:["spirit"]},
  {grp:"Comment il vous traque"},
- {id:"knows",t:"Sait où vous êtes, même caché, sans chercher",g:["deogen","aswang"]},
+ {id:"knows",t:"Sait en permanence où vous êtes, même caché ou à l'autre bout de la carte",s:"Définitif : seul le Deogen garde la ligne de vue sur tout le monde en continu",g:["deogen"]},
+ {id:"knows2",t:"Va droit sur le joueur qu'il a sorti d'une cachette, dès la chasse suivante",g:["aswang"]},
+ {info:"Une entité qui fonce droit sur vous au début d'une chasse n'a rien de spécial : toutes ont 1 chance sur 2 de retourner là où elles vous ont vu la fois d'avant."},
  {id:"hideend",t:"La chasse s'arrête quand il ouvre votre cachette",g:["aswang"]},
  {id:"blind",t:"Ne vous voit pas alors que vous êtes immobile à découvert",g:["kormos","banshee"]},
  {id:"hearsteps",t:"Vous suit au bruit de vos pas (de loin, sans vous voir)",g:["kormos"]},
@@ -1109,9 +1268,9 @@ const OBS = [
  {id:"quiet",t:"Pas entendus seulement tout près (l'électronique grésille avant)",g:["myling"]},
  {id:"throws",t:"Lance des objets en rafale pendant la chasse",g:["poltergeist"]},
  {grp:"Quand il a chassé"},
- {id:"flame3",t:"Chasse juste après avoir soufflé une flamme (la 3e)",g:["onryo"]},
- {id:"smudge60",t:"Chasse entre 60 et 90 s après un encens",g:["demon"]},
- {id:"cd20",t:"Rechasse 20 à 25 s après la fin de la chasse précédente",g:["demon"]},
+ {id:"flame3",trig:1,t:"Chasse juste après avoir soufflé une flamme (la 3e)",g:["onryo"]},
+ {id:"smudge60",trig:1,t:"Chasse entre 60 et 90 s après un encens",g:["demon"]},
+ {id:"cd20",trig:1,t:"Rechasse 20 à 25 s après la fin de la chasse précédente",g:["demon"]},
  {grp:"Hors chasse"},
  {id:"salt1",t:"A piétiné un tas de sel mais ignoré les suivants",g:["gallu"]},
  {id:"nosalt",t:"Est passé sur le sel sans jamais le perturber",g:["wraith","gallu"]},
@@ -1136,19 +1295,24 @@ const GCAT = {
 const gcat = g => GCAT[g.id] || ["normal"];
 
 /* ---------------- état ---------------- */
-const S = {keys:{smudge:'s',hunt:'h',cd:'c',tap:'f',reset:'r'}, ev:{}, n:3, manual:{}, san:null, los:null, spdf:false, speed:null, obs:{}, cat:{}, fav:{}, pick:null, blood:false, diff:"pro", cgrace:3, chunt:"high", map:-1};
+const S = {keys:{smudge:'s',hunt:'h',cd:'c',tap:'f',reset:'r'}, ev:{}, n:3, manual:{}, san:null, los:null, spdf:false, speed:null, obs:{}, cat:{}, fav:{}, pick:null, blood:false, chm:false, chmDone:false, diff:"pro", cgrace:3, chunt:"high", map:-1};
 EV_ORDER.forEach(k=>S.ev[k]=0);
 const LS="phasmo-journal-v1";
 let HADKEYS=false;   // le journal avait-il déjà ses propres touches en mémoire ?
-try{const s=JSON.parse(localStorage.getItem(LS)||"null"); if(s){ HADKEYS=!!s.keys;Object.assign(S,s,{speed:null}); S.obs=S.obs||{}; S.cat=S.cat||{}; S.fav=S.fav||{}; S.keys=Object.assign({smudge:'s',hunt:'h',cd:'c',tap:'f',reset:'r'},s.keys||{});}}catch(e){}
-function save(){try{localStorage.setItem(LS,JSON.stringify({ev:S.ev,n:S.n,manual:S.manual,san:S.san,los:S.los,spdf:S.spdf,obs:S.obs,cat:S.cat,keys:S.keys,fav:S.fav,pick:S.pick,blood:S.blood,diff:S.diff,cgrace:S.cgrace,chunt:S.chunt,map:S.map}))}catch(e){}}
+try{const s=JSON.parse(localStorage.getItem(LS)||"null"); if(s){ HADKEYS=!!s.keys;Object.assign(S,s,{speed:null}); S.obs=S.obs||{}; S.cat=S.cat||{}; Object.keys(S.cat).forEach(k=>{S.cat[k]=S.cat[k]===2?2:(S.cat[k]?1:0); if(!S.cat[k])delete S.cat[k];}); if(S.los==="oui") S.los="prog"; S.fav=S.fav||{}; S.keys=Object.assign({smudge:'s',hunt:'h',cd:'c',tap:'f',reset:'r'},s.keys||{});}}catch(e){}
+function save(){try{localStorage.setItem(LS,JSON.stringify({ev:S.ev,n:S.n,manual:S.manual,san:S.san,los:S.los,spdf:S.spdf,obs:S.obs,cat:S.cat,keys:S.keys,fav:S.fav,pick:S.pick,blood:S.blood,chm:S.chm,chmDone:S.chmDone,diff:S.diff,cgrace:S.cgrace,chunt:S.chunt,map:S.map}))}catch(e){}}
 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const fmt=x=>x.toFixed(2).replace(".",",");
 const BM=()=>S.blood?1.15:1;          // Lune de sang : +15 % de vitesse en chasse
 const HUNTSET={low:[15,30,40],med:[20,40,50],high:[30,50,60]};
 const MSZ=()=>(S.map>=0&&MAPS[S.map])?MAPS[S.map].s:-1;   // 0 petite, 1 moyenne, 2 grande, -1 inconnue
-const HLEN=()=>{const z=MSZ(); return z<0?0:D().hunt[z];} // durée de chasse sur cette carte
+/* entités dont la vitesse change d'un coup (palier), sans la montée progressive de 13 s */
+const JUMP=["revenant","jinn","raiju","dayan","deogen","kormos","hantu","obambo","gallu","mimic"];
+const LOSLBL={jump:"Vitesse maximale d'un coup",prog:"Sa vitesse monte progressivement",non:"Sa vitesse ne monte jamais"};
+const CHMX=()=>S.chmDone?20:0;        // chasse maudite déjà survenue : +20 s sur toutes les suivantes
+const HLEN=()=>{const z=MSZ(); return z<0?0:D().hunt[z]+CHMX();} // durée de chasse sur cette carte
+const GRACE=()=>S.chm?1:D().grace;    // une chasse maudite ne laisse qu'une seconde
 const D=()=>{                         // difficulté courante (défaut : Professionnel)
   const d=DIFFS.find(x=>x.id===S.diff)||DIFFS[2];
   return (d.free||d.id==="defi") ? Object.assign({},d,{grace:+S.cgrace,hunt:HUNTSET[S.chunt]||HUNTSET.high}) : d;
@@ -1174,14 +1338,18 @@ function evidenceReason(g){
 }
 function reason(g){
   const r=evidenceReason(g); if(r) return r;
-  if(S.san!=null && S.san!=="" && g.seuilMax<999 && +S.san>g.seuilMax+0.5) return "a chassé au-dessus de "+g.seuilMax+" %";
-  if(S.los==="oui" && g.los==="non" && g.id!=="mimic") return "n'accélère pas en LdV";
-  if(S.los==="non" && g.los==="oui") return "accélère toujours en LdV";
-  const cats=Object.keys(S.cat).filter(k=>S.cat[k]);
+  if(!S.chm && S.san!=null && S.san!=="" && g.seuilMax<999 && +S.san>g.seuilMax+0.5) return "a chassé au-dessus de "+g.seuilMax+" %";
+  if(g.id!=="mimic"){
+    if(S.los==="prog" && g.los==="non") return "sa vitesse ne monte jamais progressivement";
+    if(S.los==="jump" && !JUMP.includes(g.id)) return "ne change jamais de vitesse d'un coup";
+  }
+  if(S.los==="non" && g.los==="oui") return "accélère toujours en ligne de vue";
+  const cats=Object.keys(S.cat).filter(k=>S.cat[k]===1);
   if(cats.length && !cats.some(c=>gcat(g).includes(c))) return "vitesse de base "+cats.map(c=>CAT[c].toLowerCase()).join(" / ")+" impossible";
+  if(g.id!=="mimic") for(const c of Object.keys(S.cat)) if(S.cat[c]===2 && gcat(g).includes(c)) return "peut être "+CAT[c].toLowerCase()+" (vitesse barrée)";
   if(S.spdf && S.speed!=null && g.id!=="mimic"){const [a,b]=g.spd; if(S.speed<a-0.12||S.speed>b+0.12) return "vitesse "+fmt(S.speed)+" m/s hors plage";}
-  for(const o of OBS){ if(o.info) continue; if(o.n3&&S.n!==3) continue; if(o.x&&S.obs[o.id]&&o.x.includes(g.id)) return "exclu : "+o.t.toLowerCase(); }
-  if(g.id!=="mimic") for(const o of OBS){ if(o.info) continue; if(o.n3&&S.n!==3) continue; if(o.g&&S.obs[o.id]&&!o.g.includes(g.id)) return "ne colle pas : "+o.t.toLowerCase(); }
+  for(const o of OBS){ if(o.info) continue; if(o.n3&&S.n!==3) continue; if(o.trig&&S.chm) continue; if(o.x&&S.obs[o.id]&&o.x.includes(g.id)) return "exclu : "+o.t.toLowerCase(); }
+  if(g.id!=="mimic") for(const o of OBS){ if(o.info) continue; if(o.n3&&S.n!==3) continue; if(o.trig&&S.chm) continue; if(o.g&&S.obs[o.id]&&!o.g.includes(g.id)) return "ne colle pas : "+o.t.toLowerCase(); }
   if(S.manual[g.id]) return "éliminée à la main";
   return null;
 }
@@ -1253,13 +1421,18 @@ function renderFilters(){
   const alive=GHOSTS.filter(g=>!reason(g));
   $$("#catf .chip").forEach(b=>{
     const L=CATLBL[b.dataset.v]; b.textContent=L[0]+" · "+L[1];
-    b.setAttribute("aria-pressed",String(!!S.cat[b.dataset.v]));
+    const st=S.cat[b.dataset.v]||0;
+    b.setAttribute("aria-pressed",String(st===1));
+    b.classList.toggle("cut", st===2);
     const possible=alive.some(g=>gcat(g).includes(b.dataset.v));
-    b.classList.toggle("dead", !possible && !S.cat[b.dataset.v]);
-    b.title = possible ? "" : "Aucune entité restante ne peut avoir cette vitesse";
+    b.classList.toggle("dead", !possible && !st);
+    b.title = st===1 ? "Vue : ne garde que les entités qui peuvent l'atteindre — cliquez pour barrer"
+      : st===2 ? "Barrée : élimine toutes les entités qui peuvent l'atteindre — cliquez pour retirer"
+      : possible ? "1 clic = vitesse vue · 2 clics = vitesse barrée" : "Aucune entité restante ne peut avoir cette vitesse";
   });
   $$("#losf .chip").forEach(b=>{
-    const possible=alive.some(g=>g.id==="mimic"||(b.dataset.v==="oui"?g.los!=="non":g.los!=="oui"));
+    const v=b.dataset.v;
+    const possible=alive.some(g=>g.id==="mimic"||(v==="prog"?g.los!=="non":v==="jump"?JUMP.includes(g.id):g.los!=="oui"));
     b.classList.toggle("dead", !possible && S.los!==b.dataset.v);
   });
   $$("#losf .chip").forEach(b=>b.setAttribute("aria-pressed",String(S.los===b.dataset.v)));
@@ -1318,14 +1491,17 @@ function renderRecap(){
   });
 
   // autres filtres de l'enquête
-  if(S.los==="oui") items.push({c:"keep",t:"A accéléré en me voyant",h:"ligne de vue",k:"los"});
-  if(S.los==="non") items.push({c:"keep",t:"N'a jamais accéléré en me voyant",h:"ligne de vue",k:"los"});
-  Object.keys(S.cat).filter(c=>S.cat[c]).forEach(c=>
-    items.push({c:"keep",t:"Vitesse "+CAT[c].toLowerCase(),h:"vitesse de base",k:"cat:"+c}));
+  if(S.los&&LOSLBL[S.los]) items.push({c:"keep",t:LOSLBL[S.los],h:"vitesse en chasse",k:"los"});
+  Object.keys(S.cat).filter(c=>S.cat[c]).forEach(c=>S.cat[c]===2
+    ? items.push({c:"ex",  t:"Jamais "+CAT[c].toLowerCase(),  h:"vitesse barrée",  k:"cat:"+c})
+    : items.push({c:"keep",t:"Vitesse "+CAT[c].toLowerCase(), h:"vitesse de base", k:"cat:"+c}));
   if(S.san!=null&&S.san!=="") items.push({c:"keep",t:"A chassé à "+S.san+" % de santé",h:"seuil",k:"san"});
   if(S.spdf&&S.speed!=null) items.push({c:"keep",t:"Vitesse mesurée "+fmt(S.speed)+" m/s",h:"filtre",k:"spdf"});
   const man=Object.keys(S.manual).filter(i=>S.manual[i]);
   man.forEach(i=>{const g=GHOSTS.find(x=>x.id===i); if(g) items.push({c:"ex",t:g.fr,h:"éliminée à la main",k:"man:"+i});});
+  if(S.blood) items.push({c:"keep",t:"🌕 Lune de sang",h:"contexte",k:"cx:blood"});
+  if(S.chm) items.push({c:"keep",t:"🔮 Chasse maudite",h:"contexte",k:"cx:chm"});
+  if(S.chmDone) items.push({c:"keep",t:"⏱ Chasses +20 s",h:"contexte",k:"cx:chmDone"});
   if(S.pick){const g=GHOSTS.find(x=>x.id===S.pick); if(g) items.push({c:"ok",t:"C'est lui : "+g.fr,h:"choix",k:"pick"});}
 
   $("#recap").hidden = items.length===0;
@@ -1341,6 +1517,7 @@ function renderRecap(){
     else if(t==="los") S.los=null;
     else if(t==="san") S.san=null;
     else if(t==="spdf") S.spdf=false;
+    else if(t==="cx") return v==="blood"?setBlood(false):v==="chm"?setChm(false):setChmDone(false);
     else if(t==="pick") S.pick=null;
     update();
   });
@@ -1354,7 +1531,10 @@ function update(){renderEv();renderGrid();renderFilters();renderObs();renderFavs
 
 $$("#nev button").forEach(b=>b.onclick=()=>{S.n=+b.dataset.n; diffCheck(); update();});
 $("#san").oninput=e=>{S.san=e.target.value===""?null:+e.target.value; renderEv();renderGrid();save();};
-$$("#catf .chip").forEach(b=>b.onclick=()=>{if(S.cat[b.dataset.v])delete S.cat[b.dataset.v]; else S.cat[b.dataset.v]=1; update();});
+$$("#catf .chip").forEach(b=>b.onclick=()=>{
+  const v=b.dataset.v, st=S.cat[v]||0;
+  if(st===2) delete S.cat[v]; else S.cat[v]=st+1;
+  update();});
 $$("#losf .chip").forEach(b=>b.onclick=()=>{S.los=S.los===b.dataset.v?null:b.dataset.v; update();});
 $("#spdf").onclick=()=>{S.spdf=!S.spdf; update();};
 $("#resetAll").onclick=resetAll;
@@ -1425,6 +1605,7 @@ $("#gspd").onchange=()=>{if(taps.length>=3){taps=taps.slice();} diffCheck(); ref
 function refreshAll(){
   // les vitesses affichées dépendent de la Lune de sang et du réglage de vitesse d'entité
   document.body.classList.toggle("bm",S.blood||GM()>1);
+  if(typeof renderCtx==="function") renderCtx();
   recompute(); update();
   if(typeof renderDiff==="function") renderDiff();
   if(typeof renderSpdTbl==="function") renderSpdTbl();
@@ -1438,6 +1619,28 @@ function setBlood(on){
 }
 $("#blood").onclick=()=>setBlood(!S.blood);
 $("#bmBtn").onclick=()=>setBlood(!S.blood);
+
+/* ---------------- contexte de la partie ---------------- */
+function renderCtx(){
+  const set=(id,on)=>{const b=$(id); if(b) b.setAttribute("aria-pressed",String(!!on));};
+  set("#cxBlood",S.blood); set("#cxChm",S.chm); set("#cxChmDone",S.chmDone);
+  const n=$("#ctxnote"); if(!n) return;
+  const p=[];
+  if(S.blood) p.push("<b>🌕 Lune de sang</b> : vitesses de chasse +15 % (déjà appliquées partout ici), perte de santé passive ×2, paie +10 %. Les preuves, les seuils de chasse et les durées ne changent pas : si la santé chute vite, c'est la météo, pas un Démon.");
+  if(S.chm) p.push("<b>🔮 Chasse maudite</b> : déclenchée par un objet maudit, donc à n'importe quelle santé, grâce de 1 s, recharge ignorée. Les déductions par seuil de santé, par encens et par recharge sont désactivées dans l'enquête. Tout ce qui s'observe pendant la chasse reste valable.");
+  if(S.chmDone) p.push("<b>⏱ Maudite déjà passée</b> : toutes les chasses du contrat durent 20 s de plus, celle en cours comprise. Les minuteurs en tiennent compte.");
+  if(!p.length) p.push("Cochez ce qui s'applique : l'enquête, les vitesses et les minuteurs s'adaptent.");
+  n.innerHTML=p.join("<br><br>");
+  const s=$("#sanote");
+  if(s){ s.hidden=!(S.chm||S.blood);
+    s.innerHTML=S.chm ? "<b style='color:var(--no)'>Chasse maudite cochée</b> : ce pourcentage n'élimine plus personne, une chasse maudite part à n'importe quelle santé."
+      : "🌕 En Lune de sang la santé tombe deux fois plus vite : lisez-la sur le moniteur, ne la devinez pas au temps écoulé.";}
+}
+function setChm(on){ S.chm=!!on; refreshAll(); hostDiff(); Object.values(T).forEach(t=>t.render()); }
+function setChmDone(on){ S.chmDone=!!on; refreshAll(); hostDiff(); Object.values(T).forEach(t=>t.render()); }
+$("#cxBlood").onclick=()=>setBlood(!S.blood);
+$("#cxChm").onclick=()=>setChm(!S.chm);
+$("#cxChmDone").onclick=()=>setChmDone(!S.chmDone);
 
 /* ---------------- thème ---------------- */
 const THEMES=["auto","dark","light"], THLBL={auto:"🌓 Thème : auto",dark:"🌙 Thème : sombre",light:"☀ Thème : clair"};
@@ -1459,7 +1662,7 @@ setTheme(getTheme(),false);
 function hostDiff(){
   const d=D();
   try{ window.chrome && window.chrome.webview && window.chrome.webview.postMessage(
-    JSON.stringify({type:"diff",label:d.n,grace:d.grace,hunt:d.hunt,size:MSZ()})); }catch(e){}
+    JSON.stringify({type:"diff",label:d.n+(S.chm?" · maudite":"")+(S.blood?" · lune de sang":""),grace:GRACE(),hunt:d.hunt.map(v=>v+CHMX()),size:MSZ()})); }catch(e){}
 }
 function renderDiff(){
   const d=D();
@@ -1476,8 +1679,11 @@ function renderDiff(){
   const chips=[
     [d.free?"preuves libres":(d.ev+(d.ev>1?" preuves":" preuve")+(d.hid?` · ${d.hid} cachée${d.hid>1?"s":""}`:"")), "acc"],
     ...(z<0?[["taille de carte non précisée","no"]]:[[SIZES[z].n.toLowerCase()+" carte","acc"]]),
-    ["grâce "+d.grace+" s", d.grace<=2?"no":""],
-    [L?`chasse ${L} s`:"chasse "+d.hunt.join(" / ")+" s", ""],
+    ["grâce "+GRACE()+" s"+(S.chm?" · maudite":""), GRACE()<=2?"no":""],
+    [L?`chasse ${L} s`:"chasse "+d.hunt.map(v=>v+CHMX()).join(" / ")+" s", CHMX()?"no":""],
+    ...(S.chmDone?[["+20 s · maudite passée","no"]]:[]),
+    ...(S.blood?[["🌕 Lune de sang : +15 % vitesse","no"],["santé ×2 Lune de sang","no"]]:[]),
+    ...(S.chm?[["🔮 seuils de santé désactivés","no"]]:[]),
     ...(dr?[[`−${fmt(dr)} %/s · ${fmt(dr/2)} en solo`,""]]:[]),
     ...(z<0?[]:[[`${SIZES[z].light} lumières max`,""]]),
     ["fantôme "+pct(d.gs), d.gs>1?"no":""],
@@ -1563,16 +1769,16 @@ class Timer{
 }
 const T={
  smudge:new Timer("tm-smudge",180,[60,90,180],s=>s<60?"Aucune chasse possible":s<90?"<b>Chasse possible : Démon</b>":s<180?"<b>Chasse possible : sauf Esprit</b>":"<b>Toutes peuvent chasser</b>"),
- hunt:new Timer("tm-hunt",60,[15,20,30,40,50],s=>{const d=D();
-   if(s<d.grace) return `<b>Période de grâce (${d.grace} s)</b> : il ne peut pas tuer`;
+ hunt:new Timer("tm-hunt",60,[15,20,30,40,50],s=>{const d=D(),gr=GRACE(),x=CHMX(),h=d.hunt.map(v=>v+x);
+   if(s<gr) return `<b>Période de grâce (${gr} s${S.chm?" · maudite":""})</b> : il ne peut pas tuer`;
    const L=HLEN();
-   if(L) return s<L ? `Chasse en cours · elle dure ${L} s ici`
+   if(L) return s<L ? `Chasse en cours · elle dure ${L} s ici${x?" (+20 s maudite)":""}`
                     : `<b>Au-delà de ${L} s</b> : chasse maudite ou morts qui rallongent`;
-   if(s<d.hunt[0]) return "Chasse en cours";
-   if(s<d.hunt[1]) return `<b>Terminée sur petite carte</b> (${d.hunt[0]} s)`;
-   if(s<d.hunt[2]) return `<b>Terminée sauf grande carte</b> (${d.hunt[1]} s)`;
-   return `<b>Au-delà du maximum</b> (${d.hunt[2]} s) : chasse maudite ou morts qui rallongent`;}),
- cd:new Timer("tm-cd",25,[20,25],s=>s<20?"Pas de nouvelle chasse":s<25?"<b>Démon peut rechasser</b>":"<b>Nouvelle chasse possible</b>")
+   if(s<h[0]) return "Chasse en cours";
+   if(s<h[1]) return `<b>Terminée sur petite carte</b> (${h[0]} s)`;
+   if(s<h[2]) return `<b>Terminée sauf grande carte</b> (${h[1]} s)`;
+   return `<b>Au-delà du maximum</b> (${h[2]} s) : chasse maudite ou morts qui rallongent`;}),
+ cd:new Timer("tm-cd",25,[20,25],s=>(S.chm?"<i>Un objet maudit peut relancer une chasse à tout moment.</i><br>":"")+(s<20?"Pas de nouvelle chasse":s<25?"<b>Démon peut rechasser</b>":"<b>Nouvelle chasse possible</b>"))
 };
 
 /* ---------------- clavier ---------------- */
@@ -1783,6 +1989,11 @@ window.phasmo = {
     timers:Object.fromEntries(Object.entries(T).map(([k,t])=>[k,Math.round(t.elapsed())]))}; }
 };
 </script>
+
+
+
+
+
 
 </body>
 </html>
