@@ -32,9 +32,13 @@ Double-clique **`publier.cmd`**. Il fabrique le dossier `dist` avec **un seul fi
 Tu envoies cet exe, tes amis double-cliquent. Rien d'autre à installer, rien à mettre à côté.
 
 Deux points à leur dire :
-- Windows affichera peut-être « Windows a protégé votre ordinateur » au premier lancement,
-  parce que l'exe n'est pas signé numériquement (une signature coûte cher). Il faut cliquer
+- Windows affichera « Windows a protégé votre ordinateur » au premier lancement : c'est
+  SmartScreen, qui ne connaît pas encore le fichier. Il faut cliquer
   « Informations complémentaires » puis « Exécuter quand même ».
+  Cet écran s'estompe tout seul à mesure que l'appli est téléchargée. Rien ne le fait
+  disparaître d'un coup : depuis 2024, même un certificat EV (plusieurs centaines d'euros
+  par an) ne donne plus de réputation immédiate. Mieux vaut expliquer l'écran, publier
+  l'empreinte SHA-256 et laisser le code source visible.
 - L'appli a besoin du **Microsoft Edge WebView2 Runtime**, déjà présent sur Windows 11 et sur la
   quasi-totalité des Windows 10. S'il manque, un message le dit et il s'installe gratuitement
   depuis le site de Microsoft.
@@ -89,6 +93,17 @@ Tout cela se change dans ⚙.
   et surtout **la période de grâce et la durée de chasse de la difficulté choisie dans le
   journal** : changer de difficulté change ce que la fenêtre annonce.
 - Position et opacité retenues dans `%AppData%\PhasmoCompanion\timers.txt`.
+
+### Taille, minuteurs affichés, noms (clic droit)
+
+- **Taille de la fenêtre** : 60, 75, 85, 100 ou 125 %. Tout est mis à l'échelle, chiffres compris.
+  Si la fenêtre dépasse de l'écran après un agrandissement, elle est ramenée dedans toute seule.
+- **Minuteurs affichés** : décochez ceux dont vous ne vous servez pas. La fenêtre rétrécit d'autant.
+  Il en reste toujours au moins un affiché.
+- **Renommer les minuteurs…** : trois champs, 18 caractères chacun. Le nom s'affiche au-dessus du
+  chrono, suivi de sa touche. Un champ laissé vide reprend le nom d'origine.
+
+Taille, choix et noms sont retenus d'une session à l'autre, comme le reste.
 
 ## Plein écran
 

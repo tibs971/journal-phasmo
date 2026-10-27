@@ -84,9 +84,9 @@ public partial class TimerWindow : Window
     {
         _kSmudge = smudge; _kHunt = hunt; _kCd = cd; _kReset = resetAll;
         MiHide.Header = $"Masquer ({hide})";
-        LblSmudge.Text = "Encens   " + smudge;
-        LblHunt.Text = "Chasse   " + hunt;
-        LblCd.Text = "Recharge   " + cd;
+        LblSmudge.Text = _n1 + "   " + smudge;
+        LblHunt.Text = _n2 + "   " + hunt;
+        LblCd.Text = _n3 + "   " + cd;
         MiResetAll.Header = $"Tout remettre à zéro ({resetAll})";
         WriteHint();
         Refresh();
@@ -282,8 +282,82 @@ public partial class TimerWindow : Window
     /// Une clé absente garde simplement sa valeur par défaut, ce qui évite de tout perdre
     /// quand le fichier vient d'une version plus ancienne.
     /// </summary>
+    // ---------- taille, minuteurs affichés, noms ----------
+    private string _n1 = RenameDialog.Def1, _n2 = RenameDialog.Def2, _n3 = RenameDialog.Def3;
+
+    private void Echelle_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem m && m.Tag is string t &&
+            double.TryParse(t, NumberStyles.Float, CultureInfo.InvariantCulture, out var v))
+        {
+            Echelle = v;
+            SaveSettings();
+        }
+    }
+
+    private double Echelle
+    {
+        get => Zoom.ScaleX;
+        set
+        {
+            var v = Math.Clamp(value, 0.5, 1.5);
+            Zoom.ScaleX = v; Zoom.ScaleY = v;
+            LimiterALEcran();
+        }
+    }
+
+    private void Voir_Click(object sender, RoutedEventArgs e)
+    {
+        // au moins un minuteur doit rester affiché, sinon la fenêtre devient un point mort
+        if (!MiVoir1.IsChecked && !MiVoir2.IsChecked && !MiVoir3.IsChecked)
+            ((MenuItem)sender).IsChecked = true;
+        AppliquerVisibilite();
+        SaveSettings();
+    }
+
+    private void AppliquerVisibilite()
+    {
+        BoxSmudge.Visibility = MiVoir1.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+        BoxHunt.Visibility   = MiVoir2.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+        BoxCd.Visibility     = MiVoir3.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+        // la marge droite du dernier bloc visible ferait un vide : on la retire
+        Border? dernier = MiVoir3.IsChecked ? BoxCd : MiVoir2.IsChecked ? BoxHunt : BoxSmudge;
+        foreach (var b in new[] { BoxSmudge, BoxHunt, BoxCd })
+            b.Margin = ReferenceEquals(b, dernier) ? new Thickness(0) : new Thickness(0, 0, 6, 0);
+        LimiterALEcran();
+    }
+
+    private void Renommer_Click(object sender, RoutedEventArgs e)
+    {
+        var d = new RenameDialog(IsVisible ? this : null, _n1, _n2, _n3);
+        if (d.ShowDialog() != true) return;
+        _n1 = d.Nom1; _n2 = d.Nom2; _n3 = d.Nom3;
+        MajNoms();
+        SaveSettings();
+    }
+
+    private void MajNoms()
+    {
+        LblSmudge.Text = _n1 + "   " + _kSmudge;
+        LblHunt.Text   = _n2 + "   " + _kHunt;
+        LblCd.Text     = _n3 + "   " + _kCd;
+        MiVoir1.Header = _n1; MiVoir2.Header = _n2; MiVoir3.Header = _n3;
+    }
+
+    /// <summary>Après un agrandissement, la fenêtre peut déborder : on la ramène dans l'écran.</summary>
+    private void LimiterALEcran()
+    {
+        UpdateLayout();
+        var w = SystemParameters.WorkArea;
+        if (ActualWidth > 0 && Left + ActualWidth > w.Right) Left = Math.Max(w.Left, w.Right - ActualWidth);
+        if (ActualHeight > 0 && Top + ActualHeight > w.Bottom) Top = Math.Max(w.Top, w.Bottom - ActualHeight);
+        if (Left < w.Left) Left = w.Left;
+        if (Top < w.Top) Top = w.Top;
+    }
+
     public void SaveSettings()
     {
+        if (_chargement) return;
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath)!);
@@ -297,55 +371,82 @@ public partial class TimerWindow : Window
                 "verrou="  + (MiLock.IsChecked ? "1" : "0"),
                 "autocd="  + (MiAutoCd.IsChecked ? "1" : "0"),
                 "dessus2=" + (MiTop.IsChecked ? "1" : "0"),
-                "affichee=" + (IsVisible ? "1" : "0")
+                "affichee=" + (IsVisible ? "1" : "0"),
+                "echelle=" + Echelle.ToString(inv),
+                "voir1=" + (MiVoir1.IsChecked ? "1" : "0"),
+                "voir2=" + (MiVoir2.IsChecked ? "1" : "0"),
+                "voir3=" + (MiVoir3.IsChecked ? "1" : "0"),
+                "nom1=" + _n1,
+                "nom2=" + _n2,
+                "nom3=" + _n3
             });
         }
         catch { }
     }
 
+    private bool _chargement;
+
     private void LoadSettings()
     {
-        var inv = CultureInfo.InvariantCulture;
-        var v = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        _chargement = true;
         try
         {
-            if (File.Exists(SettingsPath))
+            var inv = CultureInfo.InvariantCulture;
+            var v = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            try
             {
-                var txt = File.ReadAllText(SettingsPath);
+                if (File.Exists(SettingsPath))
+                {
+                    var txt = File.ReadAllText(SettingsPath);
 
-                if (txt.Contains('=') == false && txt.Contains(';'))
-                {
-                    // ancien format « gauche;haut;fenêtre;verrou;autocd;décor »
-                    var p = txt.Split(';');
-                    string[] noms = { "gauche", "haut", "fenetre", "verrou", "autocd", "decor", "affichee" };
-                    for (var i = 0; i < p.Length && i < noms.Length; i++) v[noms[i]] = p[i];
-                }
-                else
-                {
-                    foreach (var ligne in txt.Split('\n'))
+                    if (txt.Contains('=') == false && txt.Contains(';'))
                     {
-                        var i = ligne.IndexOf('=');
-                        if (i > 0) v[ligne[..i].Trim()] = ligne[(i + 1)..].Trim();
+                        // ancien format « gauche;haut;fenêtre;verrou;autocd;décor »
+                        var p = txt.Split(';');
+                        string[] noms = { "gauche", "haut", "fenetre", "verrou", "autocd", "decor", "affichee" };
+                        for (var i = 0; i < p.Length && i < noms.Length; i++) v[noms[i]] = p[i];
+                    }
+                    else
+                    {
+                        foreach (var ligne in txt.Split('\n'))
+                        {
+                            var i = ligne.IndexOf('=');
+                            if (i > 0) v[ligne[..i].Trim()] = ligne[(i + 1)..].Trim();
+                        }
                     }
                 }
             }
+            catch { }
+
+            double? Nb(string k) => v.TryGetValue(k, out var t) &&
+                double.TryParse(t, NumberStyles.Float, inv, out var d) && !double.IsNaN(d) ? (double?)d : null;
+
+            var g = Nb("gauche"); var h = Nb("haut");
+            if (g is not null && h is not null) { Left = g.Value; Top = h.Value; }
+
+            Opacity = Math.Clamp(Nb("fenetre") ?? 1.0, 0.3, 1.0);
+            if (v.TryGetValue("affichee", out var af)) EtaitVisible = af != "0";
+            if (v.TryGetValue("verrou", out var lo)) MiLock.IsChecked = lo == "1";
+            if (v.TryGetValue("autocd", out var ac)) MiAutoCd.IsChecked = ac == "1";
+            if (v.TryGetValue("dessus2", out var de)) { MiTop.IsChecked = de == "1"; Topmost = MiTop.IsChecked; }
+
+            if (v.TryGetValue("nom1", out var s1) && s1.Trim().Length > 0) _n1 = s1.Trim();
+            if (v.TryGetValue("nom2", out var s2) && s2.Trim().Length > 0) _n2 = s2.Trim();
+            if (v.TryGetValue("nom3", out var s3) && s3.Trim().Length > 0) _n3 = s3.Trim();
+            MajNoms();
+
+            if (v.TryGetValue("voir1", out var w1)) MiVoir1.IsChecked = w1 == "1";
+            if (v.TryGetValue("voir2", out var w2)) MiVoir2.IsChecked = w2 == "1";
+            if (v.TryGetValue("voir3", out var w3)) MiVoir3.IsChecked = w3 == "1";
+            if (!MiVoir1.IsChecked && !MiVoir2.IsChecked && !MiVoir3.IsChecked) MiVoir1.IsChecked = true;
+            AppliquerVisibilite();
+
+            Echelle = Nb("echelle") ?? 1.0;
+
+            // toujours passer par la propriété, même sans fichier : c'est elle qui applique
+            // l'opacité à tous les pinceaux du décor et qui renforce le texte si besoin.
+            BackgroundOpacity = Math.Clamp(Nb("decor") ?? _bgOpacity, 0, 1);
         }
-        catch { }
-
-        double? Nb(string k) => v.TryGetValue(k, out var t) &&
-            double.TryParse(t, NumberStyles.Float, inv, out var d) && !double.IsNaN(d) ? (double?)d : null;
-
-        var g = Nb("gauche"); var h = Nb("haut");
-        if (g is not null && h is not null) { Left = g.Value; Top = h.Value; }
-
-        Opacity = Math.Clamp(Nb("fenetre") ?? 1.0, 0.3, 1.0);
-        if (v.TryGetValue("affichee", out var af)) EtaitVisible = af != "0";
-        if (v.TryGetValue("verrou", out var lo)) MiLock.IsChecked = lo == "1";
-        if (v.TryGetValue("autocd", out var ac)) MiAutoCd.IsChecked = ac == "1";
-        if (v.TryGetValue("dessus2", out var de)) { MiTop.IsChecked = de == "1"; Topmost = MiTop.IsChecked; }
-
-        // toujours passer par la propriété, même sans fichier : c'est elle qui applique
-        // l'opacité à tous les pinceaux du décor et qui renforce le texte si besoin.
-        BackgroundOpacity = Math.Clamp(Nb("decor") ?? _bgOpacity, 0, 1);
+        finally { _chargement = false; }
     }
 }

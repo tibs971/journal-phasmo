@@ -51,12 +51,25 @@ Créé par **Thibault.P (Shwarzyi)** — gratuit, et qui le restera.
 1. Allez dans **[Releases](../../releases)** et téléchargez `PhasmoCompanion.exe`.
 2. Lancez-le. C'est tout — rien à installer, aucun fichier annexe.
 
-**Windows va afficher un avertissement bleu** (« Windows a protégé votre ordinateur »). C'est normal :
-l'exe n'est pas signé numériquement, et une signature coûte plusieurs centaines d'euros par an pour
-une application gratuite. Cliquez sur **Informations complémentaires** → **Exécuter quand même**.
+### L'écran bleu « Windows a protégé votre ordinateur »
 
-Si vous préférez ne pas faire confiance à un exe, le code source est entièrement là : compilez-le
-vous-même avec `publier.cmd` (SDK .NET 8 requis).
+Il apparaîtra au premier lancement. Ce n'est **pas** un virus détecté : c'est Microsoft Defender
+SmartScreen qui ne connaît pas encore ce fichier. Tout programme neuf, distribué hors du Microsoft
+Store, déclenche cet écran tant qu'il n'a pas été téléchargé par assez de monde.
+
+Pour passer : cliquez sur **Informations complémentaires**, puis sur le bouton
+**Exécuter quand même** qui apparaît en bas.
+
+L'avertissement disparaîtra de lui-même au fil des téléchargements, sans rien changer au fichier.
+
+**Vous n'êtes pas obligé de me croire sur parole.** Trois façons de vérifier :
+
+- **Le code source est entièrement ici.** Rien n'est caché : lisez-le, puis compilez l'exe
+  vous-même avec `publier.cmd` (SDK .NET 8 requis). L'appli ne se connecte à aucun serveur,
+  n'envoie rien, n'écrit que dans son propre dossier `%AppData%\PhasmoCompanion`.
+- **L'empreinte du fichier** est publiée sur la page de la Release (voir ci-dessous).
+- **VirusTotal** : déposez l'exe sur [virustotal.com](https://www.virustotal.com) et regardez
+  le résultat vous-même.
 
 **Vérifier que le fichier n'a pas été modifié** — dans PowerShell :
 
@@ -67,6 +80,12 @@ Get-FileHash -Algorithm SHA256 .\PhasmoCompanion.exe
 L'empreinte doit correspondre à celle publiée sur la page de la Release.
 
 ---
+
+## Fenêtre des minuteurs
+
+Clic droit dessus pour : choisir sa **taille** (60 à 125 %), n'afficher que les **minuteurs**
+que vous utilisez, et les **renommer** comme vous voulez. Plus l'opacité du décor et de la
+fenêtre, le verrouillage de la position et l'option « toujours au-dessus ».
 
 ## Raccourcis par défaut
 

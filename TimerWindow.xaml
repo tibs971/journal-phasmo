@@ -36,6 +36,20 @@
       <MenuItem x:Name="MiTop" Header="Toujours au-dessus du jeu" IsCheckable="True" IsChecked="False"
                 Click="Top_Click" ToolTip="À cocher seulement si le jeu est en fenêtré sans bordure (sinon le plein écran saute)"/>
       <MenuItem x:Name="MiLock" Header="Verrouiller la position" IsCheckable="True"/>
+      <Separator/>
+      <MenuItem Header="Taille de la fenêtre">
+        <MenuItem Header="60 %"  Tag="0.6"  Click="Echelle_Click"/>
+        <MenuItem Header="75 %"  Tag="0.75" Click="Echelle_Click"/>
+        <MenuItem Header="85 %"  Tag="0.85" Click="Echelle_Click"/>
+        <MenuItem Header="100 %" Tag="1.0"  Click="Echelle_Click"/>
+        <MenuItem Header="125 %" Tag="1.25" Click="Echelle_Click"/>
+      </MenuItem>
+      <MenuItem Header="Minuteurs affichés">
+        <MenuItem x:Name="MiVoir1" Header="1er minuteur" IsCheckable="True" IsChecked="True" Click="Voir_Click"/>
+        <MenuItem x:Name="MiVoir2" Header="2e minuteur"  IsCheckable="True" IsChecked="True" Click="Voir_Click"/>
+        <MenuItem x:Name="MiVoir3" Header="3e minuteur"  IsCheckable="True" IsChecked="True" Click="Voir_Click"/>
+      </MenuItem>
+      <MenuItem Header="Renommer les minuteurs…" Click="Renommer_Click"/>
       <MenuItem Header="Opacité du décor (texte intact)">
         <MenuItem Header="100 %" Tag="1.0"  Click="BgOpacity_Click"/>
         <MenuItem Header="85 %"  Tag="0.85" Click="BgOpacity_Click"/>
@@ -55,6 +69,9 @@
   </Window.ContextMenu>
 
   <Border x:Name="Root" CornerRadius="8" BorderThickness="1" Padding="9,7">
+    <Border.LayoutTransform>
+      <ScaleTransform x:Name="Zoom" ScaleX="1" ScaleY="1"/>
+    </Border.LayoutTransform>
     <Border.Effect>
       <DropShadowEffect Color="#000000" BlurRadius="6" ShadowDepth="0" Opacity="0.9"/>
     </Border.Effect>
