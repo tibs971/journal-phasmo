@@ -4,22 +4,23 @@ using System.Windows.Input;
 namespace PhasmoCompanion;
 
 /// <summary>
-/// Renomme les trois minuteurs. Un champ vide reprend le nom d'origine :
+/// Renomme les quatre minuteurs. Un champ vide reprend le nom d'origine :
 /// l'utilisateur n'a pas à retrouver le libellé exact pour revenir en arrière.
 /// </summary>
 public partial class RenameDialog : Window
 {
-    public const string Def1 = "Encens", Def2 = "Chasse", Def3 = "Recharge";
+    public const string Def1 = "Encens", Def2 = "Chasse", Def3 = "Recharge", Def4 = "Chrono";
 
     public string Nom1 { get; private set; } = Def1;
     public string Nom2 { get; private set; } = Def2;
     public string Nom3 { get; private set; } = Def3;
+    public string Nom4 { get; private set; } = Def4;
 
-    public RenameDialog(Window? proprietaire, string n1, string n2, string n3)
+    public RenameDialog(Window? proprietaire, string n1, string n2, string n3, string n4)
     {
         InitializeComponent();
         if (proprietaire is not null && proprietaire.IsVisible) Owner = proprietaire;
-        N1.Text = n1; N2.Text = n2; N3.Text = n3;
+        N1.Text = n1; N2.Text = n2; N3.Text = n3; N4.Text = n4;
         Loaded += (_, _) => { N1.Focus(); N1.SelectAll(); };
     }
 
@@ -34,12 +35,13 @@ public partial class RenameDialog : Window
         Nom1 = Propre(N1.Text, Def1);
         Nom2 = Propre(N2.Text, Def2);
         Nom3 = Propre(N3.Text, Def3);
+        Nom4 = Propre(N4.Text, Def4);
         DialogResult = true;
     }
 
     private void Defaut_Click(object sender, RoutedEventArgs e)
     {
-        N1.Text = Def1; N2.Text = Def2; N3.Text = Def3;
+        N1.Text = Def1; N2.Text = Def2; N3.Text = Def3; N4.Text = Def4;
     }
 
     private void Cancel_Click(object sender, RoutedEventArgs e) => DialogResult = false;

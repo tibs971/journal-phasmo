@@ -37,7 +37,13 @@
                FontFamily="Segoe UI" FontSize="14" Padding="8,0" VerticalContentAlignment="Center"
                KeyDown="Champ_KeyDown"/>
 
-      <TextBlock Text="3e minuteur (recharge)" Foreground="#8C94A6" FontFamily="Segoe UI" FontSize="11" Margin="0,0,0,3"/>
+      <TextBlock Text="3e minuteur (chrono en secondes)" Foreground="#8C94A6" FontFamily="Segoe UI" FontSize="11" Margin="0,0,0,3"/>
+      <TextBox x:Name="N4" Height="30" MaxLength="18" Margin="0,0,0,10"
+               Background="#171B23" BorderBrush="#2A303C" BorderThickness="1" Foreground="#E3E6EC"
+               FontFamily="Segoe UI" FontSize="14" Padding="8,0" VerticalContentAlignment="Center"
+               KeyDown="Champ_KeyDown"/>
+
+      <TextBlock Text="4e minuteur (recharge)" Foreground="#8C94A6" FontFamily="Segoe UI" FontSize="11" Margin="0,0,0,3"/>
       <TextBox x:Name="N3" Height="30" MaxLength="18" Margin="0,0,0,16"
                Background="#171B23" BorderBrush="#2A303C" BorderThickness="1" Foreground="#E3E6EC"
                FontFamily="Segoe UI" FontSize="14" Padding="8,0" VerticalContentAlignment="Center"

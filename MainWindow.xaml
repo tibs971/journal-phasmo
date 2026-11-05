@@ -5,7 +5,7 @@
         Title="Journal Phasmo"
         Width="1100" Height="760" MinWidth="320" MinHeight="180"
         WindowStyle="None" ResizeMode="CanResizeWithGrip"
-        Background="#0E1116" Topmost="False" Opacity="0.97"
+        Background="#0E1116" Topmost="False"
         WindowStartupLocation="CenterScreen">
 
   <Grid>
@@ -17,12 +17,8 @@
     <!-- barre de titre maison : déplacer la fenêtre, boutons -->
     <Border Grid.Row="0" Background="#171B23" MouseLeftButtonDown="Bar_Drag">
       <DockPanel LastChildFill="False" Margin="8,4">
-        <TextBlock DockPanel.Dock="Left" Text="JOURNAL PHASMO" Foreground="#A68CFF"
-                   FontFamily="Segoe UI" FontSize="11" VerticalAlignment="Center"/>
-        <TextBlock DockPanel.Dock="Left" x:Name="Hint" Margin="10,0,0,0"
-                   x:FieldModifier="private" Text="raccourcis en cours de chargement — modifiables dans ⚙"
-                   Foreground="#8C94A6" FontFamily="Segoe UI" FontSize="11" VerticalAlignment="Center"/>
-
+        <!-- Les boutons sont déclarés AVANT le texte : dans un DockPanel, le premier déclaré
+             réserve sa place. Déclarés après, ils disparaissaient dès que la fenêtre rétrécissait. -->
         <Button DockPanel.Dock="Right" Content="✕" Click="Close_Click" Style="{StaticResource BarBtn}"
                 ToolTip="Fermer"/>
         <Button DockPanel.Dock="Right" x:Name="BtnMax" Content="▢" Click="Max_Click" Style="{StaticResource BarBtn}"
@@ -32,16 +28,16 @@
         <Button DockPanel.Dock="Right" x:Name="BtnTop" Content="📌" Click="Top_Click" Style="{StaticResource BarBtn}"
                 ToolTip="Toujours au-dessus (F7) — à éviter si le jeu est en plein écran exclusif"/>
         <Button DockPanel.Dock="Right" Content="⚙" Click="Settings_Click" Style="{StaticResource BarBtn}"
-                ToolTip="Réglages : raccourcis et transparence"/>
+                ToolTip="Réglages : raccourcis et opacité des minuteurs"/>
         <Button DockPanel.Dock="Right" x:Name="BtnTimers" Content="⏱" Click="Timers_Click" Style="{StaticResource BarBtn}"
                 ToolTip="Fenêtre flottante des minuteurs (F6)"/>
-        <ComboBox DockPanel.Dock="Right" x:Name="CbOpacity" Width="70" Margin="0,0,6,0"
-                  SelectionChanged="Opacity_Changed" ToolTip="Opacité">
-          <ComboBoxItem Content="100 %" Tag="1.0"/>
-          <ComboBoxItem Content="97 %"  Tag="0.97" IsSelected="True"/>
-          <ComboBoxItem Content="85 %"  Tag="0.85"/>
-          <ComboBoxItem Content="70 %"  Tag="0.7"/>
-        </ComboBox>
+
+        <TextBlock DockPanel.Dock="Left" Text="JOURNAL PHASMO" Foreground="#A68CFF"
+                   FontFamily="Segoe UI" FontSize="11" VerticalAlignment="Center"/>
+        <TextBlock DockPanel.Dock="Left" x:Name="Hint" Margin="10,0,8,0"
+                   x:FieldModifier="private" Text="raccourcis en cours de chargement — modifiables dans ⚙"
+                   Foreground="#8C94A6" FontFamily="Segoe UI" FontSize="11" VerticalAlignment="Center"
+                   TextTrimming="CharacterEllipsis" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
       </DockPanel>
     </Border>
 

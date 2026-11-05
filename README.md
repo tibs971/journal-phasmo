@@ -81,6 +81,20 @@ L'empreinte doit correspondre à celle publiée sur la page de la Release.
 
 ---
 
+## Sur téléphone (Android et iPhone)
+
+Le journal s'installe comme une application, sans passer par aucun magasin :
+
+1. Ouvrez **https://tibs971.github.io/journal-phasmo/** dans Chrome (Android) ou Safari (iPhone).
+2. Menu du navigateur → **Ajouter à l'écran d'accueil**.
+
+Il apparaît alors avec son icône, s'ouvre en plein écran sans barre d'adresse, et **fonctionne
+hors ligne** : tout est mis en cache au premier lancement. Les mises à jour se font toutes seules
+au lancement suivant, sans rien réinstaller. Aucun avertissement de sécurité, aucun APK à autoriser.
+
+Les minuteurs flottants et les raccourcis clavier n'existent que dans l'application Windows :
+sur téléphone, ce sont les minuteurs intégrés à la page qui servent.
+
 ## Fenêtre des minuteurs
 
 Clic droit dessus pour : choisir sa **taille** (60 à 125 %), n'afficher que les **minuteurs**

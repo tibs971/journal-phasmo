@@ -11,7 +11,8 @@ public enum HkAction
 {
     Smudge, Hunt, Cooldown, ResetAll,
     ResetSmudge, ResetHunt, ResetCooldown,
-    Tap, TapReset, ToggleTimers, TogglePin
+    Tap, TapReset, ToggleTimers, TogglePin,
+    Sec, ResetSec
 }
 
 /// <summary>Une touche + ses modificateurs.</summary>
@@ -77,10 +78,12 @@ public sealed class HotkeyManager
     {
         (HkAction.Smudge,        "Encens : démarrer / pause"),
         (HkAction.Hunt,          "Chasse : démarrer / pause"),
+        (HkAction.Sec,           "Chrono en secondes : démarrer / pause"),
         (HkAction.Cooldown,      "Recharge : démarrer / pause"),
-        (HkAction.ResetAll,      "Remettre les 3 minuteurs à zéro"),
+        (HkAction.ResetAll,      "Remettre tous les minuteurs à zéro"),
         (HkAction.ResetSmudge,   "Remettre l'encens à zéro"),
         (HkAction.ResetHunt,     "Remettre la chasse à zéro"),
+        (HkAction.ResetSec,      "Remettre le chrono à zéro"),
         (HkAction.ResetCooldown, "Remettre la recharge à zéro"),
         (HkAction.Tap,           "Taper le rythme des pas"),
         (HkAction.TapReset,      "Remettre la mesure de vitesse à zéro"),
@@ -108,6 +111,8 @@ public sealed class HotkeyManager
         Map[HkAction.Tap] = new Hotkey(0, 0x74);             // F5
         Map[HkAction.ToggleTimers] = new Hotkey(0, 0x75);    // F6
         Map[HkAction.TogglePin] = new Hotkey(0, 0x76);       // F7
+        Map[HkAction.Sec] = new Hotkey(0, 0x77);             // F8
+        Map[HkAction.ResetSec] = new Hotkey(4, 0x77);        // Maj+F8
         Map[HkAction.ResetSmudge] = new Hotkey(4, 0x70);     // Maj+F1
         Map[HkAction.ResetHunt] = new Hotkey(4, 0x71);       // Maj+F2
         Map[HkAction.ResetCooldown] = new Hotkey(4, 0x72);   // Maj+F3

@@ -47,6 +47,7 @@
       <MenuItem Header="Minuteurs affichés">
         <MenuItem x:Name="MiVoir1" Header="1er minuteur" IsCheckable="True" IsChecked="True" Click="Voir_Click"/>
         <MenuItem x:Name="MiVoir2" Header="2e minuteur"  IsCheckable="True" IsChecked="True" Click="Voir_Click"/>
+        <MenuItem x:Name="MiVoir4" Header="Chrono"       IsCheckable="True" IsChecked="True" Click="Voir_Click"/>
         <MenuItem x:Name="MiVoir3" Header="3e minuteur"  IsCheckable="True" IsChecked="True" Click="Voir_Click"/>
       </MenuItem>
       <MenuItem Header="Renommer les minuteurs…" Click="Renommer_Click"/>
@@ -83,12 +84,33 @@
     </Border.BorderBrush>
     <StackPanel>
       <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-        <Border x:Name="Grip" CornerRadius="3" Padding="5,1" Margin="0,0,6,0" Cursor="SizeAll"
+        <Border x:Name="Grip" CornerRadius="3" Padding="5,1" Margin="0,0,4,0" Cursor="SizeAll"
                 ToolTip="Glisser pour déplacer la fenêtre">
           <TextBlock Text="⠿" FontSize="12" Foreground="#C9D1DC" FontFamily="Segoe UI"/>
         </Border>
-        <TextBlock x:Name="HintLine" Text="glisser pour déplacer · clic droit : options"
-                   Foreground="#8C94A6" FontSize="10" FontFamily="Segoe UI" VerticalAlignment="Center"/>
+        <!-- Le clic droit ouvre déjà ce menu, mais rien ne le disait assez :
+             cet engrenage ouvre exactement le même, au clic gauche. -->
+        <Button x:Name="BtnOptions" Click="Options_Click" Cursor="Hand" Margin="0,0,6,0"
+                Padding="5,1" BorderThickness="0" Foreground="#C9D1DC"
+                FontFamily="Segoe UI" FontSize="12" Content="⚙"
+                ToolTip="Options des minuteurs : taille, opacité, minuteurs affichés, renommer, masquer">
+          <Button.Template>
+            <ControlTemplate TargetType="Button">
+              <Border x:Name="b" Background="{TemplateBinding Background}" CornerRadius="3"
+                      Padding="{TemplateBinding Padding}">
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              </Border>
+              <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                  <Setter TargetName="b" Property="Background" Value="#3A4150"/>
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Button.Template>
+        </Button>
+        <TextBlock x:Name="HintLine" Text="⚙ ou clic droit : options · glisser pour déplacer"
+                   Foreground="#8C94A6" FontSize="10" FontFamily="Segoe UI" VerticalAlignment="Center"
+                   TextTrimming="CharacterEllipsis"/>
       </StackPanel>
       <StackPanel Orientation="Horizontal">
         <Border x:Name="BoxSmudge" CornerRadius="6" BorderThickness="1" Padding="8,5" Margin="0,0,6,0">
@@ -103,6 +125,13 @@
             <TextBlock Style="{StaticResource Lbl}" x:Name="LblHunt" Text="Chasse"/>
             <TextBlock x:Name="THunt" Style="{StaticResource Big}" Text="0:00"/>
             <TextBlock x:Name="MHunt" Style="{StaticResource Msg}"/>
+          </StackPanel>
+        </Border>
+        <Border x:Name="BoxSec" CornerRadius="6" BorderThickness="1" Padding="8,5" Margin="0,0,6,0">
+          <StackPanel Width="130">
+            <TextBlock Style="{StaticResource Lbl}" x:Name="LblSec" Text="Chrono"/>
+            <TextBlock x:Name="TSec" Style="{StaticResource Big}" Text="0,0 s"/>
+            <TextBlock x:Name="MSec" Style="{StaticResource Msg}"/>
           </StackPanel>
         </Border>
         <Border x:Name="BoxCd" CornerRadius="6" BorderThickness="1" Padding="8,5">

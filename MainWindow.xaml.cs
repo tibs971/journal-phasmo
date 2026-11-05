@@ -162,7 +162,8 @@ public partial class MainWindow : Window
     {
         string K(HkAction a) => JsonEncodedText.Encode(FromVirtualKey(_hotkeys.Map[a].Vk)).ToString();
         return "{\"smudge\":\"" + K(HkAction.Smudge) + "\",\"hunt\":\"" + K(HkAction.Hunt) +
-               "\",\"cd\":\"" + K(HkAction.Cooldown) + "\",\"tap\":\"" + K(HkAction.Tap) +
+               "\",\"cd\":\"" + K(HkAction.Cooldown) + "\",\"sec\":\"" + K(HkAction.Sec) +
+               "\",\"tap\":\"" + K(HkAction.Tap) +
                "\",\"reset\":\"" + K(HkAction.TapReset) + "\"}";
     }
 
@@ -254,6 +255,7 @@ public partial class MainWindow : Window
         changed |= Apply("smudge", HkAction.Smudge);
         changed |= Apply("hunt", HkAction.Hunt);
         changed |= Apply("cd", HkAction.Cooldown);
+        changed |= Apply("sec", HkAction.Sec);
         changed |= Apply("tap", HkAction.Tap);
         changed |= Apply("reset", HkAction.TapReset);
 
@@ -268,12 +270,13 @@ public partial class MainWindow : Window
             if (vk == 0) return false;
 
             // les remises à zéro des minuteurs suivent : Maj + la même touche
-            if (action is HkAction.Smudge or HkAction.Hunt or HkAction.Cooldown)
+            if (action is HkAction.Smudge or HkAction.Hunt or HkAction.Cooldown or HkAction.Sec)
             {
                 var reset = action switch
                 {
                     HkAction.Smudge => HkAction.ResetSmudge,
                     HkAction.Hunt => HkAction.ResetHunt,
+                    HkAction.Sec => HkAction.ResetSec,
                     _ => HkAction.ResetCooldown
                 };
                 _hotkeys.Map[reset] = new Hotkey(4, vk);
@@ -344,12 +347,18 @@ public partial class MainWindow : Window
                          _hotkeys.Map[HkAction.Hunt].ToString(),
                          _hotkeys.Map[HkAction.Cooldown].ToString(),
                          _hotkeys.Map[HkAction.ResetAll].ToString(),
-                         _hotkeys.Map[HkAction.ToggleTimers].ToString());
+                         _hotkeys.Map[HkAction.ToggleTimers].ToString(),
+                         _hotkeys.Map[HkAction.Sec].ToString());
         Hint.Text = failed.Count == 0
             ? $"{_hotkeys.Map[HkAction.Smudge]} encens · {_hotkeys.Map[HkAction.Hunt]} chasse · " +
-              $"{_hotkeys.Map[HkAction.Cooldown]} recharge · {_hotkeys.Map[HkAction.ResetAll]} remise à zéro · " +
+              $"{_hotkeys.Map[HkAction.Cooldown]} recharge · {_hotkeys.Map[HkAction.Sec]} chrono · " +
+              $"{_hotkeys.Map[HkAction.ResetAll]} remise à zéro · " +
               $"{_hotkeys.Map[HkAction.ToggleTimers]} minuteurs — ⚙ pour changer"
             : "Touches déjà prises par un autre logiciel : " + string.Join(", ", failed) + " — changez-les dans ⚙";
+
+        // ... et le journal lui-même, sinon son groupe « Raccourcis clavier » reste
+        // sur les anciennes touches alors que la fenêtre des minuteurs, elle, suit.
+        if (_ready) Js("phasmo.forceKeys(" + KeysJson() + ")");
     }
 
     // ================= signature d'auteur (Ctrl + Alt + @) =================
@@ -406,10 +415,12 @@ public partial class MainWindow : Window
             case HkAction.Smudge: _timers.ToggleSmudge(); break;
             case HkAction.Hunt: _timers.ToggleHunt(); break;
             case HkAction.Cooldown: _timers.ToggleCd(); break;
+            case HkAction.Sec: _timers.ToggleSec(); break;
             case HkAction.ResetAll: _timers.ResetAll(); break;
             case HkAction.ResetSmudge: _timers.ResetSmudge(); break;
             case HkAction.ResetHunt: _timers.ResetHunt(); break;
             case HkAction.ResetCooldown: _timers.ResetCd(); break;
+            case HkAction.ResetSec: _timers.ResetSec(); break;
             case HkAction.Tap: Js("phasmo.tap()"); break;
             case HkAction.TapReset: Js("phasmo.tapReset()"); break;
             case HkAction.ToggleTimers: ToggleTimers(); break;
@@ -454,6 +465,9 @@ public partial class MainWindow : Window
         SlBg.Value = Math.Round(_timers.BackgroundOpacity * 100);
         SlWin.Value = Math.Round(_timers.Opacity * 100);
         BuildKeyList();
+        // WebView2 se dessine par-dessus les éléments WPF placés au-dessus de lui : tant qu'il
+        // est visible, le panneau de réglages reste invisible. On le masque le temps des réglages.
+        Web.Visibility = Visibility.Collapsed;
         Settings.Visibility = Visibility.Visible;
         Keyboard.Focus(this);
     }
@@ -464,6 +478,7 @@ public partial class MainWindow : Window
     {
         _capturing = null; _capturingBtn = null;
         Settings.Visibility = Visibility.Collapsed;
+        Web.Visibility = Visibility.Visible;
         _hotkeys.Save();
         RegisterHotkeys();
     }
@@ -620,17 +635,6 @@ public partial class MainWindow : Window
         BtnTop.ToolTip = Topmost ? "Toujours au-dessus : activé" : "Toujours au-dessus : désactivé";
     }
 
-    private void Opacity_Changed(object sender, SelectionChangedEventArgs e)
-    {
-        if (!_uiReady) return;
-        if (CbOpacity?.SelectedItem is ComboBoxItem it && it.Tag is string tag &&
-            double.TryParse(tag, NumberStyles.Float, CultureInfo.InvariantCulture, out var v))
-        {
-            Opacity = v;
-            SaveSettings();
-        }
-    }
-
     // ---------- réglages de fenêtre ----------
     protected override void OnClosed(EventArgs e)
     {
@@ -652,7 +656,7 @@ public partial class MainWindow : Window
 
             File.WriteAllText(SettingsPath, string.Join(";",
                 r.Left.ToString(inv), r.Top.ToString(inv), r.Width.ToString(inv), r.Height.ToString(inv),
-                Opacity.ToString(inv), Topmost ? "1" : "0",
+                "1", Topmost ? "1" : "0",   // l'opacité du journal n'est plus réglable
                 WindowState == WindowState.Maximized ? "1" : "0",
                 "v2"));   // marqueur : le journal n'est plus épinglé par défaut
         }
@@ -671,13 +675,13 @@ public partial class MainWindow : Window
                 && double.TryParse(p[1], NumberStyles.Float, inv, out var t)
                 && double.TryParse(p[2], NumberStyles.Float, inv, out var w)
                 && double.TryParse(p[3], NumberStyles.Float, inv, out var hh)
-                && double.TryParse(p[4], NumberStyles.Float, inv, out var o))
+                && double.TryParse(p[4], NumberStyles.Float, inv, out _))
             {
                 WindowStartupLocation = WindowStartupLocation.Manual;
                 Left = l; Top = t;
                 Width = Math.Max(MinWidth, w);
                 Height = Math.Max(MinHeight, hh);
-                Opacity = Math.Clamp(o, 0.3, 1.0);
+                // o : ancienne opacité du journal, ignorée depuis le retrait du réglage
                 Topmost = p[5] == "1";
             }
             if (p.Length >= 7 && p[6] == "1") WindowState = WindowState.Maximized;
@@ -688,21 +692,6 @@ public partial class MainWindow : Window
             if (p.Length < 8 || p[7] != "v2") Topmost = false;
         }
         catch { }
-        finally { UpdateTopButton(); SyncOpacityCombo(); MajBoutonMax(); }
-    }
-
-    /// <summary>Sélectionne dans la liste la valeur la plus proche de l'opacité en cours.</summary>
-    private void SyncOpacityCombo()
-    {
-        ComboBoxItem? best = null;
-        var ecart = double.MaxValue;
-        foreach (var o in CbOpacity.Items)
-        {
-            if (o is not ComboBoxItem it || it.Tag is not string tag) continue;
-            if (!double.TryParse(tag, NumberStyles.Float, CultureInfo.InvariantCulture, out var v)) continue;
-            var d = Math.Abs(v - Opacity);
-            if (d < ecart) { ecart = d; best = it; }
-        }
-        if (best is not null) CbOpacity.SelectedItem = best;
+        finally { UpdateTopButton(); MajBoutonMax(); }
     }
 }

@@ -44,6 +44,7 @@ public partial class TimerWindow : Window
     public readonly Chrono Smudge = new();
     public readonly Chrono Hunt = new();
     public readonly Chrono Cd = new();
+    public readonly Chrono Sec = new();
 
     private readonly DispatcherTimer _tick = new() { Interval = TimeSpan.FromMilliseconds(100) };
 
@@ -54,12 +55,13 @@ public partial class TimerWindow : Window
     {
         InitializeComponent();
 
-        foreach (var b in new[] { BoxSmudge, BoxHunt, BoxCd })
+        foreach (var b in new[] { BoxSmudge, BoxHunt, BoxSec, BoxCd })
         {
             b.Background = _boxBg;
             b.BorderBrush = _boxLine;
         }
         Grip.Background = GripBrush;
+        BtnOptions.Background = GripBrush;   // suit l'opacité du décor comme la poignée
 
         LoadSettings();
         _tick.Tick += (_, _) => Refresh();
@@ -68,7 +70,7 @@ public partial class TimerWindow : Window
     }
 
     // touches affichées : remplacées par celles réellement configurées
-    private string _kSmudge = "F1", _kHunt = "F2", _kCd = "F3", _kReset = "F4";
+    private string _kSmudge = "F1", _kHunt = "F2", _kCd = "F3", _kReset = "F4", _kSec = "F8";
 
     // difficulté courante, envoyée par le journal
     private string _diff = "Professionnel";
@@ -80,12 +82,13 @@ public partial class TimerWindow : Window
     private static readonly string[] SizeName = { "petite carte", "carte moyenne", "grande carte" };
 
     /// <summary>Affiche les touches réellement configurées à côté de chaque minuteur.</summary>
-    public void ShowKeys(string smudge, string hunt, string cd, string resetAll, string hide)
+    public void ShowKeys(string smudge, string hunt, string cd, string resetAll, string hide, string sec)
     {
-        _kSmudge = smudge; _kHunt = hunt; _kCd = cd; _kReset = resetAll;
+        _kSmudge = smudge; _kHunt = hunt; _kCd = cd; _kReset = resetAll; _kSec = sec;
         MiHide.Header = $"Masquer ({hide})";
         LblSmudge.Text = _n1 + "   " + smudge;
         LblHunt.Text = _n2 + "   " + hunt;
+        LblSec.Text = _n4 + "   " + sec;
         LblCd.Text = _n3 + "   " + cd;
         MiResetAll.Header = $"Tout remettre à zéro ({resetAll})";
         WriteHint();
@@ -109,12 +112,13 @@ public partial class TimerWindow : Window
     private void WriteHint()
     {
         var carte = _size >= 0 ? " · " + SizeName[_size] : "";
-        HintLine.Text = $"{_kSmudge}/{_kHunt}/{_kCd} démarrer ou pause · {_kReset} remise à zéro · {_diff}{carte}";
+        HintLine.Text = $"⚙ options · {_kSmudge}/{_kHunt}/{_kSec}/{_kCd} démarrer ou pause · {_kReset} remise à zéro · {_diff}{carte}";
     }
 
     // ---------- appelé par les raccourcis globaux ----------
     public void ToggleSmudge() { Smudge.Toggle(); Refresh(); }
     public void ToggleCd() { Cd.Toggle(); Refresh(); }
+    public void ToggleSec() { Sec.Toggle(); Refresh(); }
 
     public void ToggleHunt()
     {
@@ -127,10 +131,16 @@ public partial class TimerWindow : Window
     public void ResetSmudge() { Smudge.Reset(); Refresh(); }
     public void ResetHunt() { Hunt.Reset(); Refresh(); }
     public void ResetCd() { Cd.Reset(); Refresh(); }
-    public void ResetAll() { Smudge.Reset(); Hunt.Reset(); Cd.Reset(); Refresh(); }
+    public void ResetSec() { Sec.Reset(); Refresh(); }
+    public void ResetAll() { Smudge.Reset(); Hunt.Reset(); Cd.Reset(); Sec.Reset(); Refresh(); }
 
     // ---------- affichage ----------
     private static string Fmt(double s) => ((int)(s / 60)) + ":" + ((int)(s % 60)).ToString("00");
+
+    /// <summary>Chrono libre : au dixième sous une minute, puis en minutes:secondes.</summary>
+    private static string FmtSec(double s) => s < 60
+        ? s.ToString("0.0", CultureInfo.GetCultureInfo("fr-FR")) + " s"
+        : Fmt(s);
 
     // couleurs du TEXTE : toujours pleinement opaques
     private static readonly Brush Ink = new SolidColorBrush(Color.FromRgb(0xE3, 0xE6, 0xEC));
@@ -151,12 +161,13 @@ public partial class TimerWindow : Window
     {
         Paint(Smudge, TSmudge, MSmudge, BoxSmudge, SmudgeMsg(Smudge.Seconds), SmudgeColor(Smudge.Seconds));
         Paint(Hunt, THunt, MHunt, BoxHunt, HuntMsg(Hunt.Seconds), Muted);
+        Paint(Sec, TSec, MSec, BoxSec, SecMsg(Sec.Seconds), SecColor(Sec.Seconds), true);
         Paint(Cd, TCd, MCd, BoxCd, CdMsg(Cd.Seconds), CdColor(Cd.Seconds));
     }
 
-    private void Paint(Chrono c, TextBlock time, TextBlock msg, Border box, string text, Brush brush)
+    private void Paint(Chrono c, TextBlock time, TextBlock msg, Border box, string text, Brush brush, bool dixieme = false)
     {
-        time.Text = Fmt(c.Seconds);
+        time.Text = dixieme ? FmtSec(c.Seconds) : Fmt(c.Seconds);
         msg.Text = (c.Paused && c.Seconds > 0 ? "⏸ en pause · " : "") + text;
         msg.Foreground = brush;
         box.BorderBrush = c.Running ? _boxAccent : (c.Paused && c.Seconds > 0 ? _boxWarn : _boxLine);
@@ -194,6 +205,21 @@ public partial class TimerWindow : Window
 
     private static Brush CdColor(double s) => s <= 0 ? Muted : s < 20 ? Good : s < 25 ? Warn : Ink;
 
+    // Chrono libre : les mêmes repères que le journal, du plus court au plus long
+    private string SecMsg(double s) => s <= 0 ? _kSec + " pour démarrer"
+        : s < 1.2 ? "chrono libre · au dixième sous 60 s"
+        : s < 2.7 ? "1,2 s — écart son/grésillement d'un Myling"
+        : s < 5 ? "2,7 s — un Revenant a fini de décélérer"
+        : s < 5.9 ? "5 s — fin de l'aveuglement par l'encens"
+        : s < 20 ? "5,9 s — écart son/grésillement d'une entité normale"
+        : s < 25 ? "20 s — un Démon peut déjà rechasser"
+        : s < 64 ? "25 s — recharge terminée, chasse possible"
+        : s < 80 ? "64 s — un Myling peut déjà refaire un son"
+        : s < 127 ? "80 s — son paranormal attendu pour les autres"
+        : "au-delà de 127 s — plus aucun son paranormal attendu";
+
+    private static Brush SecColor(double s) => s <= 0 ? Muted : s < 5.9 ? Good : s < 64 ? Warn : Ink;
+
     // ---------- fenêtre ----------
     private void Drag(object sender, MouseButtonEventArgs e)
     {
@@ -202,6 +228,15 @@ public partial class TimerWindow : Window
     }
 
     private void ResetAll_Click(object sender, RoutedEventArgs e) => ResetAll();
+
+    /// <summary>Ouvre le menu d'options — le même que le clic droit, mais trouvable.</summary>
+    private void Options_Click(object sender, RoutedEventArgs e)
+    {
+        if (ContextMenu is null) return;
+        ContextMenu.PlacementTarget = sender as UIElement ?? this;
+        ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+        ContextMenu.IsOpen = true;
+    }
 
     /// <summary>
     /// Épinglage des minuteurs. Décoché, la fenêtre cesse de passer devant le jeu — c'est ce
@@ -243,12 +278,12 @@ public partial class TimerWindow : Window
 
             // sans décor, on renforce le texte pour qu'il reste bien lisible sur le jeu
             var vif = v < 0.35;
-            foreach (var tb in new[] { TSmudge, THunt, TCd })
+            foreach (var tb in new[] { TSmudge, THunt, TSec, TCd })
             {
                 tb.Foreground = vif ? InkBright : Ink;
                 tb.FontWeight = vif ? FontWeights.Bold : FontWeights.SemiBold;
             }
-            foreach (var tb in new[] { LblSmudge, LblHunt, LblCd, HintLine })
+            foreach (var tb in new[] { LblSmudge, LblHunt, LblSec, LblCd, HintLine })
                 tb.Foreground = vif ? LblBright : Muted;
 
             Refresh();
@@ -283,7 +318,7 @@ public partial class TimerWindow : Window
     /// quand le fichier vient d'une version plus ancienne.
     /// </summary>
     // ---------- taille, minuteurs affichés, noms ----------
-    private string _n1 = RenameDialog.Def1, _n2 = RenameDialog.Def2, _n3 = RenameDialog.Def3;
+    private string _n1 = RenameDialog.Def1, _n2 = RenameDialog.Def2, _n3 = RenameDialog.Def3, _n4 = RenameDialog.Def4;
 
     private void Echelle_Click(object sender, RoutedEventArgs e)
     {
@@ -309,7 +344,7 @@ public partial class TimerWindow : Window
     private void Voir_Click(object sender, RoutedEventArgs e)
     {
         // au moins un minuteur doit rester affiché, sinon la fenêtre devient un point mort
-        if (!MiVoir1.IsChecked && !MiVoir2.IsChecked && !MiVoir3.IsChecked)
+        if (!MiVoir1.IsChecked && !MiVoir2.IsChecked && !MiVoir3.IsChecked && !MiVoir4.IsChecked)
             ((MenuItem)sender).IsChecked = true;
         AppliquerVisibilite();
         SaveSettings();
@@ -319,19 +354,21 @@ public partial class TimerWindow : Window
     {
         BoxSmudge.Visibility = MiVoir1.IsChecked ? Visibility.Visible : Visibility.Collapsed;
         BoxHunt.Visibility   = MiVoir2.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+        BoxSec.Visibility    = MiVoir4.IsChecked ? Visibility.Visible : Visibility.Collapsed;
         BoxCd.Visibility     = MiVoir3.IsChecked ? Visibility.Visible : Visibility.Collapsed;
         // la marge droite du dernier bloc visible ferait un vide : on la retire
-        Border? dernier = MiVoir3.IsChecked ? BoxCd : MiVoir2.IsChecked ? BoxHunt : BoxSmudge;
-        foreach (var b in new[] { BoxSmudge, BoxHunt, BoxCd })
+        Border? dernier = MiVoir3.IsChecked ? BoxCd : MiVoir4.IsChecked ? BoxSec
+                        : MiVoir2.IsChecked ? BoxHunt : BoxSmudge;
+        foreach (var b in new[] { BoxSmudge, BoxHunt, BoxSec, BoxCd })
             b.Margin = ReferenceEquals(b, dernier) ? new Thickness(0) : new Thickness(0, 0, 6, 0);
         LimiterALEcran();
     }
 
     private void Renommer_Click(object sender, RoutedEventArgs e)
     {
-        var d = new RenameDialog(IsVisible ? this : null, _n1, _n2, _n3);
+        var d = new RenameDialog(IsVisible ? this : null, _n1, _n2, _n3, _n4);
         if (d.ShowDialog() != true) return;
-        _n1 = d.Nom1; _n2 = d.Nom2; _n3 = d.Nom3;
+        _n1 = d.Nom1; _n2 = d.Nom2; _n3 = d.Nom3; _n4 = d.Nom4;
         MajNoms();
         SaveSettings();
     }
@@ -340,8 +377,9 @@ public partial class TimerWindow : Window
     {
         LblSmudge.Text = _n1 + "   " + _kSmudge;
         LblHunt.Text   = _n2 + "   " + _kHunt;
+        LblSec.Text    = _n4 + "   " + _kSec;
         LblCd.Text     = _n3 + "   " + _kCd;
-        MiVoir1.Header = _n1; MiVoir2.Header = _n2; MiVoir3.Header = _n3;
+        MiVoir1.Header = _n1; MiVoir2.Header = _n2; MiVoir3.Header = _n3; MiVoir4.Header = _n4;
     }
 
     /// <summary>Après un agrandissement, la fenêtre peut déborder : on la ramène dans l'écran.</summary>
@@ -376,9 +414,11 @@ public partial class TimerWindow : Window
                 "voir1=" + (MiVoir1.IsChecked ? "1" : "0"),
                 "voir2=" + (MiVoir2.IsChecked ? "1" : "0"),
                 "voir3=" + (MiVoir3.IsChecked ? "1" : "0"),
+                "voir4=" + (MiVoir4.IsChecked ? "1" : "0"),
                 "nom1=" + _n1,
                 "nom2=" + _n2,
-                "nom3=" + _n3
+                "nom3=" + _n3,
+                "nom4=" + _n4
             });
         }
         catch { }
@@ -433,12 +473,14 @@ public partial class TimerWindow : Window
             if (v.TryGetValue("nom1", out var s1) && s1.Trim().Length > 0) _n1 = s1.Trim();
             if (v.TryGetValue("nom2", out var s2) && s2.Trim().Length > 0) _n2 = s2.Trim();
             if (v.TryGetValue("nom3", out var s3) && s3.Trim().Length > 0) _n3 = s3.Trim();
+            if (v.TryGetValue("nom4", out var s4) && s4.Trim().Length > 0) _n4 = s4.Trim();
             MajNoms();
 
             if (v.TryGetValue("voir1", out var w1)) MiVoir1.IsChecked = w1 == "1";
             if (v.TryGetValue("voir2", out var w2)) MiVoir2.IsChecked = w2 == "1";
             if (v.TryGetValue("voir3", out var w3)) MiVoir3.IsChecked = w3 == "1";
-            if (!MiVoir1.IsChecked && !MiVoir2.IsChecked && !MiVoir3.IsChecked) MiVoir1.IsChecked = true;
+            if (v.TryGetValue("voir4", out var w4)) MiVoir4.IsChecked = w4 == "1";
+            if (!MiVoir1.IsChecked && !MiVoir2.IsChecked && !MiVoir3.IsChecked && !MiVoir4.IsChecked) MiVoir1.IsChecked = true;
             AppliquerVisibilite();
 
             Echelle = Nb("echelle") ?? 1.0;

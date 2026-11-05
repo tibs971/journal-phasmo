@@ -43,6 +43,24 @@ Deux points à leur dire :
   quasi-totalité des Windows 10. S'il manque, un message le dit et il s'installe gratuitement
   depuis le site de Microsoft.
 
+## Publier la version téléphone (dossier `web`)
+
+Le dossier `web` est une **application web installable** (PWA) : la page du journal, un manifeste,
+un service worker et les icônes. Pour la mettre en ligne gratuitement :
+
+1. Sur GitHub, onglet **Settings** → **Pages**.
+2. Source : **Deploy from a branch**, branche `main`, dossier **`/web`**. Enregistrez.
+3. Au bout d'une minute, l'adresse est `https://tibs971.github.io/journal-phasmo/`.
+
+C'est cette adresse que tes joueurs ajoutent à leur écran d'accueil. Pour mettre à jour : remplace
+`web/index.html` par le nouveau journal, et **incrémente le numéro dans `web/sw.js`**
+(`const CACHE = "journal-phasmo-v1"` → `v2`), sinon les téléphones garderont l'ancienne version
+en cache.
+
+`web/index.html` est le même journal que `phasmo.html`, avec en plus le manifeste et le service
+worker. Le `phasmo.html` embarqué dans l'exe, lui, ne les a pas : le service worker ne s'active
+jamais dans l'application Windows.
+
 ## Réglages dans l'application (bouton ⚙)
 
 Pas besoin de Visual Studio pour régler quoi que ce soit :
@@ -175,6 +193,57 @@ Soyons clairs sur ce que cela fait et ne fait pas : c'est une **signature**, pas
 Quelqu'un qui décompile l'exe peut retirer la vérification. Ce qui protège vraiment une
 paternité, c'est une trace datée et extérieure — un dépôt Git public, une archive en ligne,
 un envoi daté — pas un code caché dans le programme.
+
+## Corriger les données du jeu (dossier `source`)
+
+**`phasmo.html` est un fichier généré : ne le modifie pas à la main**, ta correction serait
+écrasée au prochain build. Tout le contenu du journal — les 30 fiches d'entités, les 98
+observations, l'équipement, les cartes, les difficultés, les objets maudits, les idées reçues,
+les tables de vitesses — vit dans un seul fichier :
+
+```
+source/donnees.json
+```
+
+C'est la **source unique**, partagée avec la future application Android : une correction faite
+là vaut pour la page web, l'appli Windows et le téléphone. Le reste du dossier `source` :
+
+| fichier | rôle |
+|---|---|
+| `donnees.json` | le contenu. C'est le seul fichier à corriger. |
+| `modele.html` | la coquille et le moteur d'identification, sans les données |
+| `construire.js` | fusionne les deux et produit la page |
+| `teq.js` | compare deux pages état par état, pour vérifier qu'une correction n'a rien cassé ailleurs |
+
+### Refaire la page après une correction
+
+Depuis le dossier `source`, avec Node.js installé :
+
+```
+node construire.js ../phasmo.html
+```
+
+`construire.js` **refuse de construire** si quelque chose ne tient pas : une table absente, une
+entité citée par une observation sans exister, deux observations qui portent le même
+identifiant, une fiche sans nom. C'est ce garde-fou qui a révélé un bug réel : deux
+observations de vitesse partageaient l'identifiant `slowfast`, et la seconde n'avait donc
+jamais pu s'appliquer.
+
+### Vérifier qu'on n'a rien cassé
+
+Garde une copie de l'ancienne page, puis :
+
+```
+node teq.js ancienne.html ../phasmo.html
+```
+
+Le script balaye plus de mille états — chaque observation seule, les 128 combinaisons de
+preuves, les 243 états des pastilles de vitesse, chaque vitesse mesurée au Tap, et tout cela
+en double avec « resté caché » — et liste les écarts. Zéro écart signifie que seule la
+correction voulue a bougé.
+
+Il faut ensuite recopier la page dans `web/index.html` en y réinsérant le manifeste et le
+service worker (voir « Publier la version téléphone »).
 
 ## Mettre à jour les données du jeu
 
