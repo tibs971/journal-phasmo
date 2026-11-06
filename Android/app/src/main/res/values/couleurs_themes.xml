@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Les palettes choisies à la main, en plus du réglage automatique.
+  Chacune garde la même logique : un accent, une couleur pour ce qui est retenu,
+  et le rouge réservé à la chasse.
+-->
+<resources>
+
+    <!-- ARDOISE — la palette de référence, pensée pour une pièce éteinte -->
+    <color name="ard_fond">#10151C</color>
+    <color name="ard_surface">#171D26</color>
+    <color name="ard_haute">#202733</color>
+    <color name="ard_encre">#DCE3EA</color>
+    <color name="ard_pale">#8A95A3</color>
+    <color name="ard_filet">#39465A</color>
+    <color name="ard_contour">#56688A</color>
+    <color name="ard_accent">#E8A33D</color>
+    <color name="ard_sur_accent">#1A1203</color>
+    <color name="ard_retenu">#5BC8C0</color>
+    <color name="ard_sur_retenu">#042320</color>
+    <color name="ard_alarme">#F06A5E</color>
+
+    <!-- CLAIR — pour préparer un contrat en plein jour -->
+    <color name="cla_fond">#E9EAE7</color>
+    <color name="cla_surface">#F4F5F2</color>
+    <color name="cla_haute">#DEE1DC</color>
+    <color name="cla_encre">#151A20</color>
+    <color name="cla_pale">#58616B</color>
+    <color name="cla_filet">#AEB5AC</color>
+    <color name="cla_contour">#7E877D</color>
+    <color name="cla_accent">#8A5A05</color>
+    <color name="cla_sur_accent">#FFFFFF</color>
+    <color name="cla_retenu">#0E6761</color>
+    <color name="cla_sur_retenu">#FFFFFF</color>
+    <color name="cla_alarme">#B3271C</color>
+
+    <!-- CARNET — papier et encre sépia, comme le carnet d'un enquêteur -->
+    <color name="car_fond">#E3D9BF</color>
+    <color name="car_surface">#EFE7D2</color>
+    <color name="car_haute">#D6C9A8</color>
+    <color name="car_encre">#2B2317</color>
+    <color name="car_pale">#5E5239</color>
+    <color name="car_filet">#A89672</color>
+    <color name="car_contour">#7B6B4E</color>
+    <color name="car_accent">#6E4B1F</color>
+    <color name="car_sur_accent">#FBF5E6</color>
+    <color name="car_retenu">#3B6140</color>
+    <color name="car_sur_retenu">#FBF5E6</color>
+    <color name="car_alarme">#8E2B1C</color>
+
+    <!-- VISION NOCTURNE — une seule teinte, comme un écran de caméra infrarouge.
+         Le vert préserve l'adaptation de l'oeil au noir : on distingue les états par
+         la LUMINOSITÉ, pas par la couleur. Du coup l'ambre de l'alarme, seule teinte
+         étrangère, saute littéralement aux yeux. -->
+    <color name="noc_fond">#040908</color>
+    <color name="noc_surface">#081210</color>
+    <color name="noc_haute">#0E1D19</color>
+    <color name="noc_encre">#9DE8B6</color>
+    <color name="noc_pale">#58A376</color>
+    <color name="noc_filet">#214B3F</color>
+    <color name="noc_contour">#307059</color>
+    <color name="noc_accent">#C6FF8F</color>
+    <color name="noc_sur_accent">#06180A</color>
+    <color name="noc_retenu">#5FE89A</color>
+    <color name="noc_sur_retenu">#042313</color>
+    <color name="noc_alarme">#FFB02E</color>
+</resources>

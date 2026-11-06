@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Thème SOMBRE — c'est le mode normal d'usage : on joue dans le noir.
+
+  Ardoise froide #10151C plutôt que du noir : le noir pur fait baver le texte sur les
+  écrans OLED et durcit le contraste au point de fatiguer. L'ambre et le cyan sont
+  désaturés juste ce qu'il faut pour ne pas éblouir dans une pièce éteinte.
+-->
+<resources>
+    <color name="jp_fond">#10151C</color>
+    <color name="jp_surface">#171D26</color>
+    <color name="jp_surface_haute">#202733</color>
+    <color name="jp_encre">#DCE3EA</color>
+    <color name="jp_encre_pale">#8A95A3</color>
+    <color name="jp_filet">#39465A</color>
+    <color name="jp_contour">#56688A</color>
+
+    <color name="jp_primary">#E8A33D</color>
+    <color name="jp_sur_primary">#1A1203</color>
+    <color name="jp_primary_doux">#4A3410</color>
+    <color name="jp_sur_primary_doux">#F6E2BC</color>
+
+    <color name="jp_trouvee">#5BC8C0</color>
+    <color name="jp_sur_trouvee">#042320</color>
+
+    <color name="jp_exclue">#1B222C</color>
+    <color name="jp_sur_exclue">#5F6975</color>
+
+    <color name="jp_signalee">#E8A33D</color>
+    <color name="jp_sur_signalee">#1A1203</color>
+
+    <color name="jp_alarme">#F06A5E</color>
+    <color name="jp_sur_alarme">#2A0603</color>
+</resources>

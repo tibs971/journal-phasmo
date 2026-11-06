@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- En-tete de groupe repliable : une zone tactile pleine largeur de 48 dp. -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="48dp"
+    android:gravity="center_vertical"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:background="?attr/colorSurfaceVariant"
+    android:textAppearance="?attr/textAppearanceTitleSmall"
+    android:textColor="?attr/colorOnSurface"
+    android:clickable="true"
+    android:focusable="true" />

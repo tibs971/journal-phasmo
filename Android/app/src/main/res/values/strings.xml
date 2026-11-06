@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Journal Phasmo</string>
+
+    <string name="nav_enquete">Enquête</string>
+    <string name="nav_entites">Entités</string>
+    <string name="nav_chasse">Chasse</string>
+    <string name="nav_guide">Guide</string>
+
+    <string name="legende_etats">Un appui : trouvée · deux appuis : exclue · trois : on oublie</string>
+    <string name="legende_vitesses">Un appui : ne garder que celle-là · deux appuis : la barrer</string>
+    <string name="pied_de_page">Aide de jeu non officielle, créée par un joueur, gratuite et sans but commercial. Phasmophobia est un jeu de Kinetic Games, sans lien avec cette application.</string>
+</resources>

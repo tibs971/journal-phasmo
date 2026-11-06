@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Thème CLAIR. Le jeu sombre est dans values-night/colors.xml.
+
+  Le parti pris : l'application est un RELEVÉ, pas une affiche d'horreur. L'horreur est
+  dans le contenu ; l'interface reste un instrument qu'on lit vite et dans le noir.
+
+  Base ardoise froide, jamais du noir. Accent AMBRE — la couleur des lampes qui
+  préservent la vision nocturne et des afficheurs d'EMF. Cyan froid pour ce qui est
+  confirmé. Et le ROUGE est réservé à la chasse : employé partout il ne veut plus rien
+  dire, employé rarement il redevient une alarme.
+-->
+<resources>
+    <color name="jp_fond">#E9EAE7</color>
+    <color name="jp_surface">#F4F5F2</color>
+    <color name="jp_surface_haute">#DEE1DC</color>
+    <color name="jp_encre">#151A20</color>
+    <color name="jp_encre_pale">#58616B</color>
+    <color name="jp_filet">#AEB5AC</color>
+    <color name="jp_contour">#7E877D</color>
+
+    <!-- accent : ambre -->
+    <color name="jp_primary">#8A5A05</color>
+    <color name="jp_sur_primary">#FFFFFF</color>
+    <color name="jp_primary_doux">#F6E2BC</color>
+    <color name="jp_sur_primary_doux">#2B1C00</color>
+
+    <!-- relevé confirmé : cyan froid -->
+    <color name="jp_trouvee">#0E6761</color>
+    <color name="jp_sur_trouvee">#FFFFFF</color>
+
+    <!-- écarté : éteint, et barré -->
+    <color name="jp_exclue">#DEE1DC</color>
+    <color name="jp_sur_exclue">#79818A</color>
+
+    <!-- signalé sans être éliminé -->
+    <color name="jp_signalee">#8A5A05</color>
+    <color name="jp_sur_signalee">#FFFFFF</color>
+
+    <!-- UNIQUEMENT la chasse. Rien d'autre n'a le droit d'être rouge. -->
+    <color name="jp_alarme">#B3271C</color>
+    <color name="jp_sur_alarme">#FFFFFF</color>
+</resources>

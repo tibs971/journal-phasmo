@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Typographie : tout le TEXTE en Atkinson Hyperlegible, tous les RELEVÉS en IBM Plex
+      Mono. Atkinson est dessinée pour rester lisible en mauvaises conditions de vision,
+      ce qui est exactement la condition d'usage : dans le noir, du coin de l'oeil. La
+      mono sert aux valeurs mesurées, jamais à de petites étiquettes décoratives.
+    -->
+    <style name="Texte.Corps" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/journal_texte</item>
+        <item name="fontFamily">@font/journal_texte</item>
+    </style>
+    <style name="Texte.Petit" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:fontFamily">@font/journal_texte</item>
+        <item name="fontFamily">@font/journal_texte</item>
+    </style>
+    <style name="Texte.Titre" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/journal_texte</item>
+        <item name="fontFamily">@font/journal_texte</item>
+    </style>
+    <style name="Texte.TitrePetit" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/journal_texte</item>
+        <item name="fontFamily">@font/journal_texte</item>
+    </style>
+    <style name="Texte.Etiquette" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:fontFamily">@font/journal_texte</item>
+        <item name="fontFamily">@font/journal_texte</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="textAllCaps">false</item>
+    </style>
+    <style name="Texte.Grand" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:fontFamily">@font/journal_texte</item>
+        <item name="fontFamily">@font/journal_texte</item>
+    </style>
+
+    <!-- les valeurs mesurées -->
+    <style name="Releve" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/journal_releve</item>
+        <item name="fontFamily">@font/journal_releve</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+    <style name="Releve.Grand" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">@font/journal_releve</item>
+        <item name="fontFamily">@font/journal_releve</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="Theme.JournalPhasmo" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/jp_primary</item>
+        <item name="colorOnPrimary">@color/jp_sur_primary</item>
+        <item name="colorPrimaryContainer">@color/jp_primary_doux</item>
+        <item name="colorOnPrimaryContainer">@color/jp_sur_primary_doux</item>
+
+        <item name="colorSecondary">@color/jp_trouvee</item>
+        <item name="colorOnSecondary">@color/jp_sur_trouvee</item>
+        <item name="colorSecondaryContainer">@color/jp_primary_doux</item>
+        <item name="colorOnSecondaryContainer">@color/jp_sur_primary_doux</item>
+
+        <item name="colorError">@color/jp_alarme</item>
+        <item name="colorOnError">@color/jp_sur_alarme</item>
+
+        <item name="android:colorBackground">@color/jp_fond</item>
+        <item name="colorSurface">@color/jp_surface</item>
+        <item name="colorSurfaceVariant">@color/jp_surface_haute</item>
+        <item name="colorOnSurface">@color/jp_encre</item>
+        <item name="colorOnSurfaceVariant">@color/jp_encre_pale</item>
+        <item name="colorOutline">@color/jp_contour</item>
+        <item name="colorOutlineVariant">@color/jp_filet</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/jp_fond</item>
+
+        <item name="textAppearanceBodyMedium">@style/Texte.Corps</item>
+        <item name="textAppearanceBodySmall">@style/Texte.Petit</item>
+        <item name="textAppearanceTitleMedium">@style/Texte.Titre</item>
+        <item name="textAppearanceTitleSmall">@style/Texte.TitrePetit</item>
+        <item name="textAppearanceLabelLarge">@style/Texte.Etiquette</item>
+        <item name="textAppearanceHeadlineSmall">@style/Texte.Grand</item>
+    </style>
+
+    <style name="Theme.JournalPhasmo.Lancement" parent="Theme.JournalPhasmo">
+        <item name="android:windowBackground">?android:attr/colorBackground</item>
+    </style>
+</resources>

@@ -1,0 +1,3051 @@
+{
+ "EV": {
+  "emf": {
+   "fr": "EMF 5",
+   "long": "EMF niveau 5",
+   "key": "1"
+  },
+  "sb": {
+   "fr": "Spirit Box",
+   "long": "Spirit Box",
+   "key": "2"
+  },
+  "uv": {
+   "fr": "UV",
+   "long": "Ultraviolet (empreintes)",
+   "key": "3"
+  },
+  "orb": {
+   "fr": "Orbes",
+   "long": "Orbe fantomatique",
+   "key": "4"
+  },
+  "wr": {
+   "fr": "Écriture",
+   "long": "Écriture fantomatique",
+   "key": "5"
+  },
+  "frz": {
+   "fr": "Glaciales",
+   "long": "Températures glaciales",
+   "key": "6"
+  },
+  "dots": {
+   "fr": "D.O.T.S.",
+   "long": "Projecteur D.O.T.S.",
+   "key": "7"
+  }
+ },
+ "EV_ORDER": [
+  "emf",
+  "sb",
+  "uv",
+  "orb",
+  "wr",
+  "frz",
+  "dots"
+ ],
+ "GHOSTS": [
+  {
+   "id": "spirit",
+   "fr": "Esprit",
+   "en": "Spirit",
+   "ev": [
+    "emf",
+    "sb",
+    "wr"
+   ],
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "L'encens l'empêche de chasser 180 s (au lieu de 90 s).",
+   "capa": [
+    "Aucune capacité active particulière."
+   ],
+   "indices": [
+    "Après un encens, ne peut pas chasser pendant 180 s. Toute autre entité peut attendre 180 s, mais l'Esprit y est obligé."
+   ],
+   "confirm": [
+    "Encensez-le hors chasse et lancez le minuteur : aucune chasse avant 180 s = très probable Esprit (non définitif).",
+    "<b>Le test du double encens, bien plus net</b> : encens, chrono, puis un second encens vers 160-170 s. Un second encens n'a aucun effet tant que le premier court, donc l'Esprit reste bloqué jusqu'à 180 s. S'il chasse <b>dans les 60 s qui suivent le second encens, c'est un Esprit</b> ; entre 60 et 90 s, c'est lui ou un Démon — mais un Démon aurait presque sûrement chassé avant."
+   ],
+   "elim": [
+    "Une chasse entre 90 s et 180 s après l'encens = pas un Esprit (définitif, sauf Démon/Mimic)."
+   ]
+  },
+  {
+   "id": "wraith",
+   "fr": "Spectre",
+   "en": "Wraith",
+   "ev": [
+    "emf",
+    "sb",
+    "dots"
+   ],
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "Ne marche jamais dans le sel.",
+   "capa": [
+    "Se téléporte près d'un joueur au hasard et laisse une mesure <b>au niveau des pieds</b> du joueur : EMF 2, et <b>1 fois sur 3 un EMF 5</b>. Il reprend ensuite son comportement normal."
+   ],
+   "indices": [
+    "Ne perturbe jamais le sel et ne laisse donc jamais d'empreintes UV dans le sel.",
+    "Idée reçue : il ne traverse pas les murs pendant les chasses."
+   ],
+   "confirm": [
+    "EMF surgissant loin de sa pièce, à côté d'un joueur, sans raison apparente.",
+    "<b>Au lecteur EMF rang III, la mesure est au niveau du sol</b> ; celle du Fantôme et celle du Poltergeist sont à hauteur de tête. Et un EMF 5 surgi de nulle part ne peut être qu'un Spectre : le Fantôme n'a pas cette preuve."
+   ],
+   "elim": [
+    "Sel piétiné par l'entité = pas un Spectre (définitif). Attention : le Gallu enragé ne perturbe pas le sel non plus."
+   ]
+  },
+  {
+   "id": "phantom",
+   "fr": "Fantôme",
+   "en": "Phantom",
+   "ev": [
+    "sb",
+    "uv",
+    "dots"
+   ],
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "Disparaît quand on le prend en photo. Clignote peu visible en chasse.",
+   "capa": [
+    "Se déplace <b>en marchant</b> vers un joueur choisi au hasard dans le bâtiment, jusqu'à moins de 5 m de lui, et laisse un <b>EMF 2 à hauteur de tête</b> à l'arrivée. Ce déplacement ignore la limite de 30 s des autres états.",
+    "Entendre ses battements de cœur coûte <b>0,5 % de santé par seconde et par joueur qui les entend, à toute l'équipe</b> : à trois joueurs concernés, chacun perd 1,5 %/s. Uniquement pendant les événements et les chasses, en plus de la perte passive."
+   ],
+   "indices": [
+    "Prendre une photo pendant un événement le fait disparaître (la photo doit être étiquetée « Fantôme »).",
+    "En chasse : invisible plus longtemps entre les clignotements (≈1 à 2 s).",
+    "N'utilise plus sa capacité sur les joueurs morts ou dehors (v0.18)."
+   ],
+   "confirm": [
+    "Photo pendant un événement : l'entité disparaît et n'apparaît pas sur la photo.",
+    "Clignotement très espacé en chasse."
+   ],
+   "elim": [
+    "L'entité reste visible sur une photo « Fantôme » étiquetée = pas un Fantôme."
+   ]
+  },
+  {
+   "id": "poltergeist",
+   "fr": "Poltergeist",
+   "en": "Poltergeist",
+   "ev": [
+    "sb",
+    "uv",
+    "wr"
+   ],
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "Lance plusieurs objets d'un coup (« explosion »).",
+   "capa": [
+    "Explosion d'objets : lance tous les objets proches en même temps ; chaque objet fait perdre 2 % de santé aux joueurs qui le voient."
+   ],
+   "indices": [
+    "Lance les objets plus fort et plus souvent.",
+    "En chasse, lance un objet environ toutes les 0,5 s.",
+    "Faiblesse : presque inoffensif dans une pièce vide.",
+    "Quand il interagit avec un objet, il n'a que <b>20 % de chances de le lancer</b> ; sinon il retourne dans sa pièce favorite sans rien faire d'autre."
+   ],
+   "confirm": [
+    "Faites un tas d'objets dans sa pièce : plusieurs objets projetés simultanément = Poltergeist."
+   ],
+   "elim": [
+    "<b>Il ne sait que lancer</b> : allumer une source de feu, déclencher l'alarme d'une voiture, téléporter un jouet ou déplacer un mannequin <b>élimine le Poltergeist</b>."
+   ]
+  },
+  {
+   "id": "banshee",
+   "fr": "Banshee",
+   "en": "Banshee",
+   "ev": [
+    "uv",
+    "orb",
+    "dots"
+   ],
+   "seuil": "50 % (santé de sa cible)",
+   "seuilMax": 50,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "Traque une seule cible. Cri unique au micro parabolique.",
+   "capa": [
+    "Choisit une cible (l'hôte en solo) et ne chasse qu'en fonction de la santé mentale de cette cible, où qu'elle soit.",
+    "Peut marcher vers sa cible pour démarrer une chasse depuis elle."
+   ],
+   "indices": [
+    "Hors chasse, elle se déplace vers sa cible : sur un petit déplacement, 2 chances sur 3 d'aller à moins de 3 m d'elle (sans effet si la cible est à un autre étage). Elle fait aussi des longs déplacements hors de sa pièce une fois sur deux.",
+    "En solo, la cible est forcément vous : un capteur de mouvement posé près de vous, loin de sa pièce, la voit venir.",
+    "Cri unique au micro parabolique (≈33 % des sons paranormaux).",
+    "Événements de chant nettement plus fréquents : <b>46,7 %</b> de ses événements, contre 20 % pour les autres.",
+    "Quand elle marche vers sa cible, <b>elle ne laisse aucune mesure EMF</b> — c'est ce qui la sépare du Spectre et du Fantôme, qui en laissent un.",
+    "Toujours féminine (nom et modèle).",
+    "En chasse, ignore les autres joueurs (mais peut les tuer s'ils sont sur son chemin).",
+    "Peut changer de pièce favorite depuis v0.13."
+   ],
+   "confirm": [
+    "Cri Banshee au micro parabolique (définitif).",
+    "Pendant une chasse, passe à côté d'un joueur visible pour en viser un autre."
+   ],
+   "elim": [
+    "Nom ou modèle masculin = pas une Banshee (définitif).",
+    "<b>Tout le monde dehors, puis un état D.O.T.S. qui dure plus de 1,76 s : ce n'est pas une Banshee</b> (définitif). Sa cible étant dehors, elle ne se déplace qu'à moins de 2 m d'elle-même, donc son D.O.T.S. est toujours bref."
+   ]
+  },
+  {
+   "id": "jinn",
+   "fr": "Djinn",
+   "en": "Jinn",
+   "ev": [
+    "emf",
+    "uv",
+    "frz"
+   ],
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "1,7 m/s · 2,5 m/s (disjoncteur ON, LdV, > 3 m)",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "spécial",
+   "key": "Très rapide de loin si le disjoncteur est allumé. N'éteint jamais le disjoncteur.",
+   "capa": [
+    "Capacité : disjoncteur allumé, puis après <b>5 s</b> il vérifie les joueurs dans sa pièce ou à moins de 3 m et draine <b>25 % de santé mentale</b> au premier d'entre eux. Cela produit une mesure <b>EMF 2 ou 5 au disjoncteur</b>."
+   ],
+   "indices": [
+    "Disjoncteur ON + ligne de vue + joueur à plus de 3 m → fonce à 2,5 m/s, puis revient à la normale à moins de 3 m.",
+    "Ne peut jamais couper le disjoncteur directement.",
+    "<b>Couper le disjoncteur le désarme entièrement</b> : plus de capacité, plus de 2,5 m/s, il redevient une entité standard. C'est à la fois la parade et le test.",
+    "Si le disjoncteur est <b>cassé</b> (difficulté personnalisée, ou vœu « je souhaite avoir de l'activité » de la patte de singe), il devient impossible à identifier par son comportement : seules les preuves restent."
+   ],
+   "confirm": [
+    "Chasse disjoncteur allumé : accélération brutale de loin, ralentissement net près de vous.",
+    "<b>Posez un lecteur EMF au disjoncteur</b> : une mesure alors que le disjoncteur n'a jamais été coupé trahit sa capacité.",
+    "Une santé mentale qui chute de 25 % d'un coup : c'est lui."
+   ],
+   "elim": [
+    "L'entité coupe le disjoncteur elle-même = pas un Djinn (définitif)."
+   ]
+  },
+  {
+   "id": "mare",
+   "fr": "Cauchemar",
+   "en": "Mare",
+   "ev": [
+    "sb",
+    "orb",
+    "wr"
+   ],
+   "seuil": "60 % dans le noir · 40 % lumière allumée",
+   "seuilMax": 60,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "N'allume jamais la lumière ; la rééteint juste après que vous l'allumez.",
+   "capa": [
+    "<b>1 chance sur 7</b> d'éteindre presque instantanément (1 s au plus) une lumière allumée par un joueur à moins de <b>4 m</b> et au même étage. Fonctionne même disjoncteur coupé ou cassé, mais pas sur une ampoule brisée. Chaque lumière a 10 s de recharge par joueur."
+   ],
+   "indices": [
+    "Ne peut jamais allumer une lumière.",
+    "Fait éclater les ampoules plus souvent.",
+    "Se déplace davantage quand la lumière de sa pièce actuelle est allumée."
+   ],
+   "confirm": [
+    "Allumez sa pièce : lumière rééteinte presque immédiatement = forte suspicion.",
+    "Chasse au-dessus de 50 % pièce sombre."
+   ],
+   "elim": [
+    "L'entité allume un interrupteur = pas un Cauchemar (définitif).",
+    "Chasse au-dessus de 40 % avec la lumière de sa pièce allumée = pas un Cauchemar."
+   ]
+  },
+  {
+   "id": "revenant",
+   "fr": "Revenant",
+   "en": "Revenant",
+   "ev": [
+    "orb",
+    "wr",
+    "frz"
+   ],
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "Base 1,0 m/s · 3,0 m/s en poursuite, dès qu'il détecte",
+   "spd": [
+    1,
+    3
+   ],
+   "los": "non",
+   "key": "Vitesse de base très lente (1,0). Bondit à 3,0 dès qu'il vous détecte.",
+   "capa": [
+    "<b>Sa vitesse de base est 1,0 m/s — très lente, et c'est la seule qu'il ait.</b> Les 3,0 m/s ne sont pas une seconde vitesse de base : c'est sa vitesse de poursuite, qui remplace chez lui l'accélération en ligne de vue des autres. Elle s'enclenche d'un coup dès qu'il détecte un joueur, à la vue, à la voix ou par l'électronique."
+   ],
+   "indices": [
+    "Après avoir perdu sa cible, il garde 3,0 m/s jusqu'à la dernière position connue, puis <b>ralentit progressivement</b> : −0,75 m/s², soit environ 2,7 s pour retomber à 1,0 m/s. C'était instantané avant la v0.8.",
+    "L'accélération, elle, reste instantanée : la montée est brutale, la descente est douce."
+   ],
+   "confirm": [
+    "Pas très lents (1,0 m/s) puis bond immédiat à 3,0 m/s."
+   ],
+   "elim": [
+    "Vitesse de base normale (1,7 m/s) sans cible = pas un Revenant."
+   ]
+  },
+  {
+   "id": "shade",
+   "fr": "Ombre",
+   "en": "Shade",
+   "ev": [
+    "emf",
+    "wr",
+    "frz"
+   ],
+   "seuil": "35 %",
+   "seuilMax": 35,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "Timide : ne chasse pas si vous êtes dans sa pièce. Seuil très bas.",
+   "capa": [
+    "Tant qu'un joueur est dans sa pièce actuelle (pas seulement sa pièce favorite), elle ne fait RIEN : aucune interaction (disjoncteur et poupée vaudou compris), aucun événement, aucune chasse.",
+    "Mais elle chasse normalement depuis une pièce vide : si elle s'est promenée à côté pendant que vous occupez sa pièce, la chasse part de là. Une chasse qui démarre d'une pièce où il n'y a personne est un bon signe d'Ombre."
+   ],
+   "indices": [
+    "Moins active quand plusieurs joueurs sont proches ; elle peut quand même toucher des objets des pièces voisines à travers le mur.",
+    "Ses événements ratent d'autant plus que la santé est haute : jamais à 100 %, +2 % de chance par point de santé perdu, toujours à 50 %.",
+    "Elle ne fait ni l'événement de chant ni l'apparition classique, mais choisit le souffle (brume) 60 % du temps.",
+    "Apparaît en ombre 2 fois sur 3 pendant un événement, 1 fois sur 2 lors d'un objet maudit, et redevient visible dès qu'une chasse commence."
+   ],
+   "confirm": [
+    "Très peu d'activité, événements en forme d'ombre.",
+    "Aucune interaction du tout tant que quelqu'un reste dans sa pièce."
+   ],
+   "elim": [
+    "Chasse au-dessus de 35 % (hors objet maudit) = pas une Ombre (définitif)."
+   ]
+  },
+  {
+   "id": "demon",
+   "fr": "Démon",
+   "en": "Demon",
+   "ev": [
+    "uv",
+    "wr",
+    "frz"
+   ],
+   "seuil": "70 % · parfois à n'importe quelle santé",
+   "seuilMax": 999,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "Chasse tôt et souvent. Encens : seulement 60 s de protection.",
+   "capa": [
+    "Capacité rare : peut lancer une chasse quelle que soit la santé mentale."
+   ],
+   "indices": [
+    "Recharge entre chasses : 20 s (au lieu de 25 s).",
+    "Encens : empêche la chasse 60 s (au lieu de 90 s).",
+    "Crucifix plus efficace : 4,5 / 6 / 7,5 m selon le rang."
+   ],
+   "confirm": [
+    "Chasse entre 60 s et 90 s après un encens = Démon (définitif, hors Mimic).",
+    "Nouvelle chasse 20–25 s après la fin de la précédente."
+   ],
+   "elim": [
+    "Pas de test d'élimination définitif."
+   ]
+  },
+  {
+   "id": "yurei",
+   "fr": "Yurei",
+   "en": "Yurei",
+   "ev": [
+    "orb",
+    "frz",
+    "dots"
+   ],
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "Claque une porte et fait chuter la santé. L'encens le piège dans sa pièce.",
+   "capa": [
+    "Ferme complètement une porte et draine 15 % de santé mentale aux joueurs proches (≈7,5 m)."
+   ],
+   "indices": [
+    "Encensé, il reste bloqué dans sa pièce favorite pendant 90 s : plus aucune errance, et <b>plus aucun état D.O.T.S.</b> non plus.",
+    "Il ouvre et ferme les portes avec une force bien supérieure aux autres : elles vont toujours jusqu'au bout.",
+    "Bug : peut entrouvrir les portes de casier."
+   ],
+   "confirm": [
+    "Porte fermée entièrement + chute de santé soudaine.",
+    "Après encens dans sa pièce : aucune activité hors de la pièce. Posez des détecteurs aux portes : s'il les franchit dans les 90 s, ce n'est pas lui."
+   ],
+   "elim": [
+    "<b>Laissez des portes entrouvertes à 45° près de lui</b> : hors chasse, une entité qui en laisse une à moitié ouverte ou à moitié fermée élimine le Yurei. Attention, l'inverse ne prouve rien : toutes les entités savent fermer une porte en entier."
+   ]
+  },
+  {
+   "id": "oni",
+   "fr": "Oni",
+   "en": "Oni",
+   "ev": [
+    "emf",
+    "frz",
+    "dots"
+   ],
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "Très visible en chasse. Ne fait JAMAIS la bulle d'air / brume.",
+   "capa": [
+    "Ses événements font perdre 20 % de santé (au lieu de 10 %) — y compris l'événement de chant depuis v0.19."
+   ],
+   "indices": [
+    "Activité +30 dès qu'un joueur est à moins de 6 m ou dans sa pièce.",
+    "<b>2 fois sur 5 son événement est une poursuite</b> (contre 1 fois sur 5 pour les autres), et il apparaît en forme pleine 2 fois sur 3.",
+    "En chasse, clignote en restant beaucoup plus visible.",
+    "Ne fait jamais l'événement mist (souffle / brume fantomatique)."
+   ],
+   "confirm": [
+    "Clignotement très visible en chasse (attention : Deogen aussi)."
+   ],
+   "elim": [
+    "Mist (souffle) vu de vos yeux = pas un Oni (définitif). Le son « souffle » seul ne suffit pas."
+   ]
+  },
+  {
+   "id": "yokai",
+   "fr": "Yokai",
+   "en": "Yokai",
+   "ev": [
+    "sb",
+    "orb",
+    "dots"
+   ],
+   "seuil": "80 % si on parle près de lui · sinon 50 %",
+   "seuilMax": 80,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "Parler près de lui le fait chasser tôt ; en chasse il est presque sourd.",
+   "capa": [
+    "Parler (chat vocal) dans sa pièce lui permet de chasser jusqu'à 80 %, et augmente son activité de 30. <b>Cela ne le rend pas plus agressif pour autant</b> : ça ne fait que relever son seuil. Sous 50 % de santé moyenne, parler ne change donc plus rien."
+   ],
+   "indices": [
+    "Pendant une chasse, n'entend les voix et l'électronique qu'à 2,5 m.",
+    "Déclenche la boîte à musique à 0,5 m (1 m pour les autres)."
+   ],
+   "confirm": [
+    "En chasse, parlez / allumez un appareil à 3–5 m : il ne vous détecte pas = Yokai."
+   ],
+   "elim": [
+    "Il vous repère à la voix de loin en chasse = pas un Yokai."
+   ]
+  },
+  {
+   "id": "hantu",
+   "fr": "Hantu",
+   "en": "Hantu",
+   "ev": [
+    "uv",
+    "orb",
+    "frz"
+   ],
+   "forced": "frz",
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "1,4 m/s (> 15 °C) → 2,7 m/s (< 0 °C)",
+   "spd": [
+    1.4,
+    2.7
+   ],
+   "los": "non",
+   "key": "Plus rapide dans le froid. Souffle glacé visible en chasse.",
+   "capa": [
+    "Vitesse selon la température de la pièce <b>qu'il traverse</b>, par paliers : <b>&gt; 15 °C → 1,4</b> · 12-15 °C → 1,75 · 9-12 °C → 2,1 · 6-9 °C → 2,3 · 3-6 °C → 2,4 · 0-3 °C → 2,5 · <b>&lt; 0 °C → 2,7 m/s</b>. Aucune accélération en ligne de vue."
+   ],
+   "indices": [
+    "Souffle de vapeur visible toutes les 3 s près de sa tête pendant les chasses, dans n'importe quelle pièce, tant que le disjoncteur est éteint.",
+    "Repère : un joueur qui sprinte fait 2,125 m/s de moyenne. Au-dessus de 12 °C le Hantu est nettement plus lent que vous, entre 9 et 12 °C vous êtes à égalité, en dessous il vous rattrape.",
+    "N'allume jamais le disjoncteur et l'éteint plus souvent.",
+    "Preuve forcée : Températures glaciales (en mode 1-2 preuves)."
+   ],
+   "confirm": [
+    "Souffle glacé visible en chasse (disjoncteur coupé) = Hantu (définitif).",
+    "Vitesse qui change selon les pièces froides/chaudes."
+   ],
+   "elim": [
+    "L'entité allume le disjoncteur = pas un Hantu.",
+    "Pas de souffle en chasse avec disjoncteur coupé = pas un Hantu."
+   ]
+  },
+  {
+   "id": "goryo",
+   "fr": "Goryo",
+   "en": "Goryo",
+   "ev": [
+    "emf",
+    "uv",
+    "dots"
+   ],
+   "forced": "dots",
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "D.O.T.S. visible uniquement à la caméra, sans personne dans la pièce.",
+   "capa": [
+    "Sa silhouette D.O.T.S. n'apparaît qu'à travers une caméra vidéo quand aucun joueur n'est dans la pièce."
+   ],
+   "indices": [
+    "S'éloigne peu de sa pièce et ne change jamais de pièce favorite.",
+    "Erre moins que les autres, donc <b>interagit plus</b> : c'est l'entité qui interagit le plus à 0 % de santé.",
+    "<b>2 chances sur 3</b> de passer en D.O.T.S. depuis l'errance, contre 1 sur 3 pour les autres ; et 10 % depuis l'état de pièce favorite — il est la seule entité à pouvoir faire du D.O.T.S. quand l'errance est désactivée (carte L'Ermite, vœu d'emprisonnement).",
+    "Son point D.O.T.S. est à moins de 1 m du joueur, contre 2 m pour les autres, et toujours dans sa pièce favorite.",
+    "Preuve forcée : D.O.T.S. (en mode 1-2 preuves)."
+   ],
+   "confirm": [
+    "D.O.T.S. vu uniquement au moniteur du camion avec la pièce vide.",
+    "S'il refuse de se montrer : faites sortir tout le monde du bâtiment, ses états D.O.T.S. durent alors plus longtemps."
+   ],
+   "elim": [
+    "D.O.T.S. vu à l'œil nu ou avec quelqu'un dans la pièce = pas un Goryo (définitif).",
+    "Changement de pièce favorite = pas un Goryo."
+   ]
+  },
+  {
+   "id": "myling",
+   "fr": "Myling",
+   "en": "Myling",
+   "ev": [
+    "emf",
+    "uv",
+    "wr"
+   ],
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "Pas silencieux en chasse (audibles à 12 m au lieu de 20 m).",
+   "capa": [
+    "Ses bruits de pas et sons vocaux en chasse ne portent qu'à 12 m, à peine plus que les 10 m nécessaires aux interférences électroniques.",
+    "À l'enregistreur de son, le bruit statique d'un de ses sons paranormaux démarre <b>1 m plus loin</b> que pour les autres : à la portée pleine de l'appareil (5 m au rang I, 6,5 m au rang II, 7,5 m au rang III) au lieu de 4 / 5,5 / 6,5 m."
+   ],
+   "indices": [
+    "Sons paranormaux plus fréquents au micro parabolique <b>comme à l'enregistreur</b> : 64 à 127 s, contre 80 à 127 s pour les autres.",
+    "Peut toujours émettre des sons vocaux en chasse (idée reçue).",
+    "Le volume de ses pas est légèrement étouffé à la limite des 12 m, puis redevient vite net à l'approche.",
+    "Deux façons de tester en chasse : lâcher un appareil électronique allumé dans votre cachette avant qu'elle ne commence, ou garder un appareil allumé (ou le chat global) sur vous avec de l'encens pour vous protéger.",
+    "Attention au Raiju : ses interférences portent à 15 m et donnent la même impression. Séparez-les à la vitesse."
+   ],
+   "confirm": [
+    "Deux sons paranormaux en moins de 80 s au micro parabolique ou à l'enregistreur de son (définitif).",
+    "<b>Enregistreur : le bruit statique démarre à la portée maximale de l'appareil</b> et non 1 m plus près (définitif, plus facile au rang I ou III).",
+    "Votre électronique clignote (≈10 m) mais vous n'entendez pas encore ses pas = Myling.",
+    "Ses pas s'entendent à 12 m, le grésillement commence à 10 m : les deux arrivent presque ensemble, alors qu'une entité normale s'entend 10 m avant de faire grésiller quoi que ce soit."
+   ],
+   "elim": [
+    "Pas entendus de loin, avant le clignotement de l'électronique = pas un Myling.",
+    "Enregistreur : bruit statique qui démarre 1 m avant la portée maximale (4 / 5,5 / 6,5 m) = pas un Myling.",
+    "Test invalide si l'entité est à un autre étage : la portée audible y est étouffée."
+   ]
+  },
+  {
+   "id": "onryo",
+   "fr": "Onryo",
+   "en": "Onryo",
+   "ev": [
+    "sb",
+    "orb",
+    "frz"
+   ],
+   "seuil": "60 % · + chasse toutes les 3 flammes soufflées",
+   "seuilMax": 999,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "Une flamme allumée agit comme un crucifix. Chaque 3e flamme soufflée = chasse.",
+   "capa": [
+    "Les flammes (bougies, briquet…) bloquent ses chasses comme un crucifix : il souffle la flamme à la place.",
+    "Après chaque 3e flamme soufflée, il tente une chasse quelle que soit la santé mentale."
+   ],
+   "indices": [
+    "N'évite pas les flammes (idée reçue) : il les souffle en voulant chasser.",
+    "L'encens retarde la chasse de capacité au lieu de la réinitialiser.",
+    "Souffler une flamme au lieu de chasser <b>ne relance pas la recharge</b>, contrairement à un crucifix : il peut réessayer tout de suite.",
+    "Si une flamme et un crucifix sont tous deux à portée, <b>c'est la flamme qui agit</b>, le crucifix est épargné.",
+    "Le compteur peut dépasser 3 : s'il souffle la 3e pendant un événement, la chasse ne part qu'après."
+   ],
+   "confirm": [
+    "Chasse juste après avoir soufflé la 3e flamme.",
+    "<b>Définitif : une flamme soufflée moins de 30 s après son premier allumage, ou moins de 20 s après les suivants.</b> Ses tentatives de chasse ignorent la recharge propre de la flamme — aucune autre entité ne peut le faire. Il est aussi le seul à pouvoir souffler l'allumette d'un allumeur rang I, qui ne dure que 10 s."
+   ],
+   "elim": [
+    "Chasse démarrée à côté d'une flamme allumée (dans la portée) = pas un Onryo."
+   ]
+  },
+  {
+   "id": "twins",
+   "fr": "Les Jumeaux",
+   "en": "The Twins",
+   "ev": [
+    "emf",
+    "sb",
+    "frz"
+   ],
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "1,5 m/s ou 1,9 m/s",
+   "spd": [
+    1.5,
+    3.01
+   ],
+   "los": "spécial",
+   "key": "Deux vitesses différentes selon les chasses. Interactions en double.",
+   "capa": [
+    "Une seule entité avec deux portées d'interaction (une grande, une petite) : interactions quasi simultanées à deux endroits.",
+    "Vitesse de base 1,7 m/s avec un modificateur fixe de <b>±0,2</b> : 1,5 ou 1,9 m/s. <b>Chaque chasse retire au sort, 50/50, sans tenir compte de la précédente</b> — il n'alterne pas. Le modificateur s'applique <b>après</b> l'accélération en ligne de vue, d'où 2,605 et 3,005 m/s en pointe."
+   ],
+   "indices": [
+    "LdV max : 2,6 m/s (lent) / 3,0 m/s (rapide).",
+    "Portée d'interaction ×4 (8,5 m, 17 m sur grande carte).",
+    "<b>Mécaniquement, c'est une seule entité</b>, pas deux : la « seconde » position n'est qu'une interaction à longue portée. 50 % de chances d'interagir près d'elle, 30 % au loin après 1 à 2 s, 20 % aux deux.",
+    "L'endroit de l'interaction lointaine ne refroidit pas, ne répond pas à la Spirit Box, ne déclenche ni détecteur ni sel et n'y fait jamais d'événement : l'entité n'y est pas. Seul l'EMF 5 y apparaît.",
+    "<b>Au moment de chasser, il vérifie le crucifix à sa position actuelle, puis tire sa vitesse</b> : 1,5 m/s → la chasse part de là où il est ; 1,9 m/s → il devrait se téléporter près de sa dernière interaction lointaine. <b>Un bug actuel empêche cette téléportation</b> : il choisit bien la vitesse rapide, mais démarre quand même de sa position. Une chasse maudite part toujours de sa position, avec le même tirage 50/50.",
+    "La portée d'interaction qu'il utilise pendant une chasse est celle dont il s'était servi juste avant de la déclencher.",
+    "Piège : un Moroï entre 20 et 25 % de santé fait 1,915 m/s, indiscernable des 1,9 m/s des Jumeaux ; au-dessus de 45 % il fait 1,5 m/s, indiscernable de l'autre.",
+    "La poupée vaudou ne peut pas forcer l'interaction lointaine : 30 % des épingles ne donnent donc rien du tout."
+   ],
+   "confirm": [
+    "Deux chasses de suite avec des vitesses de base différentes (1,5 puis 1,9)."
+   ],
+   "elim": [
+    "Vitesse de base exactement 1,7 m/s = pas Les Jumeaux."
+   ]
+  },
+  {
+   "id": "raiju",
+   "fr": "Raiju",
+   "en": "Raiju",
+   "ev": [
+    "emf",
+    "orb",
+    "dots"
+   ],
+   "seuil": "65 % près d'électronique active · sinon 50 %",
+   "seuilMax": 65,
+   "vit": "1,7 m/s · 2,5 m/s près de l'électronique",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "spécial",
+   "key": "Fonce à 2,5 m/s près de l'électronique allumée.",
+   "capa": [
+    "Toute électronique active proche lui permet de chasser à 65 % (depuis v0.17, pas seulement tenue).",
+    "Près d'un appareil électronique actif (6 / 8 / 10 m selon la taille de la carte) : vitesse fixe 2,5 m/s."
+   ],
+   "indices": [
+    "Perturbe l'électronique et fait entendre les battements de cœur jusqu'à 15 m (au lieu de 10 m).",
+    "Ne fait plus clignoter les lumières hors chasse (v0.17.1)."
+   ],
+   "confirm": [
+    "Chasse entre 50 et 65 % avec de l'électronique allumée.",
+    "Paliers plats à 2,5 m/s quand il passe près d'appareils."
+   ],
+   "elim": [
+    "Aucune accélération près de l'électronique = pas un Raiju."
+   ]
+  },
+  {
+   "id": "obake",
+   "fr": "Obake",
+   "en": "Obake",
+   "ev": [
+    "emf",
+    "uv",
+    "orb"
+   ],
+   "forced": "uv",
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "1,7 m/s",
+   "spd": [
+    1.7,
+    2.81
+   ],
+   "los": "oui",
+   "key": "Empreintes spéciales (6 doigts). Change de forme en chasse.",
+   "capa": [
+    "Change de modèle pendant la chasse (clignotements 12, 27, 39, 54…).",
+    "Peut laisser des empreintes uniques : main à 6 doigts (portes, fenêtres), double empreinte (interrupteurs), 5 empreintes (claviers)."
+   ],
+   "indices": [
+    "25 % de chance de ne pas laisser d'UV ; ses empreintes disparaissent plus vite.",
+    "Même 25 % de chance de ne pas laisser une empreinte de pas dans le sel — et <b>le bruit de pas manquant avec</b>. Trois pas ou plus sur un seul tas avec un silence au milieu = Obake, y compris en 0 preuve.",
+    "En multijoueur, deux joueurs qui ne comptent pas le même nombre de bruits de pas sur une séquence : c'est un Obake.",
+    "Première transformation 6 à 8 s après la fin de la grâce. Si la chasse s'arrête tôt, il ne se transforme pas du tout.",
+    "Preuve forcée : UV (en mode 1-2 preuves)."
+   ],
+   "confirm": [
+    "Main à 6 doigts ou empreinte double sur un interrupteur (définitif).",
+    "Transformation visible pendant une chasse."
+   ],
+   "elim": [
+    "Pas de test d'élimination définitif."
+   ]
+  },
+  {
+   "id": "mimic",
+   "fr": "Le Mimic",
+   "en": "The Mimic",
+   "ev": [
+    "sb",
+    "uv",
+    "frz"
+   ],
+   "fake": "orb",
+   "seuil": "Copie celui de l'entité imitée",
+   "seuilMax": 999,
+   "vit": "Copie l'entité imitée",
+   "spd": [
+    0.4,
+    3.71
+   ],
+   "los": "spécial",
+   "key": "Orbes en plus de ses 3 preuves (même en 0 preuve). Imite les autres entités.",
+   "capa": [
+    "Commence en état « neutre » (il s'imite lui-même) : il se comporte comme une entité standard, sans capacité, seuil 50 %, vitesse 1,7 m/s.",
+    "Première tentative de changement 1 min après la première ouverture d'une porte de sortie, puis toutes les 30 s à 2 min.",
+    "Ne change jamais pendant une chasse ni pendant un événement.",
+    "Copie comportements, capacités, seuil et vitesse de n'importe quelle entité — mais jamais ses preuves."
+   ],
+   "indices": [
+    "Peut retomber sur « Mimic » en tirant au sort : il reste alors neutre, parfois bien plus d'une minute.",
+    "Ne peut pas imiter la Banshee ni la Dayan s'il a un modèle / nom masculin.",
+    "Montre toujours des Orbes (fausse preuve) : 4 preuves visibles en mode 3, 3 en Cauchemar, 2 en Démence, et des Orbes seules en mode 0 preuve — à chaque fois une de plus que ce que le mode autorise.",
+    "Ne montre que ses propres preuves (UV, Spirit Box, Glaciales + faux Orbes).",
+    "Presque n'importe quel test de confirmation peut aussi correspondre au Mimic."
+   ],
+   "confirm": [
+    "4 preuves trouvées dont Orbes = Mimic.",
+    "Comportements contradictoires (ex. vitesses incohérentes entre chasses).",
+    "Première minute (après ouverture de la porte) : comportement et vitesse strictement standards, même si la suite ne l'est pas."
+   ],
+   "elim": [
+    "Pas d'Orbes malgré une surveillance longue de la pièce = probablement pas un Mimic."
+   ]
+  },
+  {
+   "id": "moroi",
+   "fr": "Moroï",
+   "en": "Moroi",
+   "ev": [
+    "sb",
+    "wr",
+    "frz"
+   ],
+   "forced": "sb",
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "1,5 m/s (> 45 %) → 2,25 m/s (< 5 %) · jusqu'à 3,71 m/s en LdV",
+   "spd": [
+    1.5,
+    3.71
+   ],
+   "los": "oui",
+   "key": "Plus la santé baisse, plus il est rapide. Maudit via Spirit Box.",
+   "capa": [
+    "Malédiction : une réponse Spirit Box, ou n'importe lequel de ses sons paranormaux entendu au micro parabolique ou enregistré à l'enregistreur de son, double la perte de santé passive du joueur ; une pilule la lève."
+   ],
+   "indices": [
+    "La vitesse de base monte d'environ <b>0,083 m/s par tranche de 5 %</b> de santé moyenne sous les 50 %, et change en pleine chasse si la santé bouge. Entité la plus rapide du jeu en ligne de vue (3,71 m/s).",
+    "Piège : 1,5 m/s au-dessus de 45 % de santé, et 1,915 m/s entre 20 et 25 % — soit exactement les deux vitesses des Jumeaux.",
+    "Aveuglé 7 s par l'encens (5 s pour les autres).",
+    "Preuve forcée : Spirit Box (en mode 1-2 preuves)."
+   ],
+   "confirm": [
+    "Vitesse de base qui augmente d'une chasse à l'autre à mesure que la santé baisse.",
+    "Aveuglement d'encens nettement plus long."
+   ],
+   "elim": [
+    "Vitesse de base 1,7 m/s avec une santé moyenne > 45 % = pas un Moroï."
+   ]
+  },
+  {
+   "id": "deogen",
+   "fr": "Deogen",
+   "en": "Deogen",
+   "ev": [
+    "sb",
+    "wr",
+    "dots"
+   ],
+   "forced": "sb",
+   "seuil": "40 %",
+   "seuilMax": 40,
+   "vit": "3,0 m/s de loin → 0,4 m/s près de vous",
+   "spd": [
+    0.4,
+    3
+   ],
+   "los": "non",
+   "key": "Sait toujours où vous êtes. Fonce puis ralentit presque à l'arrêt près de vous.",
+   "capa": [
+    "Connaît toujours la position des joueurs : se cacher ne sert à rien. <b>Pendant une chasse il a en permanence une ligne de vue sur tout le monde</b> et n'erre jamais : il vise le joueur le plus proche, s'y tient 10 s, puis réévalue toutes les 5 à 10 s.",
+    "3,0 m/s au-delà de 6 m ; en dessous, vitesse = distance × 0,15 (min 0,4 m/s à ≈2,5 m)."
+   ],
+   "indices": [
+    "Respiration lourde au Spirit Box quand on est à ~1 m.",
+    "Plus visible en chasse (clignotement).",
+    "Vitesse selon la distance de cheminement : 3,0 m/s au-delà de 5,32 m, 0,4 m/s en deçà de 2,42 m. <b>Sous l'effet aveuglant d'un encens, sa vitesse tombe à 0,4 m/s</b> (1,6 m/s si la difficulté règle la vitesse d'entité à 125 ou 150 %) — l'encens est de loin la meilleure parade contre lui.",
+    "Portée létale allongée : mort instantanée à 1,1 m, mais aussi après <b>2 s</b> passées à moins de 1,5 m, au lieu d'1 s pour les autres.",
+    "Faiblesse : on peut le « tourner en rond » autour d'un obstacle.",
+    "Preuve forcée : Spirit Box (en mode 1-2 preuves)."
+   ],
+   "confirm": [
+    "Respiration Deogen au Spirit Box (définitif).",
+    "Vient droit sur vous puis ralentit fortement."
+   ],
+   "elim": [
+    "Chasse au-dessus de 40 % = pas un Deogen.",
+    "Perd votre trace alors que vous êtes caché = pas un Deogen."
+   ]
+  },
+  {
+   "id": "thaye",
+   "fr": "Thayé",
+   "en": "Thaye",
+   "ev": [
+    "orb",
+    "wr",
+    "dots"
+   ],
+   "seuil": "75 % → 15 % en vieillissant",
+   "seuilMax": 75,
+   "vit": "2,75 m/s → 1,0 m/s en vieillissant",
+   "spd": [
+    1,
+    2.75
+   ],
+   "los": "non",
+   "key": "Rapide et agressif au début, vieillit et ralentit si vous restez près de lui.",
+   "capa": [
+    "Vieillit : à chaque année, <b>−6 points de seuil, −0,175 m/s et −15 % d'activité</b>. Au-delà de 9 ans, il ne fait plus aucun événement.",
+    "Première tentative 1 min après l'ouverture de la porte. Elle réussit si un joueur est dans sa pièce ou à moins de 3 m : il vieillit alors d'un an et retente 1 à 2 min plus tard. <b>Sinon il retente toutes les 30 s</b> jusqu'à y arriver — rester loin ne fait que repousser, ça n'annule rien.",
+    "Un vieillissement obtenu <b>pendant</b> une chasse ne prend effet qu'à la fin de celle-ci."
+   ],
+   "indices": [
+    "Aucune accélération en LdV.",
+    "À la planche Ouija, « Quel âge avez-vous ? » donne un âge qui monte de 1 à 4 ans à chaque vieillissement.",
+    "Bug : peut vieillir à cause d'un joueur à l'étage en dessous ; seuil réel 1 % plus bas.",
+    "Repères : après <b>4 vieillissements</b> il est plus lent qu'un joueur qui sprinte, après <b>7</b> plus lent qu'un joueur qui marche — on peut alors le tourner en rond sans risque.",
+    "Il n'a pas la probabilité de chasse croissante des autres : toujours <b>1 chance sur 8</b> sous son seuil."
+   ],
+   "confirm": [
+    "Chasse très tôt et rapide (2,75 m/s) sans accélération, puis ralentissements successifs.",
+    "Âge différent à la Ouija après être resté près de lui."
+   ],
+   "elim": [
+    "Accélération en LdV observée = pas un Thayé."
+   ]
+  },
+  {
+   "id": "gallu",
+   "fr": "Gallu",
+   "en": "Gallu",
+   "ev": [
+    "emf",
+    "sb",
+    "uv"
+   ],
+   "seuil": "Normal 50 % · Enragé 60 % · Affaibli 40 %",
+   "seuilMax": 60,
+   "vit": "Normal 1,7 · Enragé 1,96 · Affaibli 1,36 m/s",
+   "spd": [
+    1.36,
+    3.23
+   ],
+   "los": "oui",
+   "key": "S'enrage avec le sel / l'encens / le crucifix, puis s'affaiblit après la chasse.",
+   "capa": [
+    "3 états : Normal → Enragé → (fin de chasse) Affaibli → Normal…",
+    "Monte d'un état : crucifix brûlé (immédiat), fin de l'aveuglement par l'encens pendant une chasse (immédiat), encens hors chasse (différé), ou marcher dans du sel — 2 s s'il est normal, 3 s s'il est affaibli.",
+    "Les changements ne se cumulent pas : un 2e tas de sel juste après le premier ne le fait pas passer d'affaibli à enragé d'un coup.",
+    "Enragé : crucifix −2 m, encens n'aveugle que 4 s, <b>ne perturbe plus du tout le sel</b>, pas ralenti par le sel III.",
+    "Affaibli : crucifix +1 m, encens aveugle 6 s, ralenti 3 s par le sel III."
+   ],
+   "indices": [
+    "Vitesse différente d'une chasse à l'autre.",
+    "Affaibli : laisse des empreintes jusqu'à 3 s (6 au lieu de 4 par tas).",
+    "<b>Marche dans UN tas de sel puis plus aucun</b> : le premier l'enrage, et enragé il ne touche plus au sel. Il faut attendre la fin d'une chasse (il devient affaibli) pour qu'il en perturbe un nouveau.",
+    "Un crucifix brûlé le fait monter d'un état : affaibli → normal lui rend le sel, mais normal → enragé le lui enlève.",
+    "Un crucifix de rang I posé au sol n'arrête jamais un Gallu enragé : sa tête est à 1,5 m et le crucifix ne porte qu'à 1 m.",
+    "Bug : parfois seul l'hôte voit le sel perturbé."
+   ],
+   "confirm": [
+    "Après encens/crucifix, chasse suivante plus rapide (1,96) puis la suivante lente (1,36)."
+   ],
+   "elim": [
+    "Vitesse identique à 1,7 m/s sur plusieurs chasses malgré sel/encens/crucifix."
+   ]
+  },
+  {
+   "id": "dayan",
+   "fr": "Dayan",
+   "en": "Dayan",
+   "ev": [
+    "emf",
+    "orb",
+    "sb"
+   ],
+   "seuil": "65 % si on bouge près d'elle · 45 % si immobile · sinon 50 %",
+   "seuilMax": 65,
+   "vit": "Personne à moins de 10 m : 1,7 m/s + LdV · un joueur bouge à moins de 10 m : 2,25 m/s · il est immobile : 1,2 m/s",
+   "spd": [
+    1.2,
+    2.81
+   ],
+   "los": "spécial",
+   "key": "Réagit au mouvement : accélère quand vous bougez, ralentit quand vous vous figez.",
+   "capa": [
+    "<b>Trois régimes, selon le joueur le plus proche</b>, qu'il soit au même étage ou non. <b>Aucun joueur à moins de 10 m</b> : seuil 50 %, vitesse normale 1,7 m/s avec accélération LdV classique. <b>Un joueur à moins de 10 m qui se déplace</b> : seuil 65 %, vitesse fixe 2,25 m/s, l'accélération LdV est outrepassée. <b>Un joueur à moins de 10 m immobile</b> : seuil 45 %, vitesse fixe 1,2 m/s — plus lente qu'une entité ordinaire, pas un retour à 1,7."
+   ],
+   "indices": [
+    "Toujours féminine (seule autre : Banshee).",
+    "Se figer ne la ramène pas à la normale : ça la fait descendre <b>sous</b> la vitesse normale, à 1,2 m/s. C'est la meilleure défense contre elle.",
+    "Dans les 10 m, l'accélération LdV s'accumule en arrière-plan et ne s'applique qu'une fois qu'elle n'a plus personne à moins de 10 m.",
+    "Conseil : considérer un seuil de 65 %, on ne peut pas éviter de marcher près d'elle toute la partie."
+   ],
+   "confirm": [
+    "En chasse à moins de 10 m : 2,25 m/s quand vous bougez, 1,2 m/s dès que vous stoppez. Le passage de l'un à l'autre, net et sans transition, ne ressemble à aucune autre entité."
+   ],
+   "elim": [
+    "Nom ou modèle masculin = pas une Dayan (définitif)."
+   ]
+  },
+  {
+   "id": "obambo",
+   "fr": "Obambo",
+   "en": "Obambo",
+   "ev": [
+    "wr",
+    "uv",
+    "dots"
+   ],
+   "seuil": "Calme 10 % · Agressif 65 %",
+   "seuilMax": 65,
+   "vit": "Calme 1,445 · Agressif 1,955 m/s",
+   "spd": [
+    1.445,
+    3.23
+   ],
+   "los": "oui",
+   "key": "Alterne calme / agressif toutes les 2 min, même en pleine chasse.",
+   "capa": [
+    "Commence calme ; bascule 1 min après la première ouverture d'une porte de sortie, puis toutes les 2 min (y compris pendant une chasse)."
+   ],
+   "indices": [
+    "Une chasse lancée en état agressif dure 20 % de moins.",
+    "Vitesse qui passe brusquement de lente à rapide en pleine chasse.",
+    "Activité par phases calmes/agitées (valeurs non vérifiées).",
+    "Peut être confondu avec Les Jumeaux."
+   ],
+   "confirm": [
+    "Chasse à haute santé (> 50 %) qui démarre vite (1,955 m/s) et dure moins longtemps.",
+    "Changement de vitesse en cours de chasse sans raison."
+   ],
+   "elim": [
+    "Vitesse stable à 1,7 m/s sur plusieurs chasses."
+   ]
+  },
+  {
+   "id": "kormos",
+   "fr": "Kormos",
+   "en": "Kormos",
+   "ev": [
+    "orb",
+    "sb",
+    "uv"
+   ],
+   "seuil": "50 % · 70 % si on sprinte dans sa pièce",
+   "seuilMax": 70,
+   "vit": "1,7 m/s · ×1,3 vers un son entendu (max ≈3,65)",
+   "spd": [
+    1.7,
+    3.65
+   ],
+   "los": "spécial",
+   "key": "Presque aveugle : chasse à l'oreille, vous entend marcher.",
+   "capa": [
+    "Ne voit un joueur qu'à moins de 5 m, sans obstacle.",
+    "Entend les pas sur le même étage : sprint 30 m, marche 15 m, accroupi 10 m (vérifie chaque seconde). Détecte aussi voix et électronique.",
+    "Vers un son entendu sans le voir : vitesse ×1,3."
+   ],
+   "indices": [
+    "Immobile et silencieux, il ne vous détecte pas (mais peut vous tuer en vous croisant).",
+    "Portée de mort réduite : 0,5 m instantané / 0,6 m après 1 s.",
+    "Ne fait jamais d'événement mist (souffle) ni de poursuite.",
+    "Mêmes preuves que le Mimic avec Orbes : si Glaciales en plus → Mimic."
+   ],
+   "confirm": [
+    "En chasse, restez immobile dans un endroit dégagé : s'il ne fonce pas sur vous alors qu'une autre entité vous verrait = Kormos."
+   ],
+   "elim": [
+    "Vous repère de loin alors que vous êtes immobile et silencieux = pas un Kormos."
+   ]
+  },
+  {
+   "id": "aswang",
+   "fr": "Aswang",
+   "en": "Aswang",
+   "ev": [
+    "frz",
+    "wr",
+    "dots"
+   ],
+   "seuil": "50 % (non vérifié)",
+   "seuilMax": 50,
+   "vit": "1,53 m/s → 2,53 m/s (LdV en 8,7 s)",
+   "spd": [
+    1.53,
+    2.53
+   ],
+   "los": "spécial",
+   "key": "Accélère très vite en LdV. Vous trouver caché termine la chasse.",
+   "capa": [
+    "Accélération LdV plus rapide : 1,65× atteint en 8,67 s au lieu de 13 s.",
+    "S'il atteint un joueur dans une cachette officielle (placard, casier), la chasse s'arrête net."
+   ],
+   "indices": [
+    "Après une chasse terminée ainsi, la suivante va droit vers ce joueur, même pendant la période de grâce.",
+    "Ne fonctionne pas si 0 cachette en difficulté personnalisée.",
+    "Il doit entrer dans la même cachette : vous voir y entrer ne suffit pas."
+   ],
+   "confirm": [
+    "La chasse s'arrête quand il ouvre votre placard/casier.",
+    "Vitesse de base un peu lente (1,53) puis accélération brutale en LdV."
+   ],
+   "elim": [
+    "Vitesse de base plus rapide que 1,7 m/s = pas un Aswang."
+   ]
+  },
+  {
+   "id": "deildegast",
+   "fr": "Deildegast",
+   "en": "Deildegast",
+   "ev": [
+    "emf",
+    "wr",
+    "dots"
+   ],
+   "seuil": "50 %",
+   "seuilMax": 50,
+   "vit": "3,0 m/s − 0,1 par objet utilisé (min 0,4)",
+   "spd": [
+    0.4,
+    3
+   ],
+   "los": "non",
+   "key": "Le plus rapide au départ. Ralentit selon le nombre d'objets que vous utilisez.",
+   "capa": [
+    "Vitesse de départ 3,0 m/s, sans accélération LdV.",
+    "Chaque objet unique (hors équipement) ramassé ou utilisé depuis la dernière chasse : −0,1 m/s (min 0,4 m/s après 26 objets). Compte aussi : interrupteurs, disjoncteur, robinets, consoles, micro-ondes…"
+   ],
+   "indices": [
+    "Un même objet ne compte qu'une fois ; n'importe où sur la carte, même dans le camion ; les joueurs morts comptent aussi.",
+    "Repères : <b>9 objets</b> → 2,1 m/s, il devient plus lent qu'un joueur qui sprinte · <b>13 objets</b> → 1,7 m/s · <b>26 objets</b> → 0,4 m/s, son minimum. Au-delà, plus aucun effet. Une quinzaine entre deux chasses suffit à le rendre inoffensif.",
+    "Interagit deux fois et demie moins que les autres avec les portes et les interrupteurs (10 % contre 25 %), et rate 15 % de ses interactions avec les objets.",
+    "La vitesse est verrouillée au début de la chasse, puis remise à 3,0 m/s.",
+    "Les objets lancés par l'entité ne comptent pas."
+   ],
+   "confirm": [
+    "Ne touchez à rien après une chasse : la suivante à 3,0 m/s fixe.",
+    "Manipulez 10+ objets : la chasse suivante est nettement plus lente."
+   ],
+   "elim": [
+    "Accélération en LdV observée = pas un Deildegast."
+   ]
+  }
+ ],
+ "EQUIP": [
+  {
+   "n": "Crucifix",
+   "d": "Consommable. Bloque une chasse si l'entité (pieds + tête) est dans le rayon ; elle est renvoyée dans sa pièce et attend 25 s (20 s Démon).",
+   "t": [
+    "Rayon 3 m · 1 charge",
+    "Rayon 4 m · 2 charges",
+    "Rayon 5 m · 2 charges ; chargé à fond, peut stopper une chasse maudite (consomme les 2 charges)"
+   ],
+   "note": "Démon : rayon +50 % (4,5 / 6 / 7,5 m). Gallu : −2 m enragé, +1 m affaibli. Traverse les murs. Produit un EMF 2 (33 % → 5)."
+  },
+  {
+   "n": "Encens",
+   "d": "Empêche une nouvelle chasse 90 s (60 s Démon, 180 s Esprit) — identique à tous les rangs. Rangs I et II consommables, rang III non.",
+   "t": [
+    "Fumée 5 s · rayon 3 m",
+    "Fumée 6 s · rayon 4 m · ralentit l'entité à 50 % pendant l'aveuglement",
+    "Fumée 7 s · rayon 5 m · fige complètement l'entité"
+   ],
+   "note": "Aveuglement en chasse : 5 s (7 s Moroï, 4 s Gallu enragé, 6 s Gallu affaibli), cumulable jusqu'à 20 s. Ne stoppe pas une chasse en cours ni une chasse maudite ; échoue si l'entité est dans un escalier."
+  },
+  {
+   "n": "Sel",
+   "d": "Consommable. Révèle le passage de l'entité (empreintes UV si elle a la preuve).",
+   "t": [
+    "Salière · 2 tas · petit tas rond blanc",
+    "Pot · 3 tas · longue ligne rose",
+    "Pot · 3 tas · ligne noire ; barrière hors chasse (l'entité fait demi-tour) et ralentissement de 50 % pendant 2 s en chasse"
+   ],
+   "note": "3 contenants max = 6 à 9 tas. Le Spectre l'ignore totalement ; le Gallu change d'état en marchant dedans."
+  },
+  {
+   "n": "Médicaments (santé mentale)",
+   "d": "Consommable, 1 usage, 4 max. Inutilisable au-dessus de 95 %.",
+   "t": [
+    "Récupération en 20 s",
+    "Récupération en 10 s",
+    "Récupération en 10 s + 10 s de sprint sans endurance"
+   ],
+   "note": "La quantité rendue dépend de la difficulté, pas du rang : 40 % Amateur, 35 % Intermédiaire, 30 % Professionnel, 25 % Cauchemar, 20 % Démence."
+  },
+  {
+   "n": "Lumière à feu (bougie)",
+   "d": "Réduit la perte de santé mentale à moins de 2 m. Bloque les chasses de l'Onryo. Rangs I et II consommables.",
+   "t": [
+    "Bougie · 5 min · −33 % de perte",
+    "Candélabre 3 bougies · 10 min · −50 % (soufflé plus souvent : ~96 %)",
+    "Lanterne · durée infinie · −66 % · résiste à la pluie et à la neige"
+   ],
+   "note": "L'entité souffle une flamme à moins de 5 m avec 66,67 % de chance, après 30 s puis 20–80 s de recharge. Chaque extinction compte pour l'Onryo."
+  },
+  {
+   "n": "Briquet / allumettes",
+   "d": "Emplacement d'inventaire dédié. Rangs I et II consommables.",
+   "t": [
+    "Boîte d'allumettes · 10 allumettes × 10 s",
+    "Briquet · 5 min de gaz",
+    "Zippo · 10 min · fonctionne sous la pluie forte"
+   ],
+   "note": "Allumer un encens ou une bougie depuis l'inventaire coûte 1 allumette, ou 15 s de gaz. Depuis la v0.19, les rangs I et II ne s'allument plus du tout sous la pluie forte."
+  },
+  {
+   "n": "Lecteur EMF",
+   "d": "Électronique : attire l'entité à 7,5 m en chasse (2,5 m Yokai). Portée de détection : 1,7 m au rang I, 2 m au rang II, 3,5 m au rang III.",
+   "t": [
+    "Aiguille analogique · portée 1,7 m",
+    "K2, 5 LED + son · portée 2 m",
+    "ParaMeter numérique · portée 3,5 m · suit 3 interactions, affiche distance et direction"
+   ],
+   "note": "EMF 5 = 33 % des émissions de niveau 2 ou 3 si l'entité a la preuve et qu'elle n'est pas cachée — <b>jamais à partir d'un niveau 4</b>. La lecture reste affichée 20 s. Niveaux : <b>2</b> interaction ou capacité (Spectre aux pieds, Fantôme et Poltergeist à hauteur de tête, Djinn au disjoncteur, écriture dans le livre, eau sale à l'évier) · <b>3</b> objet jeté, mesurée à l'endroit où l'objet a atterri · <b>4</b> événement paranormal, et aussi au point de départ d'une chasse. <b>Pendant une chasse, l'appareil se dérègle et ne peut plus afficher le 5</b> : on ne le voit que si l'entité interagit puis s'éloigne assez pour que le brouillage cesse."
+  },
+  {
+   "n": "Spirit Box",
+   "d": "Pose des questions à voix haute ; relance automatique toutes les 10 s. Taux de réponse <b>selon le rang</b>, et seulement dans le noir.",
+   "t": [
+    "Portée 3 m · 50 % de réponse par question",
+    "Portée 4 m · 60 % · écran (X = entendu, icône = réponse)",
+    "Portée 5 m · 70 %"
+   ],
+   "note": "Portée : <b>la même pièce</b>, ou la portée du rang si vous êtes ailleurs — <b>3 m au rang I, 4 m au rang II, 5 m au rang III</b>. La lumière principale doit être éteinte — torche, UV, bâton lumineux, bougie, D.O.T.S. et détecteur de mouvement ne comptent pas comme lumière. Selon le contrat, elle répond à tout le monde ou seulement à un joueur seul dans la pièce — tiré au sort, jamais lié au type d'entité. Deogen : respiration lourde à 1 m, 33 % par question."
+  },
+  {
+   "n": "Thermomètre",
+   "d": "<b>Sans la preuve, la pièce ne descend jamais sous 1 °C ; avec, elle va jusqu'à −10 °C.</b> La preuve est donc acquise dès qu'on lit <b>strictement moins de 1 °C</b>.",
+   "t": [
+    "Analogique, lecture continue 0,33 °C/s · erreur +3 °C · non électronique",
+    "Infrarouge, 2,5 s par mesure · erreur +3 °C",
+    "Therma-hygromètre, 1,5 s · erreur +2 °C"
+   ],
+   "note": "L'affichage ne se trompe que <b>vers le haut</b> : jusqu'à +3 °C aux rangs I et II, +2 °C au rang III. Une valeur basse est donc toujours fiable. <b>Au rang I, attendez moins de 0 °C</b> plutôt que moins de 1 : il n'a que 8 graduations entre 5 et 0 °C au lieu de 9, il est imprécis justement dans cette plage. Les pièces partent à la température de la météo (20 °C à l'intérieur si le disjoncteur démarre allumé), montent de 0,025 °C/s et descendent de 0,1 °C/s — trois fois plus lentement une fois sous la température extérieure."
+  },
+  {
+   "n": "Livre d'écriture",
+   "d": "Tentative d'écriture toutes les 45 à 90 s.",
+   "t": [
+    "51 % de réussite · portée 3 m",
+    "67 % · portée 4 m",
+    "76 % · portée 5 m"
+   ],
+   "note": "Chance de réussite par tentative : <b>51 % au rang I, 67 % au rang II, 76 % au rang III</b> — un livre de rang I peut rester vierge longtemps sans rien prouver. Non électronique. L'écriture produit un EMF 2 (33 % → 5). Livre fermé ou hors de portée : aucune tentative."
+  },
+  {
+   "n": "Lampe UV",
+   "d": "Révèle empreintes et traces. <b>Une empreinte s'efface en 120 s</b> (60 s en Démence). Temps d'apparition sous la lampe : 5 s au rang I, 10 s au bâton lumineux, 1,5 s au rang III.",
+   "t": [
+    "Lampe torche UV, faisceau étroit · 5 s pour révéler",
+    "Bâton lumineux : 60 s de pleine puissance, à resecouer · 10 s pour révéler · NON électronique",
+    "Lampe UV Pro, faisceau large · 1,5 s pour révéler"
+   ],
+   "note": "Les rangs I et III ne fonctionnent pas si les lampes sont désactivées en difficulté personnalisée."
+  },
+  {
+   "n": "Caméra vidéo",
+   "d": "Nécessaire pour les orbes et le D.O.T.S. du Goryo. Les orbes n'existent que <b>dans la pièce favorite</b> et seulement en vision nocturne — les lunettes du rang III d'équipement de tête ne les montrent pas. Le Goryo : deux fois sur trois en errance, et jamais si un joueur est dans sa pièce.",
+   "t": [
+    "Petit écran · vision nocturne verte · grosses interférences",
+    "Écran détaillé · vision nocturne noir et blanc · interférences moyennes",
+    "Grand écran · noir et blanc · interférences minimales"
+   ]
+  },
+  {
+   "n": "Appareil photo",
+   "d": "Photos illimitées, mais seules les 5 premières entrées du journal rapportent (doublons : 20 %).",
+   "t": [
+    "Pas d'écran · 3 s entre deux photos · n'attire l'entité qu'au déclenchement",
+    "Écran · 2 s",
+    "Écran · 1 s"
+   ],
+   "note": "Les rangs II et III attirent l'entité à 7,5 m en chasse."
+  },
+  {
+   "n": "Projecteur D.O.T.S.",
+   "d": "Preuve D.O.T.S. La silhouette n'apparaît que quand l'entité entre en errance : <b>une fois sur trois</b> elle choisit la silhouette (deux fois sur trois pour le Goryo), et se dirige vers un point à moins de 2 m du joueur le plus proche. <b>L'état dure 6 s au maximum</b> ; il échoue si le point visé est à un autre étage ou si le chemin fait plus de 150 % de la distance directe. Soyez patient et restez dans la pièce.",
+   "t": [
+    "Stylo laser tenu en main ou posé · cône étroit · compte comme une lampe · attire l'entité quand il est tenu",
+    "Posé uniquement (sol, mur, plafond) · dôme moyen",
+    "Posé · cône motorisé balayant · plus grande couverture · bruyant, peut être mis en pause pour une zone réduite et silencieuse"
+   ]
+  },
+  {
+   "n": "Micro parabolique",
+   "d": "Cône de 110°. Capte les sons émis jusqu'à 3 s avant. Traverse les murs, mais doit être à l'intérieur du bâtiment.",
+   "t": [
+    "Portée 20 m · témoin lumineux · même étage",
+    "Portée 30 m · écran dB avec min/pic",
+    "Portée 30 m · écran sonar (position + volume) · détecte un étage au-dessus et en dessous"
+   ],
+   "note": "<b>Un son paranormal toutes les 80 à 127 s</b> — gémissement, rire, discussion ou chuchotement, tiré au sort dans la liste masculine ou féminine selon le sexe de l'entité. Le minuteur démarre <b>dès le chargement dans le camion</b> et repart à chaque son : le premier peut tomber avant même que vous entriez. Le Myling descend à 64–127 s : <b>deux sons en moins de 80 s, c'est lui</b>, aucune autre entité ne peut aller si vite. La Banshee remplace le son par un de ses 20 cris uniques dans 33 % des cas (en moyenne un cri toutes les 4 à 6 min) ; ce cri ne porte pas plus loin qu'un son normal. Entendre <b>ou enregistrer</b> un son du Moroï vous maudit : perte de santé doublée jusqu'à la prise d'une pilule. <b>Le micro ne capte le son que 15 s après sa création</b>, ou tout de suite si vous l'entendez à l'enregistreur — mais un son <b>enregistré</b> à l'enregistreur ne peut plus être entendu au micro : choisissez entre la prime et le test. Ces sons ne sont ni les vocalises d'événement ni celles de chasse, audibles à l'oreille nue à 20 m. L'écran affiche des valeurs aléatoires pendant les chasses."
+  },
+  {
+   "n": "Lampe torche",
+   "d": "Électronique : clignote à 10 m d'une entité en chasse (15 m Raiju), l'attire à 7,5 m.",
+   "t": [
+    "Faisceau étroit et faible",
+    "Tactique, même cône mais beaucoup plus lumineuse",
+    "Projecteur mobile, faisceau large et le plus lumineux"
+   ]
+  },
+  {
+   "n": "Équipement de tête",
+   "d": "N'occupe pas d'emplacement d'inventaire.",
+   "t": [
+    "Caméra frontale (flux vers le camion, vision nocturne) · voit les orbes",
+    "Lampe frontale ≈ torche rang I",
+    "Vision nocturne verte · NE voit PAS les orbes · filtre le rouge (un EMF 5 ressemble à un EMF 4 sur le K2)"
+   ]
+  },
+  {
+   "n": "Trépied",
+   "d": "Occupe la main, ne rentre pas dans l'inventaire.",
+   "t": [
+    "30 % de chance que la caméra soit renversée",
+    "20 % · rotation motorisée depuis le camion",
+    "Le plus stable · rotation motorisée"
+   ]
+  },
+  {
+   "n": "Détecteur de mouvement",
+   "d": "Signale un passage sur la carte du camion.",
+   "t": [
+    "Un laser (mur ou sol) · clignote 2 s · déclenché aussi par les joueurs et les objets",
+    "Mode conique à deux lasers (donne le sens de passage) · bip sur l'appareil",
+    "Au sol, détection sphérique, pivote vers l'entité · seule l'entité le déclenche"
+   ],
+   "note": "Portée du rang III incertaine : 1,5 m selon le wiki, réglable 5/10/15 m selon un guide."
+  },
+  {
+   "n": "Capteur sonore",
+   "d": "Rayon réglable depuis le camion ; ignore les murs, même étage, mise à jour chaque seconde.",
+   "t": [
+    "5 ou 10 m",
+    "5 / 10 / 15 m, micros plus sensibles",
+    "5 / 10 / 15 m + 3 formes (cercle, cône, sablier) réglées sur l'appareil"
+   ],
+   "note": "Ne capte ni le détecteur EMF, ni la Spirit Box, ni le chat vocal."
+  },
+  {
+   "n": "Enregistreur de son",
+   "d": "Détecte les sons de l'entité et en enregistre jusqu'à 3 par contrat. 2 appareils maximum, 30 $. Niveaux 4, 39 et 60.",
+   "t": [
+    "Détection 5 m · enregistrement 1 m · voyants verts",
+    "Détection 6,5 m · enregistrement 1,5 m · spectre de puissance",
+    "Détection 7,5 m · enregistrement 2 m · boussole (distance + direction)"
+   ],
+   "note": "Capte les sons paranormaux, les événements, et les sons liés aux preuves : réponses de la Spirit Box, écriture fantomatique, alarme d'un EMF 5. <b>Sur un son paranormal, le bruit statique démarre 1 m en deçà de la portée de détection</b> — 4 m au rang I, 5,5 m au rang II, 6,5 m au rang III — <b>sauf pour un Myling, où il démarre à la portée pleine</b> (5 / 6,5 / 7,5 m). C'est le test le plus sûr pour lui. Les sons « entité en chasse », « événement » et « boîte à musique » s'enregistrent de plus loin. <b>Vous avez 15 s à partir de la création du son, plus sa durée, pour le capturer</b> — au-delà il est perdu, et un son enregistré ne s'entend plus au micro parabolique. Pour enregistrer, maintenez Utiliser assez près : voyants verts au rang I, barre haute au rang II, cercle plein au rang III. Un son en double atténue les voyants et les spectres."
+  }
+ ],
+ "DIFFS": [
+  {
+   "id": "amateur",
+   "n": "Amateur",
+   "lvl": 0,
+   "mult": "×1",
+   "ev": 3,
+   "hid": 0,
+   "setup": 300,
+   "san0": 100,
+   "drain": 100,
+   "pill": 40,
+   "grace": 5,
+   "hunt": [
+    15,
+    30,
+    40
+   ],
+   "gs": 1,
+   "ps": 1,
+   "cursed": 1,
+   "fing": 120,
+   "ins": "50 %",
+   "sure": true,
+   "note": "Boîte à fusibles déjà allumée, cachettes partout, aucune preuve cachée."
+  },
+  {
+   "id": "inter",
+   "n": "Intermédiaire",
+   "lvl": 10,
+   "mult": "×2",
+   "ev": 3,
+   "hid": 0,
+   "setup": 120,
+   "san0": 100,
+   "drain": 150,
+   "pill": 35,
+   "grace": 4,
+   "hunt": [
+    20,
+    40,
+    50
+   ],
+   "gs": 1,
+   "ps": 1,
+   "cursed": 1,
+   "fing": 120,
+   "ins": "25 %",
+   "sure": true,
+   "note": "Fusibles coupés au départ, quelques portes déjà ouvertes."
+  },
+  {
+   "id": "pro",
+   "n": "Professionnel",
+   "lvl": 20,
+   "mult": "×3",
+   "ev": 3,
+   "hid": 0,
+   "setup": 0,
+   "san0": 100,
+   "drain": 200,
+   "pill": 30,
+   "grace": 3,
+   "hunt": [
+    30,
+    50,
+    60
+   ],
+   "gs": 1,
+   "ps": 1,
+   "cursed": 1,
+   "fing": 120,
+   "ins": "0 %",
+   "sure": true,
+   "note": "Aucune préparation : l'entité peut chasser dès l'entrée."
+  },
+  {
+   "id": "night",
+   "n": "Cauchemar",
+   "lvl": 30,
+   "mult": "×4",
+   "ev": 2,
+   "hid": 1,
+   "setup": 0,
+   "san0": 100,
+   "drain": 200,
+   "pill": 25,
+   "grace": 2,
+   "hunt": [
+    30,
+    50,
+    60
+   ],
+   "gs": 1,
+   "ps": 1,
+   "cursed": 1,
+   "fing": 120,
+   "ins": "0 %",
+   "sure": true,
+   "note": "1 preuve cachée · les morts rallongent la chasse (+15 / 20 / 25 s) · peu de cachettes · moniteurs de la camionnette coupés."
+  },
+  {
+   "id": "insane",
+   "n": "Démence",
+   "lvl": 40,
+   "mult": "×6",
+   "ev": 1,
+   "hid": 2,
+   "setup": 0,
+   "san0": 75,
+   "drain": 200,
+   "pill": 20,
+   "grace": 2,
+   "hunt": [
+    30,
+    50,
+    60
+   ],
+   "gs": 1,
+   "ps": 1,
+   "cursed": 0,
+   "fing": 60,
+   "ins": "0 %",
+   "sure": true,
+   "note": "2 preuves cachées · aucun objet maudit sur la carte · empreintes effacées en 60 s."
+  },
+  {
+   "id": "apo1",
+   "n": "Apocalypse I",
+   "pre": true,
+   "mult": "≥ ×6 · bronze",
+   "ev": 2,
+   "hid": 1,
+   "setup": 0,
+   "san0": 75,
+   "drain": 200,
+   "pill": 20,
+   "grace": 2,
+   "hunt": [
+    30,
+    50,
+    60
+   ],
+   "gs": 1.5,
+   "ps": 1,
+   "cursed": 1,
+   "fing": 60,
+   "ins": "—",
+   "note": "Préréglage perso visant le trophée bronze. Fantôme à 150 %."
+  },
+  {
+   "id": "apo2",
+   "n": "Apocalypse II",
+   "pre": true,
+   "mult": "≥ ×10 · argent",
+   "ev": 1,
+   "hid": 2,
+   "setup": 0,
+   "san0": 50,
+   "drain": 200,
+   "pill": 5,
+   "grace": 2,
+   "hunt": [
+    30,
+    50,
+    60
+   ],
+   "gs": 1.5,
+   "ps": 0.75,
+   "cursed": 0,
+   "fing": 60,
+   "ins": "—",
+   "note": "Vous courez à 75 %, l'entité à 150 % : vous ne la semez plus."
+  },
+  {
+   "id": "apo3",
+   "n": "Apocalypse III",
+   "pre": true,
+   "mult": "≥ ×15 · or",
+   "ev": 0,
+   "hid": 3,
+   "setup": 0,
+   "san0": 0,
+   "drain": 200,
+   "pill": 0,
+   "grace": 0,
+   "hunt": [
+    30,
+    50,
+    60
+   ],
+   "gs": 1.5,
+   "ps": 0.5,
+   "cursed": 0,
+   "fing": 0,
+   "ins": "—",
+   "note": "Aucune preuve, aucune lampe, aucune période de grâce, santé mentale à 0 % dès l'entrée : tout passe par le comportement et la vitesse."
+  },
+  {
+   "id": "defi",
+   "n": "Défi hebdomadaire",
+   "mult": "×1",
+   "ev": 3,
+   "hid": 0,
+   "setup": 0,
+   "san0": 100,
+   "drain": 200,
+   "pill": 30,
+   "grace": 3,
+   "hunt": [
+    30,
+    50,
+    60
+   ],
+   "gs": 1,
+   "ps": 1,
+   "cursed": 1,
+   "fing": 120,
+   "ins": "—",
+   "note": "Réglages imposés, différents chaque semaine (26 défis, rotation le lundi 0 h UTC) et matériel fourni. Ajustez à la main ce que le défi annonce."
+  },
+  {
+   "id": "perso",
+   "n": "Perso / libre",
+   "free": true,
+   "mult": "×0 à ×15",
+   "ev": 3,
+   "hid": 0,
+   "setup": 0,
+   "san0": 100,
+   "drain": 200,
+   "pill": 30,
+   "grace": 3,
+   "hunt": [
+    30,
+    50,
+    60
+   ],
+   "gs": 1,
+   "ps": 1,
+   "cursed": 1,
+   "fing": 120,
+   "ins": "—",
+   "note": "Difficulté personnalisée (niveau 50, 3 emplacements) : réglez le nombre de preuves, la vitesse de l&rsquo;entité, la grâce et la durée de chasse comme votre contrat."
+  }
+ ],
+ "SIZES": [
+  {
+   "n": "Petite",
+   "drain": [
+    0.09,
+    0.12
+   ],
+   "light": 9,
+   "gain": [
+    100,
+    25
+   ],
+   "kills": [
+    15,
+    25,
+    35
+   ]
+  },
+  {
+   "n": "Moyenne",
+   "drain": [
+    0.05,
+    0.08
+   ],
+   "light": 8,
+   "gain": [
+    150,
+    35
+   ],
+   "kills": [
+    20,
+    30,
+    40
+   ]
+  },
+  {
+   "n": "Grande",
+   "drain": [
+    0.03,
+    0.05
+   ],
+   "light": 7,
+   "gain": [
+    200,
+    50
+   ],
+   "kills": [
+    25,
+    35,
+    45
+   ]
+  }
+ ],
+ "MAPS": [
+  {
+   "n": "Entraînement (entrepôt)",
+   "s": 0,
+   "lvl": 1
+  },
+  {
+   "n": "6 Tanglewood Drive",
+   "s": 0,
+   "lvl": 1
+  },
+  {
+   "n": "42 Edgefield Road",
+   "s": 0,
+   "lvl": 2
+  },
+  {
+   "n": "10 Ridgeview Court",
+   "s": 0,
+   "lvl": 2
+  },
+  {
+   "n": "Grafton Farmhouse",
+   "s": 0,
+   "lvl": 4
+  },
+  {
+   "n": "Nell's Diner",
+   "s": 0,
+   "lvl": 5
+  },
+  {
+   "n": "13 Willow Street",
+   "s": 0,
+   "lvl": 6
+  },
+  {
+   "n": "Prison (Restricted)",
+   "s": 0,
+   "lvl": 11
+  },
+  {
+   "n": "Camp Woodwind",
+   "s": 0,
+   "lvl": 13
+  },
+  {
+   "n": "Point Hope (Restricted)",
+   "s": 0,
+   "lvl": 15
+  },
+  {
+   "n": "Bleasdale Farmhouse",
+   "s": 1,
+   "lvl": 4
+  },
+  {
+   "n": "Brownstone High School (Restricted)",
+   "s": 1,
+   "lvl": 8
+  },
+  {
+   "n": "Prison",
+   "s": 1,
+   "lvl": 11
+  },
+  {
+   "n": "Maple Lodge Campsite",
+   "s": 1,
+   "lvl": 13
+  },
+  {
+   "n": "Point Hope",
+   "s": 1,
+   "lvl": 15
+  },
+  {
+   "n": "Sunny Meadows (Restricted)",
+   "s": 1,
+   "lvl": 17
+  },
+  {
+   "n": "Brownstone High School",
+   "s": 2,
+   "lvl": 8
+  },
+  {
+   "n": "Sunny Meadows Mental Institution",
+   "s": 2,
+   "lvl": 17
+  }
+ ],
+ "CURSED": [
+  {
+   "n": "Planche Ouija",
+   "how": "Posez des questions à voix haute, puis dites « au revoir » pour finir.",
+   "list": [
+    "« Où êtes-vous ? » → pièce actuelle de l'entité (−50 %)",
+    "« Êtes-vous ici / proche ? » → même pièce ou non (−20 %)",
+    "« Où est l'os ? » → pièce de l'os (−20 %)",
+    "« Répondez-vous à tout le monde ? » → veut-elle qu'on soit seul au Spirit Box (−20 %)",
+    "« Quel âge avez-vous ? » → âge ; s'il change : Thayé (−5 %)",
+    "« Quelle est / À quel point… ma santé » → estimation de santé (−5 %)",
+    "« Cache-cache ? » → compte à rebours puis chasse maudite (brise la planche)"
+   ],
+   "risk": "S'éloigner pendant la session ou poser une question à 0 % → la planche brûle et lance une chasse maudite. Elle donne la pièce actuelle, pas la favorite."
+  },
+  {
+   "n": "Miroir hanté",
+   "how": "Tenez-le et activez-le : il montre la pièce favorite de l'entité (une lumière y apparaît, visible par les autres).",
+   "list": [
+    "Coût : 20 % ou 7,5 %/s, le plus élevé des deux"
+   ],
+   "risk": "Utilisé sans santé (ou sous 20 %) → il se brise et lance une chasse maudite."
+  },
+  {
+   "n": "Patte de singe",
+   "how": "Faites un vœu à voix haute ; un doigt se plie. Chaque vœu une seule fois par contrat.",
+   "list": [
+    "« Voir le fantôme » → apparition, puis chasse avec vision obscurcie",
+    "« Activité » → activité ×2 pendant 2 min ; disjoncteur cassé et porte d'entrée verrouillée 2 min",
+    "« Être sain d'esprit » → tout le monde à 50 % ; pièce favorite changée, perte de santé +50 %",
+    "« Fantôme emprisonné » → bloqué 1 min ; portes verrouillées puis chasse",
+    "« Être en vie » → ressuscite un joueur ; 50 % de chance que le souhaiteur meure",
+    "« Être en sécurité » → débloque la cachette la plus proche ; lumières cassées, l'entité vous entend de partout",
+    "« Partir » → déverrouille les sorties (même en chasse) ; lent et aveuglé 5 s",
+    "« Information » → retire 1 fausse preuve du journal ; chasse près de vous, vue et ouïe réduites",
+    "« Météo » → change la météo ; −25 %"
+   ],
+   "risk": "Les doigts restants indiquent les vœux possibles. « N'importe quoi » tire un vœu au hasard."
+  },
+  {
+   "n": "Boîte à musique",
+   "how": "Ouvrez-la : à moins de 20 m, l'entité chante (invisible) ; à moins de 5 m, elle apparaît et marche vers la boîte.",
+   "list": [
+    "Coût : 2,6 %/s à moins de 3 m (77 % si elle joue entièrement)",
+    "Yokai : réagit à 0,5 m seulement"
+   ],
+   "risk": "Chasse maudite si : la boîte est lancée, un joueur atteint 0 %, l'événement dure plus de 5 s, ou l'entité touche le joueur / la boîte."
+  },
+  {
+   "n": "Cercle d'invocation",
+   "how": "Allumez les 5 bougies rouges au briquet : l'entité est téléportée au centre, attend 5 s, puis chasse (maudite).",
+   "list": [
+    "Coût : 16 % par bougie (80 % au total)"
+   ],
+   "risk": "Dernière bougie allumée sous 16 % → chasse immédiate, arrêtable seulement par un crucifix rang III. Si elle chasse déjà, elle est téléportée au cercle et continue."
+  },
+  {
+   "n": "Cartes de tarot",
+   "how": "Tirez une carte à la fois (10 par paquet).",
+   "list": [
+    "The Tower (20 %) : activité ×2 pendant 20 s",
+    "Wheel of Fortune (20 %) : +25 % (vert) ou −25 % (rouge)",
+    "The Fool (17 %, 100 % en chasse) : aucun effet",
+    "The Devil (10 %) : événement vers le joueur le plus proche",
+    "Death (10 %) : chasse maudite",
+    "The Hermit (10 %) : entité enfermée 90 s dans sa pièce",
+    "The Sun (5 %) : santé à 100 %",
+    "The Moon (5 %) : santé à 0 %",
+    "High Priestess (2 %) : ressuscite un joueur",
+    "Hanged Man (1 %) : mort instantanée"
+   ],
+   "risk": "Pendant une chasse, toutes les cartes deviennent The Fool."
+  },
+  {
+   "n": "Poupée vaudou",
+   "how": "Chaque épingle enfoncée (au hasard) force une interaction de l'entité.",
+   "list": [
+    "Coût : 5 % par épingle, 10 % pour celle du cœur",
+    "Pas d'interaction si rien n'est à portée de l'entité"
+   ],
+   "risk": "Épingle du cœur, ou 0 % de santé (toutes les épingles partent d'un coup) → chasse maudite."
+  }
+ ],
+ "MYTHS": [
+  [
+   "« L'Onryo chasse au hasard après 3 flammes »",
+   "Il tente toujours une chasse après chaque 3e flamme soufflée."
+  ],
+  [
+   "« L'Ombre ne chasse pas si je suis dans sa pièce favorite »",
+   "Ça vaut pour sa pièce actuelle, quelle qu'elle soit."
+  ],
+  [
+   "« La Ouija donne la pièce favorite »",
+   "Elle donne la position actuelle. Seul le miroir montre la pièce favorite."
+  ],
+  [
+   "« Seul l'Esprit attend 180 s après l'encens »",
+   "Toute entité peut attendre ; l'Esprit y est obligé."
+  ],
+  [
+   "« Le Hantu refroidit plus vite les pièces »",
+   "Non : il va seulement plus vite dans le froid."
+  ],
+  [
+   "« Les orbes du Mimic le suivent »",
+   "Elles restent dans la pièce favorite, identiques aux vraies."
+  ],
+  [
+   "« Le Mimic peut montrer les preuves des autres »",
+   "Il imite les comportements, pas les preuves."
+  ],
+  [
+   "« Les Jumeaux sont deux entités »",
+   "Une seule entité avec deux portées d'interaction."
+  ],
+  [
+   "« Le Spectre traverse les murs »",
+   "Il chasse et se déplace comme les autres."
+  ],
+  [
+   "« Voir sa respiration = Températures glaciales »",
+   "Depuis la v0.9, le souffle visible n'indique plus la preuve : il apparaît dès 5 °C, et une pièce peut descendre à 1 °C sans que l'entité ait les Glaciales. Seul le thermomètre tranche, sous 1 °C."
+  ],
+  [
+   "« Seul le sel III déclenche le Gallu »",
+   "Tous les rangs de sel le déclenchent."
+  ],
+  [
+   "« Il faut jeter les objets sur le Deildegast »",
+   "N'importe quel objet non-équipement, n'importe où, même dans le camion."
+  ],
+  [
+   "« L'Aswang arrête la chasse s'il me voit me cacher »",
+   "Il doit entrer dans la même cachette que vous."
+  ],
+  [
+   "« Le Myling est muet en chasse »",
+   "Il fait des sons vocaux ; ils portent seulement à 12 m."
+  ],
+  [
+   "« Chasser depuis une autre pièce = elle a changé de pièce »",
+   "Faux : elle chasse depuis là où elle se promène. Seuls les orbes ou le miroir le confirment."
+  ],
+  [
+   "« L'écriture puis le livre lancé »",
+   "Depuis v0.9, une entité avec Écriture ne lance plus le livre après avoir écrit."
+  ],
+  [
+   "« Les Jumeaux alternent : lent, puis rapide, puis lent »",
+   "Le journal du jeu dit qu'ils « alternent leurs attaques », mais c'est du texte d'ambiance : chaque chasse retire 1,5 ou 1,9 m/s à 50/50, sans mémoire de la précédente. Deux chasses de suite à la même vitesse n'éliminent donc PAS Les Jumeaux, et voir lent-rapide-lent est le hasard le plus banal."
+  ],
+  [
+   "« Elle a répondu avec plusieurs personnes dans la pièce, c'est donc telle entité »",
+   "La timidité au Spirit Box est tirée au sort par contrat, pas par type d'entité : n'importe laquelle peut répondre devant tout le monde. Ça n'élimine personne."
+  ]
+ ],
+ "OBS": [
+  {
+   "grp": "Ce qu'il a fait — élimine"
+  },
+  {
+   "id": "x_breaker_off",
+   "t": "A coupé le disjoncteur lui-même",
+   "x": [
+    "jinn"
+   ]
+  },
+  {
+   "id": "x_breaker_on",
+   "t": "A rallumé le disjoncteur",
+   "x": [
+    "hantu"
+   ]
+  },
+  {
+   "id": "x_light_on",
+   "t": "A allumé une lumière",
+   "x": [
+    "mare"
+   ]
+  },
+  {
+   "id": "x_notthrow",
+   "t": "A fait autre chose que lancer un objet : allumer un feu, déclencher l'alarme d'une voiture, téléporter un jouet, déplacer un mannequin",
+   "s": "Définitif : le Poltergeist n'a que 20 % de chances de lancer quand il interagit, et s'il échoue il ne fait rien d'autre — ces interactions lui sont impossibles",
+   "x": [
+    "poltergeist"
+   ]
+  },
+  {
+   "id": "x_halfdoor",
+   "t": "A laissé une porte à moitié ouverte ou à moitié fermée, hors chasse",
+   "s": "Définitif : le Yurei ouvre et ferme toujours en entier, avec une force bien supérieure. L'inverse ne prouve rien, toutes les entités savent fermer une porte en entier",
+   "x": [
+    "yurei"
+   ]
+  },
+  {
+   "id": "x_dots176",
+   "t": "Tout le monde dehors : un état D.O.T.S. qui dure plus de 1,76 s",
+   "s": "Définitif : sa cible étant hors du bâtiment, la Banshee ne se déplace qu'à moins de 2 m d'elle-même, donc son D.O.T.S. est toujours bref",
+   "x": [
+    "banshee"
+   ]
+  },
+  {
+   "id": "x_salt",
+   "t": "A marché dans le sel (empreintes / tas perturbé)",
+   "x": [
+    "wraith"
+   ]
+  },
+  {
+   "id": "x_mist",
+   "t": "Mist (souffle / brume) vu de vos yeux",
+   "x": [
+    "oni",
+    "kormos"
+   ]
+  },
+  {
+   "id": "x_chase",
+   "t": "Événement de poursuite : il marche / court vers vous",
+   "x": [
+    "kormos"
+   ]
+  },
+  {
+   "id": "x_photo",
+   "t": "Visible sur une photo étiquetée « Fantôme »",
+   "x": [
+    "phantom"
+   ]
+  },
+  {
+   "id": "x_dots",
+   "t": "D.O.T.S. vu à l'œil nu ou avec quelqu'un dans la pièce",
+   "x": [
+    "goryo"
+   ]
+  },
+  {
+   "id": "x_room",
+   "t": "A changé de pièce favorite (orbes / miroir)",
+   "x": [
+    "goryo"
+   ]
+  },
+  {
+   "id": "x_flame",
+   "trig": 1,
+   "t": "A chassé alors qu'une flamme était allumée près de lui",
+   "x": [
+    "onryo"
+   ]
+  },
+  {
+   "id": "x_smudge",
+   "trig": 1,
+   "t": "A chassé entre 90 et 180 s après l'encens",
+   "x": [
+    "spirit"
+   ]
+  },
+  {
+   "id": "x_male",
+   "t": "Nom ou modèle masculin",
+   "x": [
+    "banshee",
+    "dayan"
+   ]
+  },
+  {
+   "info": "Nom ou modèle féminin : n'élimine personne, toutes les entités peuvent être féminines. Seules la Banshee et la Dayan le sont TOUJOURS."
+  },
+  {
+   "id": "x_nobreath",
+   "t": "Pas de souffle glacé en chasse, disjoncteur coupé",
+   "x": [
+    "hantu"
+   ]
+  },
+  {
+   "id": "x_heard",
+   "t": "En chasse, vous a entendu parler ou repéré votre électronique à plus de 3 m",
+   "x": [
+    "yokai"
+   ]
+  },
+  {
+   "id": "x_stillseen",
+   "t": "Vous a repéré de loin alors que vous étiez immobile et silencieux",
+   "x": [
+    "kormos"
+   ]
+  },
+  {
+   "id": "x_hidekill",
+   "t": "A ouvert votre cachette et la chasse a continué",
+   "x": [
+    "aswang"
+   ]
+  },
+  {
+   "id": "x_notarget",
+   "trig": 1,
+   "t": "A chassé au-dessus de 40 % lumière de sa pièce allumée",
+   "x": [
+    "mare"
+   ]
+  },
+  {
+   "id": "x_tv",
+   "t": "A allumé un téléviseur / un ordinateur",
+   "x": [
+    "mare"
+   ]
+  },
+  {
+   "id": "x_shade_room",
+   "t": "A fait de l'EMF alors que j'étais dans sa pièce",
+   "x": [
+    "shade"
+   ]
+  },
+  {
+   "id": "x_shade_hunt",
+   "trig": 1,
+   "t": "A chassé alors que j'étais dans sa pièce",
+   "s": "Attention : il faut qu'elle ait été dans CETTE pièce. Une Ombre partie se promener à côté chasse très bien pendant que vous occupez sa pièce",
+   "x": [
+    "shade"
+   ]
+  },
+  {
+   "id": "shaderoom",
+   "t": "Plus aucune interaction ni événement tant qu'un joueur reste dans sa pièce",
+   "s": "Définitif : l'Ombre est la seule à se figer complètement — même le disjoncteur et la poupée vaudou ne donnent rien",
+   "g": [
+    "shade"
+   ]
+  },
+  {
+   "info": "Un souffle (brume) répété n'est pas une preuve : l'Ombre le choisit 60 % du temps, mais presque toutes les entités peuvent le faire. Seuls l'Oni et le Kormos ne le font JAMAIS."
+  },
+  {
+   "id": "x_book",
+   "t": "A lancé le livre d'écriture",
+   "s": "Valable seulement en 3 preuves : une entité qui a l'Écriture ne peut plus lancer le livre",
+   "n3": true,
+   "x": [
+    "spirit",
+    "poltergeist",
+    "mare",
+    "revenant",
+    "shade",
+    "demon",
+    "myling",
+    "moroi",
+    "deogen",
+    "thaye",
+    "obambo",
+    "aswang",
+    "deildegast"
+   ]
+  },
+  {
+   "id": "x_salt6",
+   "t": "Plus de 4 empreintes de suite dans le sel",
+   "s": "Jusqu'à 6 : Gallu affaibli",
+   "x": [
+    "wraith"
+   ]
+  },
+  {
+   "id": "x_cd25",
+   "trig": 1,
+   "t": "A rechassé moins de 25 s après la fin de la chasse précédente",
+   "x": [
+    "spirit",
+    "wraith",
+    "phantom",
+    "poltergeist",
+    "banshee",
+    "jinn",
+    "mare",
+    "revenant",
+    "shade",
+    "yurei",
+    "oni",
+    "yokai",
+    "hantu",
+    "goryo",
+    "myling",
+    "onryo",
+    "twins",
+    "raiju",
+    "obake",
+    "moroi",
+    "deogen",
+    "thaye",
+    "gallu",
+    "dayan",
+    "obambo",
+    "kormos",
+    "aswang",
+    "deildegast"
+   ]
+  },
+  {
+   "grp": "Vitesse vérifiée — élimine"
+  },
+  {
+   "id": "x_noelec",
+   "t": "N'a PAS accéléré en passant près d'une électronique allumée",
+   "s": "À vérifier une chasse entière, appareil posé au sol",
+   "x": [
+    "raiju"
+   ]
+  },
+  {
+   "id": "x_nofar",
+   "t": "N'a PAS foncé de loin alors que le disjoncteur était allumé",
+   "x": [
+    "jinn"
+   ]
+  },
+  {
+   "id": "x_noslow",
+   "t": "N'était PAS très lent tant qu'il ne m'avait pas détecté",
+   "x": [
+    "revenant"
+   ]
+  },
+  {
+   "id": "x_nosound",
+   "t": "N'est PAS venu vers le bruit de mes pas (je bougeais, lui non)",
+   "x": [
+    "kormos"
+   ]
+  },
+  {
+   "id": "x_base17",
+   "t": "Vitesse constante à 1,7 m/s tant qu'il ne me voyait pas",
+   "s": "Vitesse de base standard mesurée au Tap",
+   "x": [
+    "revenant",
+    "moroi",
+    "thaye",
+    "twins",
+    "deogen",
+    "deildegast",
+    "aswang",
+    "obambo"
+   ]
+  },
+  {
+   "id": "x_nolos",
+   "t": "N'a JAMAIS accéléré même en me voyant longtemps",
+   "x": [
+    "spirit",
+    "wraith",
+    "phantom",
+    "poltergeist",
+    "banshee",
+    "mare",
+    "shade",
+    "demon",
+    "yurei",
+    "oni",
+    "yokai",
+    "goryo",
+    "myling",
+    "onryo",
+    "raiju",
+    "obake",
+    "moroi",
+    "gallu",
+    "obambo",
+    "twins",
+    "jinn",
+    "aswang"
+   ]
+  },
+  {
+   "info": "Mimic : pendant la 1re minute après l'ouverture de la porte, il est en état neutre (entité standard, seuil 50 %, 1,7 m/s) et ne copie rien. Il change ensuite toutes les 30 s à 2 min, jamais pendant une chasse ni un événement."
+  },
+  {
+   "grp": "Apparence pendant la chasse"
+  },
+  {
+   "id": "shape",
+   "t": "Change de forme / de modèle en pleine chasse",
+   "g": [
+    "obake"
+   ]
+  },
+  {
+   "id": "visible",
+   "t": "Très visible : clignote en restant presque toujours visible",
+   "g": [
+    "oni",
+    "deogen"
+   ]
+  },
+  {
+   "id": "invis",
+   "t": "Presque invisible : longues disparitions entre les clignotements",
+   "g": [
+    "phantom"
+   ]
+  },
+  {
+   "id": "breath",
+   "t": "Souffle glacé qui sort de l'entité (disjoncteur coupé)",
+   "g": [
+    "hantu"
+   ]
+  },
+  {
+   "grp": "Vitesse"
+  },
+  {
+   "id": "slowfast",
+   "t": "A ralenti d'un coup, en 2 à 3 s, après m'avoir perdu de vue",
+   "s": "Définitif : seul le Revenant décélère franchement (−0,75 m/s² pendant ≈2,7 s) pour retomber à 1,0 m/s. Attention : il garde ses 3,0 m/s jusqu'à atteindre l'endroit où il vous a détecté pour la dernière fois — le ralentissement arrive là, pas au moment où vous cassez la ligne de vue. Toutes les autres gardent leur vitesse puis redescendent très lentement — il leur faut 65 s pour revenir à la normale depuis le maximum. À ne pas confondre avec la Dayan, qui tombe à 1,2 m/s parce que vous vous êtes figé, ni avec le Deogen, qui ralentit en s'approchant",
+   "g": [
+    "revenant"
+   ]
+  },
+  {
+   "id": "speedafter",
+   "t": "Sa vitesse a sauté d'un coup au moment où j'ai levé sa condition",
+   "s": "Couper le disjoncteur (Djinn), éteindre votre électronique (Raiju), sortir de ses 10 m (Dayan) : tant que la condition tient, elles sont verrouillées à une vitesse fixe et l'accélération en ligne de vue s'accumule en arrière-plan sans s'appliquer. Quand la condition tombe, le verrou saute et la vitesse accumulée se libère d'un coup — plus vite si elle vous voyait depuis longtemps, plus lentement sinon. C'est le saut net, sans transition, qui les trahit",
+   "g": [
+    "dayan",
+    "jinn",
+    "raiju"
+   ]
+  },
+  {
+   "id": "twospeed",
+   "t": "Vitesse de base différente d'une chasse à l'autre",
+   "s": "Toutes causes confondues — mesurez avec le Tap à chaque chasse",
+   "g": [
+    "twins",
+    "gallu",
+    "obambo",
+    "moroi",
+    "thaye",
+    "hantu",
+    "deildegast",
+    "dayan",
+    "raiju",
+    "jinn"
+   ]
+  },
+  {
+   "id": "selfspeed",
+   "t": "Vitesse différente d'une chasse à l'autre SANS raison",
+   "s": "Rien n'a changé : santé semblable, aucun objet / sel / encens utilisé, mêmes pièces, même température. Seules deux entités changent d'elles-mêmes : les Jumeaux (tirage au sort à chaque chasse) et l'Obambo (bascule toute seule toutes les 2 min)",
+   "g": [
+    "twins",
+    "obambo"
+   ]
+  },
+  {
+   "id": "x_samespeed",
+   "t": "Toujours exactement la même vitesse de base, chasse après chasse",
+   "s": "Élimine seulement celles qui changent d'elles-mêmes : Jumeaux et Obambo. Comptez au moins 3 chasses mesurées au Tap. Les autres (Hantu, Moroï, Thayé, Deildegast, Gallu) ne changent que si vous ou les conditions les y poussez : leur vitesse constante ne prouve rien",
+   "x": [
+    "twins",
+    "obambo"
+   ]
+  },
+  {
+   "id": "switch",
+   "t": "Change brusquement de vitesse sans vous avoir vu",
+   "g": [
+    "obambo",
+    "dayan",
+    "raiju",
+    "hantu",
+    "revenant",
+    "jinn",
+    "kormos",
+    "deogen"
+   ]
+  },
+  {
+   "id": "slowburst",
+   "t": "Très lent en errance, puis fonce d'un coup dès qu'il vous détecte (vue, voix ou électronique)",
+   "g": [
+    "revenant"
+   ],
+   "s": "Définitif : le Djinn accélère aussi d'un coup en vous voyant, mais son errance reste à 1,70 m/s. C'est la base très lente — 1,0 m/s — qui ne laisse que le Revenant. Le Kormos accélère au contraire quand il ne vous voit pas, et l'Aswang monte progressivement en 8,7 s"
+  },
+  {
+   "id": "blindacc",
+   "t": "A accéléré alors qu'il ne pouvait PAS me voir (mur, cachette, autre pièce)",
+   "s": "La LdV standard demande de vous voir",
+   "g": [
+    "revenant",
+    "kormos",
+    "deogen",
+    "raiju",
+    "hantu",
+    "obambo",
+    "dayan",
+    "gallu"
+   ]
+  },
+  {
+   "id": "closeslow",
+   "t": "Fonce droit sur vous puis ralentit presque à l'arrêt tout près",
+   "g": [
+    "deogen"
+   ]
+  },
+  {
+   "id": "movespd",
+   "t": "Accélère quand vous bougez, ralentit quand vous vous figez",
+   "g": [
+    "dayan"
+   ]
+  },
+  {
+   "id": "elec",
+   "t": "Fonce près des appareils électroniques allumés",
+   "g": [
+    "raiju"
+   ]
+  },
+  {
+   "id": "farfast",
+   "t": "Très rapide de loin, disjoncteur allumé, puis normal tout près",
+   "g": [
+    "jinn"
+   ]
+  },
+  {
+   "id": "oldslow",
+   "t": "Très rapide au début de partie, de plus en plus lent ensuite",
+   "g": [
+    "thaye",
+    "moroi",
+    "deildegast"
+   ]
+  },
+  {
+   "id": "objslow",
+   "t": "Ralentit à chaque objet utilisé, pas avec le temps",
+   "s": "Définitif : −0,1 m/s par objet différent manipulé, n'importe où, même dans le camion",
+   "g": [
+    "deildegast"
+   ]
+  },
+  {
+   "id": "sanfast",
+   "t": "Accélère quand votre santé baisse, ralentit après un cachet",
+   "s": "Définitif : sa vitesse suit la santé du joueur le plus proche",
+   "g": [
+    "moroi"
+   ]
+  },
+  {
+   "grp": "Sons & objets"
+  },
+  {
+   "id": "scream",
+   "t": "Cri unique au micro parabolique",
+   "g": [
+    "banshee"
+   ]
+  },
+  {
+   "id": "para80",
+   "t": "Deux sons paranormaux en moins de 80 s, au micro parabolique ou à l'enregistreur",
+   "s": "Définitif : les autres entités espacent leurs sons de 80 à 127 s, le Myling de 64 à 127 s",
+   "g": [
+    "myling"
+   ]
+  },
+  {
+   "info": "Sons paranormaux (grognement, rire, parole, chuchotement) : toutes les 80 à 127 s. Ils ne s'entendent qu'au micro parabolique ou à l'enregistreur sonore, et n'ont rien à voir avec les vocalises d'événement ou de chasse."
+  },
+  {
+   "id": "breathsb",
+   "t": "Respiration lourde dans la Spirit Box à ~1 m",
+   "g": [
+    "deogen"
+   ]
+  },
+  {
+   "id": "emffloor",
+   "t": "EMF surgi de nulle part, mesuré au niveau du SOL (lecteur rang III)",
+   "s": "Le Spectre laisse sa trace aux pieds du joueur ; le Fantôme et le Poltergeist la laissent à hauteur de tête. Un EMF 5 surgi de nulle part est forcément lui, le Fantôme n'a pas cette preuve",
+   "g": [
+    "wraith"
+   ]
+  },
+  {
+   "id": "emfbreaker",
+   "t": "EMF au disjoncteur alors que le disjoncteur n'a jamais été coupé",
+   "s": "Définitif : c'est la capacité du Djinn, qui draine 25 % de santé à un joueur proche et laisse sa mesure là",
+   "g": [
+    "jinn"
+   ]
+  },
+  {
+   "id": "sanity25",
+   "t": "Santé mentale d'un joueur qui chute de 25 % d'un coup",
+   "s": "Capacité du Djinn, sur un joueur de sa pièce ou à moins de 3 m, disjoncteur allumé",
+   "g": [
+    "jinn"
+   ]
+  },
+  {
+   "id": "flame30",
+   "t": "Flamme soufflée moins de 30 s après son premier allumage (20 s les fois suivantes)",
+   "s": "Définitif : les tentatives de chasse de l'Onryo ignorent la recharge propre de la flamme. Il est aussi le seul à pouvoir souffler l'allumette d'un allumeur rang I, qui ne dure que 10 s",
+   "g": [
+    "onryo"
+   ]
+  },
+  {
+   "id": "age",
+   "t": "Âge qui change à la planche Ouija",
+   "g": [
+    "thaye"
+   ]
+  },
+  {
+   "id": "x_agesame",
+   "t": "Même âge à la planche Ouija après plusieurs minutes passées près de lui",
+   "s": "Le Thayé vieillit dès qu'un joueur reste dans sa pièce",
+   "x": [
+    "thaye"
+   ]
+  },
+  {
+   "id": "orb4",
+   "t": "Orbes EN PLUS du maximum de preuves du mode",
+   "s": "Orbes + 3 preuves en mode 3, + 2 en Cauchemar, + 1 en Démence, ou des Orbes seules en mode 0 preuve",
+   "g": [
+    "mimic"
+   ]
+  },
+  {
+   "id": "stepgone",
+   "t": "Un bruit de pas manquant au milieu d'une séquence dans le sel",
+   "s": "Définitif, et valable même en 0 preuve : l'Obake a 25 % de chances de ne pas laisser une empreinte de pas — et le bruit disparaît avec. Visible aussi en fausse chasse et à la boîte à musique. En équipe, deux joueurs qui ne comptent pas le même nombre de pas le trahissent aussi",
+   "g": [
+    "obake"
+   ]
+  },
+  {
+   "id": "prints",
+   "t": "Empreinte à 6 doigts, double empreinte ou 5 empreintes",
+   "s": "1 chance sur 6 à chaque empreinte : 6 doigts sur une main, 2 traces au lieu d'1 sur interrupteur / lampe / télécommande, 5 au lieu de 4 sur clavier et porte de cellule",
+   "g": [
+    "obake"
+   ]
+  },
+  {
+   "id": "uvgone",
+   "t": "Les empreintes UV disparaissent anormalement vite",
+   "g": [
+    "obake"
+   ]
+  },
+  {
+   "id": "shadowevt",
+   "t": "Apparition sous forme d'ombre",
+   "s": "Définitif seulement pendant un événement d'objet maudit",
+   "g": [
+    "shade"
+   ]
+  },
+  {
+   "id": "teleport",
+   "t": "EMF surgit près d'un joueur, loin de sa pièce",
+   "g": [
+    "wraith",
+    "phantom"
+   ]
+  },
+  {
+   "id": "comes",
+   "t": "Hors chasse, elle vient régulièrement jusqu'à moi, loin de sa pièce",
+   "s": "Trois entités se déplacent vers un joueur : Spectre, Fantôme et Banshee. Écartez-vous et recommencez au moins 3 fois — une entité ordinaire passe près de vous par hasard, elle ne vous suit pas",
+   "g": [
+    "wraith",
+    "phantom",
+    "banshee"
+   ]
+  },
+  {
+   "id": "sing",
+   "t": "Événements de chant très fréquents",
+   "s": "Indice",
+   "g": [
+    "banshee"
+   ]
+  },
+  {
+   "grp": "Encens, crucifix, sel"
+  },
+  {
+   "id": "blind7",
+   "t": "Aveuglé par l'encens nettement plus longtemps (6-7 s)",
+   "g": [
+    "moroi",
+    "gallu"
+   ]
+  },
+  {
+   "id": "blind4",
+   "t": "Aveuglé par l'encens très brièvement (~4 s)",
+   "g": [
+    "gallu"
+   ]
+  },
+  {
+   "id": "cruci_far",
+   "t": "Crucifix rang I efficace à plus de 3 m",
+   "g": [
+    "demon",
+    "gallu"
+   ]
+  },
+  {
+   "id": "cruci_near",
+   "t": "Crucifix inefficace alors que j'étais à portée",
+   "s": "Crucifix déjà utilisé ? Sinon : Gallu enragé (−2 m)",
+   "g": [
+    "gallu"
+   ]
+  },
+  {
+   "id": "nosalt_slow",
+   "t": "Pas ralenti par le sel de rang III",
+   "g": [
+    "gallu"
+   ]
+  },
+  {
+   "id": "trapped",
+   "t": "Après un encens, plus aucune activité hors de sa pièce (90 s)",
+   "g": [
+    "yurei"
+   ]
+  },
+  {
+   "id": "smudge180",
+   "trig": 1,
+   "t": "Aucune chasse pendant 180 s après l'encens, santé basse",
+   "s": "Indice fort",
+   "g": [
+    "spirit"
+   ]
+  },
+  {
+   "grp": "Comment il vous traque"
+  },
+  {
+   "id": "knows",
+   "t": "Sait en permanence où vous êtes, même caché ou à l'autre bout de la carte",
+   "s": "Définitif : seul le Deogen garde la ligne de vue sur tout le monde en continu",
+   "g": [
+    "deogen"
+   ]
+  },
+  {
+   "id": "knows2",
+   "t": "Va droit sur le joueur qu'il a sorti d'une cachette, dès la chasse suivante",
+   "g": [
+    "aswang"
+   ]
+  },
+  {
+   "info": "Une entité qui fonce droit sur vous au début d'une chasse n'a rien de spécial : toutes ont 1 chance sur 2 de retourner là où elles vous ont vu la fois d'avant."
+  },
+  {
+   "id": "hideend",
+   "t": "La chasse s'arrête quand il ouvre votre cachette",
+   "g": [
+    "aswang"
+   ]
+  },
+  {
+   "id": "blind",
+   "t": "Ne vous voit pas alors que vous êtes immobile à découvert",
+   "g": [
+    "kormos",
+    "banshee"
+   ]
+  },
+  {
+   "id": "hearsteps",
+   "t": "Vous suit au bruit de vos pas (de loin, sans vous voir)",
+   "g": [
+    "kormos"
+   ]
+  },
+  {
+   "id": "ignore",
+   "t": "Passe à côté d'un joueur visible pour en viser un autre",
+   "g": [
+    "banshee"
+   ]
+  },
+  {
+   "id": "deaf",
+   "t": "N'entend pas votre voix / votre électronique à quelques mètres",
+   "g": [
+    "yokai"
+   ]
+  },
+  {
+   "id": "mylstatic",
+   "t": "Enregistreur : le bruit statique démarre dès que l'appareil détecte le son",
+   "s": "Définitif. Les deux au même moment = Myling. Portée pleine : 5 m au rang I, 6,5 m au rang II, 7,5 m au rang III. Plus lisible au rang I ou au rang III",
+   "g": [
+    "myling"
+   ]
+  },
+  {
+   "id": "x_mylstatic",
+   "t": "Enregistreur : le bruit statique démarre un pas APRÈS la détection (1 m plus près)",
+   "s": "Définitif : c'est le comportement normal (4 / 5,5 / 6,5 m), donc pas un Myling",
+   "x": [
+    "myling"
+   ]
+  },
+  {
+   "id": "quiet",
+   "t": "Pas entendus seulement tout près, en même temps que le grésillement",
+   "s": "12 m pour lui contre 20 m pour les autres, alors que le grésillement commence à 10 m pour tout le monde : la lampe clignote presque en même temps qu'on l'entend. À vérifier au même étage",
+   "g": [
+    "myling"
+   ]
+  },
+  {
+   "id": "throws",
+   "t": "Lance des objets en rafale pendant la chasse",
+   "g": [
+    "poltergeist"
+   ]
+  },
+  {
+   "grp": "Quand il a chassé"
+  },
+  {
+   "id": "flame3",
+   "trig": 1,
+   "t": "Chasse juste après avoir soufflé une flamme (la 3e)",
+   "g": [
+    "onryo"
+   ]
+  },
+  {
+   "id": "smudge60",
+   "trig": 1,
+   "t": "Chasse entre 60 et 90 s après un encens",
+   "g": [
+    "demon"
+   ]
+  },
+  {
+   "id": "cd20",
+   "trig": 1,
+   "t": "Rechasse 20 à 25 s après la fin de la chasse précédente",
+   "g": [
+    "demon"
+   ]
+  },
+  {
+   "grp": "Hors chasse"
+  },
+  {
+   "id": "salt1",
+   "t": "A piétiné un tas de sel mais ignoré les suivants",
+   "g": [
+    "gallu"
+   ]
+  },
+  {
+   "id": "nosalt",
+   "t": "Est passé sur le sel sans jamais le perturber",
+   "g": [
+    "wraith",
+    "gallu"
+   ]
+  },
+  {
+   "id": "doorslam",
+   "t": "Porte fermée entièrement + chute de santé brutale",
+   "g": [
+    "yurei"
+   ]
+  },
+  {
+   "id": "lightoff",
+   "t": "Rééteint la lumière juste après que vous l'allumez",
+   "g": [
+    "mare"
+   ]
+  },
+  {
+   "id": "twins2s",
+   "t": "Deux interactions à moins de 2 s d'intervalle, à deux endroits",
+   "s": "Définitif : toutes les autres entités attendent au moins 2 s entre deux interactions. Attention : la poupée vaudou force une interaction à chaque épingle, et le Poltergeist lance plusieurs objets d'un coup — mais au même endroit",
+   "g": [
+    "twins"
+   ]
+  },
+  {
+   "id": "twinsdecoy",
+   "t": "Des interactions à un endroit sans aucun froid, sans réponse Spirit Box et sans détecteur déclenché",
+   "s": "Définitif : c'est le jumeau leurre. Il interagit et fait de l'EMF 5, mais ne refroidit pas la pièce, ne répond jamais à la Spirit Box et ne déclenche pas les détecteurs de mouvement",
+   "g": [
+    "twins"
+   ]
+  },
+  {
+   "id": "multi",
+   "t": "Plusieurs objets projetés en même temps",
+   "g": [
+    "poltergeist"
+   ]
+  },
+  {
+   "id": "photo",
+   "t": "Disparaît quand on le prend en photo pendant un événement",
+   "g": [
+    "phantom"
+   ]
+  }
+ ],
+ "CAT": {
+  "tlent": "Très lente",
+  "lent": "Lente",
+  "normal": "Normale",
+  "rapide": "Rapide",
+  "trapide": "Très rapide"
+ },
+ "GCAT": {
+  "revenant": [
+   "tlent",
+   "trapide"
+  ],
+  "jinn": [
+   "normal",
+   "rapide"
+  ],
+  "hantu": [
+   "lent",
+   "normal",
+   "rapide",
+   "trapide"
+  ],
+  "twins": [
+   "lent",
+   "normal"
+  ],
+  "raiju": [
+   "normal",
+   "rapide"
+  ],
+  "moroi": [
+   "lent",
+   "normal",
+   "rapide"
+  ],
+  "deogen": [
+   "tlent",
+   "trapide"
+  ],
+  "thaye": [
+   "tlent",
+   "lent",
+   "normal",
+   "rapide",
+   "trapide"
+  ],
+  "gallu": [
+   "lent",
+   "normal",
+   "rapide"
+  ],
+  "dayan": [
+   "lent",
+   "normal",
+   "rapide"
+  ],
+  "obambo": [
+   "lent",
+   "rapide"
+  ],
+  "kormos": [
+   "normal",
+   "rapide"
+  ],
+  "aswang": [
+   "lent"
+  ],
+  "deildegast": [
+   "tlent",
+   "lent",
+   "normal",
+   "rapide",
+   "trapide"
+  ],
+  "mimic": [
+   "tlent",
+   "lent",
+   "normal",
+   "rapide",
+   "trapide"
+  ]
+ },
+ "HIDCAT": {
+  "revenant": [
+   "tlent"
+  ],
+  "jinn": [
+   "normal"
+  ],
+  "kormos": [
+   "normal"
+  ]
+ },
+ "HIDSPD": {
+  "revenant": [
+   1,
+   1
+  ],
+  "jinn": [
+   1.7,
+   1.7
+  ],
+  "kormos": [
+   1.7,
+   1.7
+  ]
+ },
+ "DEPCOND": {
+  "revenant": {
+   "c": "sa base est 1,0 m/s ; il ne monte à 3,0 que s'il vous a déjà détecté",
+   "a": "restez hors de sa vue au départ : il doit partir très lent, c'est sa vraie vitesse de base"
+  },
+  "jinn": {
+   "c": "2,5 m/s seulement avec vue sur vous, à plus de 3 m, disjoncteur allumé",
+   "a": "coupez le disjoncteur : il repasse à 1,70 m/s"
+  },
+  "hantu": {
+   "c": "de 1,4 m/s à 2,7 m/s selon la température de la pièce",
+   "a": "relevez la température au thermomètre avant la chasse"
+  },
+  "twins": {
+   "c": "1,5 m/s ou 1,9 m/s selon le jumeau qui chasse",
+   "a": "mesurez sur deux chasses : les deux vitesses doivent apparaître"
+  },
+  "raiju": {
+   "c": "2,5 m/s seulement près d'un appareil électronique allumé",
+   "a": "éteignez tout votre électronique : il repasse à 1,70 m/s"
+  },
+  "deogen": {
+   "c": "3,0 m/s au-delà de 5,32 m, 0,4 m/s en deçà de 2,42 m",
+   "a": "tenez-vous à plus de 6 m : il doit partir très rapide"
+  },
+  "dayan": {
+   "c": "2,25 m/s si un joueur bouge à moins de 10 m, 1,2 m/s s'il reste immobile",
+   "a": "figez-vous à moins de 10 m : elle doit tomber à 1,20 m/s"
+  },
+  "obambo": {
+   "c": "1,445 m/s calme, 1,955 m/s agressif ; bascule 1 min après l'ouverture puis toutes les 2 min",
+   "a": "au-dessus de 10 % de santé il ne chasse qu'en agressif : attendez-vous au rapide"
+  },
+  "kormos": {
+   "c": "×1,3 quand il va vers un bruit qu'il a entendu, sans vous voir",
+   "a": "ne sprintez pas et ne faites pas de bruit : il doit rester à 1,70 m/s"
+  }
+ },
+ "HUNTSET": {
+  "low": [
+   15,
+   30,
+   40
+  ],
+  "med": [
+   20,
+   40,
+   50
+  ],
+  "high": [
+   30,
+   50,
+   60
+  ]
+ },
+ "JUMP": [
+  "revenant",
+  "jinn",
+  "raiju",
+  "dayan",
+  "deogen",
+  "kormos",
+  "hantu",
+  "obambo",
+  "gallu",
+  "mimic"
+ ],
+ "LOSLBL": {
+  "jump": "Passe au maximum d'un coup",
+  "prog": "A accéléré progressivement en me voyant",
+  "non": "N'a jamais accéléré, même en me voyant"
+ },
+ "BLINK": [
+  {
+   "n": "Entité normale",
+   "v": [
+    0.08,
+    0.3
+   ],
+   "i": [
+    0.1,
+    0.92
+   ],
+   "c": "cycle 0,30 – 1,00 s",
+   "ref": 1
+  },
+  {
+   "n": "Fantôme",
+   "v": [
+    0.08,
+    0.3
+   ],
+   "i": [
+    0.7,
+    1.92
+   ],
+   "c": "cycle 1,00 – 2,00 s<br>le plus discret"
+  },
+  {
+   "n": "Deogen",
+   "v": [
+    0.2,
+    0.3
+   ],
+   "i": [
+    0.01,
+    0.4
+   ],
+   "c": "cycle 0,30 – 0,60 s<br>mesuré"
+  },
+  {
+   "n": "Oni",
+   "v": [
+    0.02,
+    0.5
+   ],
+   "i": [
+    0.01,
+    0.5
+   ],
+   "c": "cycle 0,30 – 1,00 s<br>mesuré"
+  },
+  {
+   "n": "Obake",
+   "v": [
+    0.08,
+    0.3
+   ],
+   "i": [
+    0.1,
+    0.92
+   ],
+   "c": "rythme standard<br>change de modèle",
+   "shift": 1
+  }
+ ],
+ "KEYLBL": {
+  "smudge": "Encens",
+  "hunt": "Chasse",
+  "cd": "Recharge",
+  "sec": "Chrono (secondes)",
+  "tap": "Tap vitesse",
+  "reset": "Remise à 0 du tap"
+ },
+ "DEPSUR": {
+  "trapide": [
+   "thaye",
+   "deildegast"
+  ],
+  "lent": [
+   "moroi",
+   "aswang"
+  ],
+  "normal": [
+   "gallu"
+  ]
+ },
+ "HIDSTART": {
+  "revenant": "tlent",
+  "jinn": "normal",
+  "kormos": "normal",
+  "aswang": "lent"
+ },
+ "HIDCOND": [
+  "hantu",
+  "twins",
+  "raiju",
+  "deogen",
+  "dayan",
+  "obambo"
+ ]
+}

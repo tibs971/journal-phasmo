@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.textfield.TextInputLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/blocRecherche"
+    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    app:startIconDrawable="@drawable/ic_enquete"
+    app:endIconMode="clear_text"
+    android:hint="Rechercher">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/champRecherche"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:imeOptions="actionSearch"
+        android:maxLines="1" />
+</com.google.android.material.textfield.TextInputLayout>

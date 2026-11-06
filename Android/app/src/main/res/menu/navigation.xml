@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Quatre destinations. La doc autorise trois à cinq ; au-delà de trois, seul le
+     libellé sélectionné s'affiche par défaut, donc on force l'affichage des quatre. -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/dest_enquete" android:icon="@drawable/ic_enquete" android:title="@string/nav_enquete" />
+    <item android:id="@+id/dest_entites" android:icon="@drawable/ic_entites" android:title="@string/nav_entites" />
+    <item android:id="@+id/dest_chasse"  android:icon="@drawable/ic_chasse"  android:title="@string/nav_chasse" />
+    <item android:id="@+id/dest_guide"   android:icon="@drawable/ic_guide"   android:title="@string/nav_guide" />
+</menu>

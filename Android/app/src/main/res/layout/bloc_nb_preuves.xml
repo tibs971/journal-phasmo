@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.button.MaterialButtonToggleGroup
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/groupeNbPreuves"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:singleSelection="true"
+    app:selectionRequired="true">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/nb0" style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="0dp" android:layout_weight="1"
+        android:layout_height="wrap_content" android:text="0" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/nb1" style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="0dp" android:layout_weight="1"
+        android:layout_height="wrap_content" android:text="1" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/nb2" style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="0dp" android:layout_weight="1"
+        android:layout_height="wrap_content" android:text="2" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/nb3" style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="0dp" android:layout_weight="1"
+        android:layout_height="wrap_content" android:text="3" />
+</com.google.android.material.button.MaterialButtonToggleGroup>
