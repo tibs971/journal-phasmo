@@ -1,0 +1,10 @@
+# Résultats de compilation — jamais versionnés
+bin/
+obj/
+dist/
+*.user
+*.suo
+.vs/
+
+# Archive produite par publier.cmd
+JournalPhasmo.zip
