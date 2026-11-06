@@ -33,28 +33,53 @@ sinon il devient un mensonge.
 3. Mets aussi le `.exe` dans un `.zip` : certains navigateurs et certains antivirus
    bloquent le téléchargement direct d'un exécutable.
 
-### Ce qu'il faut dire aux gens, et pourquoi
+### L'avertissement Windows : pourquoi, et quoi faire
 
-Ton `.exe` n'est pas signé par un certificat payant. Microsoft Defender SmartScreen
-fonctionne par réputation : la doc Microsoft dit qu'il vérifie « *downloaded files
-against a list of files that are well known and downloaded frequently. If the file isn't
-on that list, Microsoft Defender SmartScreen shows a warning, advising caution* », qu'il
-vérifie « *the digital signature used to sign a file* », et que « *if there's no
-reputation, the item is marked as a higher risk and presents a warning to the user* ».
+Au premier lancement, Windows affiche « **Windows a protégé votre ordinateur** — Microsoft
+Defender SmartScreen a empêché le démarrage d'une application non reconnue », avec
+« Éditeur : Éditeur inconnu ». Il faut cliquer sur *Informations complémentaires* puis
+*Exécuter quand même*.
 
-Autrement dit : **tes premiers utilisateurs verront un avertissement.** Ce n'est pas un
-bug de ton application, c'est le fonctionnement normal pour un fichier neuf et non
-signé. La doc Microsoft ne décrit pas la fenêtre exacte ni la manœuvre pour passer outre,
-donc je ne te l'invente pas — mais annonce-le franchement dans ta Release plutôt que de
-laisser les gens le découvrir :
+Changer de site d'hébergement n'y changera rien : **SmartScreen juge le fichier, pas
+l'endroit d'où il vient.** Et comme le fichier n'est pas signé, chaque nouvelle version
+repart de zéro — la réputation ne s'accumule jamais.
 
-> Windows peut afficher un avertissement au premier lancement : l'application est
-> nouvelle et n'est pas signée par un certificat payant. Le code source est entièrement
-> public dans ce dépôt, et `EMPREINTES.txt` permet de vérifier que le fichier téléchargé
-> est bien celui publié ici.
+Les options réelles, d'après la [documentation de Microsoft](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/code-signing-options)
+(page mise à jour le 29 août 2026) :
 
-Un certificat de signature de code coûte cher et se renouvelle. Ce n'est pas la peine
-pour une aide de jeu gratuite — mais la transparence, si.
+| route | coût | ce que ça donne |
+|---|---|---|
+| **Microsoft Store**, au format MSIX | gratuit | « No warnings » — Microsoft resigne le paquet, l'avertissement disparaît |
+| **SignPath Foundation** (projets libres) | gratuit | signature de niveau OV offerte aux projets open source |
+| **Azure Artifact Signing** | ~9,99 $/mois | pas d'avertissement en moins au départ ; réservé aux particuliers **USA et Canada** |
+| certificat **OV** | 150–300 $/an | ton nom s'affiche au lieu d'« éditeur inconnu » ; la réputation s'accumule |
+| certificat **EV** | 400 $+/an | **rien de plus que l'OV depuis 2024** |
+
+Ce que Microsoft écrit sur l'EV : « *That behavior was removed in 2024. EV-signed files now
+go through the same reputation-building process as OV certificates.* » Et : « *Paying the EV
+premium solely to avoid SmartScreen warnings is no longer justified.* »
+
+**La seule route sans avertissement que Microsoft documente est le Store**, au format MSIX :
+« *Microsoft re-signs your package automatically, meaning users never see a SmartScreen
+warning.* »
+
+Attention : signer **ne supprime pas** l'avertissement du premier téléchargement. Microsoft
+est clair là-dessus, y compris pour son propre service : « *Azure Artifact Signing does not
+provide instant SmartScreen trust* ». Signer sert à afficher ton nom et à faire monter la
+réputation au fil des versions.
+
+Une correction de ce que je disais plus haut : mettre le `.exe` dans un `.zip` n'enlève pas
+SmartScreen. Le zip sert à contourner les navigateurs et antivirus qui bloquent le
+téléchargement direct d'un exécutable, rien de plus.
+
+### En attendant, sois franc dans ta Release
+
+> Windows affichera un avertissement au premier lancement : l'application est nouvelle et
+> n'est pas signée par un certificat payant. Cliquez sur « Informations complémentaires »
+> puis « Exécuter quand même ». Le code source est entièrement public dans ce dépôt, et
+> `EMPREINTES.txt` permet de vérifier que le fichier téléchargé est bien celui publié ici.
+
+C'est plus honnête et plus rassurant que de laisser les gens le découvrir seuls.
 
 ## 3. La version téléphone, par GitHub Pages
 

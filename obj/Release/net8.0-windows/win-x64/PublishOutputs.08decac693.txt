@@ -1,0 +1,5 @@
+C:\Users\WINDOWS\Downloads\JournalPhasmo-projet\PhasmoCompanion\dist\PhasmoCompanion.pdb
+C:\Users\WINDOWS\Downloads\JournalPhasmo-projet\PhasmoCompanion\dist\Microsoft.Web.WebView2.Core.xml
+C:\Users\WINDOWS\Downloads\JournalPhasmo-projet\PhasmoCompanion\dist\Microsoft.Web.WebView2.Wpf.xml
+C:\Users\WINDOWS\Downloads\JournalPhasmo-projet\PhasmoCompanion\dist\Microsoft.Web.WebView2.WinForms.xml
+C:\Users\WINDOWS\Downloads\JournalPhasmo-projet\PhasmoCompanion\dist\PhasmoCompanion.exe

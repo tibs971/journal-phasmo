@@ -84,6 +84,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         LoadSettings();
+        ChkMaj.IsChecked = MajJournal.Active;     // avant _uiReady : ne déclenche pas d'écriture
         _uiReady = true;
         _mouse.ButtonPressed += OnMouseButton;
         _signature.Declenche += OuvrirSignature;
@@ -92,6 +93,7 @@ public partial class MainWindow : Window
             if (_timers.EtaitVisible) _timers.Show();
             BtnTimers.Opacity = _timers.IsVisible ? 1.0 : 0.45;
             await InitWeb();
+            await VerifierLeJournalAsync(false);   // en arrière-plan, sans bloquer
         };
         Closed += (_, _) => { _timers.SaveSettings(); _timers.Close(); _signature.Dispose(); };
         Closing += (_, _) => SaveSettings();
@@ -154,8 +156,41 @@ public partial class MainWindow : Window
         }
     }
 
+    /// <summary>Le journal réellement affiché, pour le comparer à celui du site.</summary>
+    private string _journalCharge = "";
+
     private static readonly string PageDir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhasmoCompanion", "page");
+
+    /// <summary>
+    /// Va voir si un journal plus récent existe. Le résultat ne s'applique qu'au
+    /// prochain démarrage : remplacer la page en cours de route effacerait l'enquête
+    /// que le joueur est en train de remplir.
+    /// </summary>
+    private async Task VerifierLeJournalAsync(bool forcer)
+    {
+        var neuf = await MajJournal.VerifierAsync(_journalCharge, forcer);
+        if (MajMessage is null) return;
+
+        if (neuf)
+            MajMessage.Text = "Journal mis à jour — il s'appliquera au prochain démarrage.";
+        else if (forcer)
+            MajMessage.Text = string.IsNullOrWhiteSpace(MajJournal.Adresse)
+                ? "Aucune adresse de mise à jour n'est renseignée dans cette version."
+                : "Votre journal est déjà à jour.";
+    }
+
+    private void Maj_Changed(object sender, RoutedEventArgs e)
+    {
+        if (!_uiReady || ChkMaj is null) return;
+        MajJournal.Active = ChkMaj.IsChecked == true;
+    }
+
+    private async void MajNow_Click(object sender, RoutedEventArgs e)
+    {
+        if (MajMessage is not null) MajMessage.Text = "Vérification…";
+        await VerifierLeJournalAsync(true);
+    }
 
     /// <summary>Les raccourcis enregistrés, dans le vocabulaire de la page.</summary>
     private string KeysJson()
@@ -189,8 +224,10 @@ public partial class MainWindow : Window
     }
 
     /// <summary>
-    /// Le journal est embarqué dans l'exe. Un phasmo.html posé à côté de l'exe le remplace,
-    /// ce qui permet de mettre les données à jour sans recompiler.
+    /// Le journal est embarqué dans l'exe. Trois sources, dans cet ordre :
+    ///   1. un phasmo.html posé À CÔTÉ DE L'EXE — c'est vous qui décidez, ça prime sur tout ;
+    ///   2. le journal téléchargé automatiquement, s'il y en a un ;
+    ///   3. celui embarqué dans l'exécutable, qui ne manque jamais.
     /// </summary>
     private string LoadPage()
     {
@@ -200,7 +237,18 @@ public partial class MainWindow : Window
             if (File.Exists(external))
             {
                 var txt = File.ReadAllText(external);
-                if (txt.Length > 20000) return txt;     // fichier manifestement complet
+                if (txt.Length > 20000) { _journalCharge = txt; return txt; }   // manifestement complet
+            }
+        }
+        catch { }
+
+        try
+        {
+            if (File.Exists(MajJournal.FichierTelecharge))
+            {
+                var txt = File.ReadAllText(MajJournal.FichierTelecharge);
+                if (MajJournal.EstUnJournalComplet(txt)) { _journalCharge = txt; return txt; }
+                MajJournal.Oublier();          // abîmé : on repart proprement de l'embarqué
             }
         }
         catch { }
@@ -211,7 +259,8 @@ public partial class MainWindow : Window
             if (!name.EndsWith("phasmo.html", StringComparison.OrdinalIgnoreCase)) continue;
             using var st = asm.GetManifestResourceStream(name)!;
             using var rd = new StreamReader(st);
-            return rd.ReadToEnd();
+            _journalCharge = rd.ReadToEnd();
+            return _journalCharge;
         }
 
         return "<html><body style='font-family:sans-serif;background:#0E1116;color:#E3E6EC;padding:24px'>" +

@@ -245,6 +245,51 @@ correction voulue a bougé.
 Il faut ensuite recopier la page dans `web/index.html` en y réinsérant le manifeste et le
 service worker (voir « Publier la version téléphone »).
 
+## Mise à jour automatique du journal
+
+L'application sait aller chercher un journal plus récent toute seule. Il y a **une ligne
+à renseigner** avant que ça serve, dans `MajJournal.cs` :
+
+```csharp
+public const string Adresse = "";
+```
+
+Mets-y l'adresse publique de ta page, par exemple
+`https://tibs971.github.io/journal-phasmo/index.html`, et recompile une fois. Tant
+qu'elle est vide, **aucune requête n'est faite** : l'application reste entièrement hors
+ligne, exactement comme avant.
+
+### Ce que ça change pour tes utilisateurs
+
+Les fiches d'entités changent à chaque correctif du jeu ; la coquille Windows, presque
+jamais. Sans ça, corriger une vitesse obligerait chacun à retélécharger tout l'exécutable.
+Avec ça, c'est **le journal seul, environ 260 Ko**, et personne ne fait rien : ils relancent
+l'application et elle est à jour.
+
+Tu corriges `source/donnees.json`, tu lances `construire.js`, tu pousses sur GitHub. Le
+lendemain, tout le monde a la correction.
+
+### Les garde-fous
+
+- **Une vérification par jour au maximum**, au démarrage, jamais pendant une partie.
+- **Rien n'est envoyé** : ni identifiant, ni statistique, ni le contenu de ton enquête.
+  C'est une simple requête de lecture.
+- Le fichier reçu n'est retenu **que s'il est vraiment le journal** : taille plausible,
+  bon titre, données présentes, balise de fin. Un portail wifi ou une page d'erreur
+  renvoie n'importe quoi, et sans ce contrôle il remplacerait l'application par une page
+  blanche sans retour possible.
+- La version embarquée dans l'exe **reste le filet** et ne disparaît jamais.
+- La mise à jour s'applique **au démarrage suivant**, pas en cours de route : remplacer la
+  page pendant que quelqu'un remplit son enquête l'effacerait.
+- Un `phasmo.html` posé à côté de l'exe **prime sur tout** : ton choix passe avant.
+- Ça se désactive dans ⚙ Réglages, avec un bouton « Vérifier maintenant » à côté.
+
+### L'ordre dans lequel le journal est choisi
+
+1. `phasmo.html` posé à côté de l'exe — c'est toi qui décides
+2. le journal téléchargé, s'il est valide
+3. celui embarqué dans l'exécutable, qui ne manque jamais
+
 ## Mettre à jour les données du jeu
 
 Le journal est embarqué dans l'exe. Pour le mettre à jour sans recompiler, pose un fichier

@@ -86,6 +86,19 @@
                        Text="À 0 % de décor, les chiffres restent nets et une poignée discrète en haut à gauche permet encore de déplacer la fenêtre."/>
             <TextBlock Foreground="#6E7689" FontSize="11" FontFamily="Segoe UI" TextWrapping="Wrap" Margin="0,10,0,0"
                        Text="Si Phasmophobia bascule tout seul du plein écran au mode fenêtré : c'est qu'une fenêtre « toujours au-dessus » est affichée par-dessus lui. Le journal ne l'est plus par défaut (bouton 📌). Pour les minuteurs, l'option se trouve dans leur menu par clic droit. Le plein écran sans bordure, lui, accepte les deux sans broncher."/>
+
+            <TextBlock Text="MISE À JOUR DU JOURNAL" Foreground="#A68CFF"
+                       FontSize="11" FontFamily="Segoe UI" Margin="0,18,0,6"/>
+            <CheckBox x:Name="ChkMaj" Foreground="#8C94A6" FontFamily="Segoe UI"
+                      Content="Chercher un journal plus récent au démarrage"
+                      Checked="Maj_Changed" Unchecked="Maj_Changed"/>
+            <TextBlock Foreground="#6E7689" FontSize="11" FontFamily="Segoe UI" TextWrapping="Wrap" Margin="0,6,0,0"
+                       Text="Les fiches d'entités changent à chaque correctif du jeu, pas l'application. Une vérification par jour télécharge le journal seul — environ 260 Ko — au lieu de vous faire réinstaller. Rien n'est envoyé : ni identifiant, ni statistique, ni le contenu de votre enquête. Sans réseau, l'application fonctionne exactement comme avant."/>
+            <DockPanel Margin="0,8,0,0" LastChildFill="False">
+              <Button DockPanel.Dock="Left" Content="Vérifier maintenant" Click="MajNow_Click" Padding="12,5"/>
+              <TextBlock DockPanel.Dock="Left" x:Name="MajMessage" Margin="12,0,0,0"
+                         VerticalAlignment="Center" Foreground="#8C94A6" FontFamily="Segoe UI" FontSize="11.5"/>
+            </DockPanel>
           </StackPanel>
 
           <DockPanel Grid.Row="3" Margin="0,16,0,0" LastChildFill="False">
