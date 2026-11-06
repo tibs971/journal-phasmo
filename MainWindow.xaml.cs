@@ -69,6 +69,9 @@ public partial class MainWindow : Window
     private readonly SignatureHook _signature = new();
     private bool _ready;
 
+    /// <summary>Éclat du journal, de 20 à 100. Réglé dans ⚙, appliqué à la page.</summary>
+    private double _lum = 100;
+
     /// <summary>
     /// Faux tant que la fenêtre se construit. Pendant la construction, WPF déclenche déjà
     /// les événements des curseurs et de la liste d'opacité (une valeur ramenée dans ses
@@ -136,6 +139,7 @@ public partial class MainWindow : Window
             _ready = true;
             // le journal adopte les raccourcis enregistrés s'il n'a encore rien retenu de son côté
             Js("phasmo.setKeys(" + KeysJson() + ")");
+            Js("phasmo.luminosite(" + _lum.ToString(CultureInfo.InvariantCulture) + ")");
             Js("phasmo.desktop()");           // masque les minuteurs de la page : ils ont leur fenêtre
         };
 
@@ -178,6 +182,15 @@ public partial class MainWindow : Window
             MajMessage.Text = string.IsNullOrWhiteSpace(MajJournal.Adresse)
                 ? "Aucune adresse de mise à jour n'est renseignée dans cette version."
                 : "Votre journal est déjà à jour.";
+    }
+
+    private void Lum_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        _lum = e.NewValue;
+        if (LblLum is not null) LblLum.Text = ((int)_lum) + " %";
+        if (!_uiReady) return;
+        if (_ready) Js("phasmo.luminosite(" + _lum.ToString(CultureInfo.InvariantCulture) + ")");
+        SaveSettings();
     }
 
     private void Maj_Changed(object sender, RoutedEventArgs e)
@@ -707,7 +720,8 @@ public partial class MainWindow : Window
                 r.Left.ToString(inv), r.Top.ToString(inv), r.Width.ToString(inv), r.Height.ToString(inv),
                 "1", Topmost ? "1" : "0",   // l'opacité du journal n'est plus réglable
                 WindowState == WindowState.Maximized ? "1" : "0",
-                "v2"));   // marqueur : le journal n'est plus épinglé par défaut
+                "v2",     // marqueur : le journal n'est plus épinglé par défaut
+                _lum.ToString(inv)));
         }
         catch { }
     }
@@ -734,6 +748,13 @@ public partial class MainWindow : Window
                 Topmost = p[5] == "1";
             }
             if (p.Length >= 7 && p[6] == "1") WindowState = WindowState.Maximized;
+
+            // Champ 9 : la luminosité. Les fichiers d'avant ne l'ont pas, d'où le test —
+            // et sans valeur enregistrée on reste à 100, surtout pas au minimum du curseur.
+            _lum = 100;
+            if (p.Length >= 9 && double.TryParse(p[8], NumberStyles.Float, inv, out var lum))
+                _lum = Math.Max(20, Math.Min(100, lum));
+            SlLum.Value = _lum;
 
             // Fichier d'avant le changement : le journal y était épinglé par défaut, ce qui
             // sortait le jeu du plein écran. On le désépingle une fois ; ensuite le choix

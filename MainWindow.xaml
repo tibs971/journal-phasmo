@@ -87,6 +87,18 @@
             <TextBlock Foreground="#6E7689" FontSize="11" FontFamily="Segoe UI" TextWrapping="Wrap" Margin="0,10,0,0"
                        Text="Si Phasmophobia bascule tout seul du plein écran au mode fenêtré : c'est qu'une fenêtre « toujours au-dessus » est affichée par-dessus lui. Le journal ne l'est plus par défaut (bouton 📌). Pour les minuteurs, l'option se trouve dans leur menu par clic droit. Le plein écran sans bordure, lui, accepte les deux sans broncher."/>
 
+            <TextBlock Text="LUMINOSITÉ DU JOURNAL" Foreground="#A68CFF"
+                       FontSize="11" FontFamily="Segoe UI" Margin="0,18,0,6"/>
+            <DockPanel Margin="0,2">
+              <TextBlock DockPanel.Dock="Left" Width="190" Foreground="#8C94A6" FontFamily="Segoe UI"
+                         VerticalAlignment="Center" Text="Éclat de la page"/>
+              <TextBlock DockPanel.Dock="Right" x:Name="LblLum" Width="46" TextAlignment="Right" Foreground="#8C94A6"/>
+              <Slider x:Name="SlLum" Minimum="20" Maximum="100" Value="100" TickFrequency="5"
+                      IsSnapToTickEnabled="True" ValueChanged="Lum_Changed"/>
+            </DockPanel>
+            <TextBlock Foreground="#6E7689" FontSize="11" FontFamily="Segoe UI" TextWrapping="Wrap" Margin="0,6,0,0"
+                       Text="Assombrit le journal sans toucher au jeu derrière. On joue dans le noir : à pleine luminosité, un coup d'oeil au journal éblouit et l'oeil met plusieurs secondes à se réhabituer. Le réglage ne descend pas sous 20 % — un écran entièrement noir ferait croire à un plantage."/>
+
             <TextBlock Text="MISE À JOUR DU JOURNAL" Foreground="#A68CFF"
                        FontSize="11" FontFamily="Segoe UI" Margin="0,18,0,6"/>
             <CheckBox x:Name="ChkMaj" Foreground="#8C94A6" FontFamily="Segoe UI"

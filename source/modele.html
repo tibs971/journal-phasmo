@@ -108,6 +108,9 @@
 :root[data-theme="nocturne"] .panel,:root[data-theme="nocturne"] .card,:root[data-theme="nocturne"] .item{
   box-shadow:0 0 0 1px rgba(95,232,154,.06), 0 4px 14px rgba(0,0,0,.6);
 }
+#dim{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:99999;
+     transition:opacity .15s linear}
+@media (prefers-reduced-motion: reduce){#dim{transition:none}}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);padding-inline:16px;padding-block:0 40px}
 button,input,select{font:inherit;color:inherit}
@@ -1183,12 +1186,12 @@ const DEPCOND = DON.DEPCOND;
 })();
 
 /* ---------------- état ---------------- */
-const S = {keys:{smudge:'s',hunt:'h',cd:'c',sec:'a',tap:'f',reset:'r'}, ev:{}, n:3, manual:{}, san:null, los:null, spdf:false, speed:null, obs:{}, cat:{}, fav:{}, pick:null, blood:false, chm:false, chmDone:false, hid:false, grp:{}, diff:"pro", cgrace:3, chunt:"high", map:-1};
+const S = {keys:{smudge:'s',hunt:'h',cd:'c',sec:'a',tap:'f',reset:'r'}, ev:{}, n:3, manual:{}, san:null, los:null, spdf:false, speed:null, obs:{}, cat:{}, fav:{}, pick:null, blood:false, chm:false, chmDone:false, hid:false, grp:{}, diff:"pro", cgrace:3, chunt:"high", map:-1, lum:100};
 EV_ORDER.forEach(k=>S.ev[k]=0);
 const LS="phasmo-journal-v1";
 let HADKEYS=false;   // le journal avait-il déjà ses propres touches en mémoire ?
 try{const s=JSON.parse(localStorage.getItem(LS)||"null"); if(s){ HADKEYS=!!s.keys;Object.assign(S,s,{speed:null}); S.obs=S.obs||{}; S.cat=S.cat||{}; S.grp=S.grp||{}; Object.keys(S.cat).forEach(k=>{S.cat[k]=S.cat[k]===2?2:(S.cat[k]?1:0); if(!S.cat[k])delete S.cat[k];}); if(S.los==="oui") S.los="prog"; S.fav=S.fav||{}; S.keys=Object.assign({smudge:'s',hunt:'h',cd:'c',sec:'a',tap:'f',reset:'r'},s.keys||{});}}catch(e){}
-function save(){try{localStorage.setItem(LS,JSON.stringify({ev:S.ev,n:S.n,manual:S.manual,san:S.san,los:S.los,spdf:S.spdf,obs:S.obs,cat:S.cat,keys:S.keys,fav:S.fav,pick:S.pick,blood:S.blood,chm:S.chm,chmDone:S.chmDone,hid:S.hid,grp:S.grp,diff:S.diff,cgrace:S.cgrace,chunt:S.chunt,map:S.map}))}catch(e){}}
+function save(){try{localStorage.setItem(LS,JSON.stringify({ev:S.ev,n:S.n,manual:S.manual,san:S.san,los:S.los,spdf:S.spdf,obs:S.obs,cat:S.cat,keys:S.keys,fav:S.fav,pick:S.pick,blood:S.blood,chm:S.chm,chmDone:S.chmDone,hid:S.hid,grp:S.grp,diff:S.diff,cgrace:S.cgrace,chunt:S.chunt,map:S.map,lum:S.lum}))}catch(e){}}
 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const fmt=x=>x.toFixed(2).replace(".",",");
@@ -1607,6 +1610,25 @@ $("#cxChmDone").onclick=()=>setChmDone(!S.chmDone);
 $("#cxHid").onclick=()=>{S.hid=!S.hid; appliquerCache(); refreshAll();};
 
 /* ---------------- thème ---------------- */
+/**
+ * Luminosité du journal, de 20 à 100. On ne descend jamais à zéro : un écran
+ * entièrement noir ferait croire à un plantage. À 100, le voile est retiré du calcul
+ * de rendu plutôt que laissé transparent.
+ */
+function setLum(v, persist){
+  const x = (v === null || v === undefined) ? NaN : Number(v);   // 0 est une valeur,
+  const n = Math.max(20, Math.min(100,       // « +v || 100 » le confondait avec « rien »
+            Math.round(Number.isFinite(x) ? x : 100)));
+  S.lum = n;
+  // on le crée au besoin : le script s'exécute avant la fin du corps du document,
+  // donc chercher un élément écrit plus bas ne donnerait rien.
+  let d = document.getElementById("dim");
+  if(!d){ d = document.createElement("div"); d.id = "dim"; d.setAttribute("aria-hidden","true");
+          document.body.appendChild(d); }
+  d.style.opacity = n >= 100 ? 0 : ((100 - n) / 100 * 0.88).toFixed(3);
+  if(persist) save();
+}
+
 const THEMES=["auto","dark","light","carnet","nocturne","halloween"],
       THLBL={auto:"🌓 Thème : auto",dark:"🌙 Thème : ardoise",light:"☀ Thème : clair",carnet:"📓 Thème : carnet",nocturne:"🔦 Thème : vision nocturne",halloween:"🎃 Thème : Halloween"},
       THBASE={auto:null,dark:"dark",light:"light",carnet:"light",nocturne:"dark",halloween:"dark"};
@@ -2137,6 +2159,7 @@ $("#cursed").innerHTML=CURSED.map(c=>`<div class="item"><h4>${c.n}</h4><p>${c.ho
 $("#equip").innerHTML=EQUIP.map(e=>`<div class="item"><h4>${e.n}</h4><p class="hint" style="margin-bottom:6px">${e.d}</p><ul>${e.t.map((x,i)=>`<li><b>Rang ${['I','II','III'][i]}</b> — ${x}</li>`).join('')}</ul>${e.note?`<p class="hint" style="margin-top:6px">${e.note}</p>`:''}</div>`).join("");
 $("#myths").innerHTML=MYTHS.map(([a,b])=>`<div class="item"><p class="hint" style="margin-bottom:4px">${a}</p><p>${b}</p></div>`).join("");
 
+setLum(S.lum);          // la luminosité retenue, appliquée dès le premier rendu
 update();
 
 /* ---------------- API pour l'appli de bureau (WebView2) ---------------- */
@@ -2164,6 +2187,8 @@ window.phasmo = {
   },
   diff(id){ setDiff(id); },
   overlay(on){ setOverlay(on===undefined ? !document.body.classList.contains("ovl") : !!on); },
+  // réglée depuis le panneau ⚙ de l'application Windows
+  luminosite(v){ setLum(v, true); },
   state(){ return {left:GHOSTS.filter(g=>!reason(g)).map(g=>g.fr),
     timers:Object.fromEntries(Object.entries(T).map(([k,t])=>[k,Math.round(t.elapsed())]))}; }
 };

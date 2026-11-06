@@ -1,7 +1,7 @@
 /* Journal Phasmo — service worker.
    Le journal tient dans un seul fichier : on le met en cache à l'installation,
    on le sert immédiatement, et on rafraîchit en arrière-plan quand le réseau est là. */
-const CACHE = "journal-phasmo-v3";
+const CACHE = "journal-phasmo-v5";
 const FICHIERS = ["./", "./index.html", "./manifest.webmanifest",
                   "./icone-192.png", "./icone-512.png", "./icone-maskable-512.png"];
 
