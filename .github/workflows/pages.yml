@@ -1,1 +1,53 @@
+# Publie la version téléphone (le dossier web/) sur GitHub Pages.
+#
+# Pourquoi un workflow et pas un simple réglage : GitHub Pages ne sait publier que la
+# racine du dépôt ou un dossier /docs. La doc officielle dit, pour tout autre dossier :
+# « we recommend that you write a GitHub Actions workflow to publish your site ».
+#
+# À FAIRE UNE SEULE FOIS, dans le dépôt :
+#   Settings  >  Pages  >  Build and deployment  >  Source  =  GitHub Actions
+# Ensuite chaque envoi sur la branche principale met le site à jour tout seul.
+name: Publier la version téléphone
 
+on:
+  push:
+    branches: [main, master]
+    paths: ['web/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  construire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Vérifier que le journal est bien là
+        run: |
+          test -f web/index.html || { echo "web/index.html manque"; exit 1; }
+          test -f web/manifest.webmanifest || { echo "le manifeste manque"; exit 1; }
+          test -f web/sw.js || { echo "le service worker manque"; exit 1; }
+          echo "index.html : $(wc -c < web/index.html) octets"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+  deployer:
+    needs: construire
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - id: pages
+        uses: actions/deploy-pages@v4
